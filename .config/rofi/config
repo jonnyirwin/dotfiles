@@ -1,14 +1,14 @@
 rofi.width: 100
 rofi.padding: 700 
-rofi.font: "System San Francisco Display" 18
-rofi.lines: 5
+rofi.font: "System San Francisco Display" 22
+rofi.lines: 3
 rofi.bw: 0
 rofi.hide-scrollbar: true
 
 ! State:           'bg',           'fg',           'bgalt',        'hlbg',         'hlfg'
-rofi.color-normal: argb:FF000000,  argb:99FFFFFF,  argb:FF000000,  argb:FF000000,  argb:FFCC575D
-rofi.color-urgent: argb:FF000000,  argb:99FFFFFF,  argb:FF000000,  argb:FF000000,  argb:FFCC575D
-rofi.color-active: argb:FF000000,  argb:99FFFFFF,  argb:FF000000,  argb:FF000000,  argb:FFCC575D
+rofi.color-normal: argb:00000000,  argb:99FFFFFF,  argb:00000000,  argb:11FFFFFF,  argb:FFCC575D
+rofi.color-urgent: argb:00000000,  argb:99FFFFFF,  argb:00000000,  argb:11FFFFFF,  argb:FFCC575D
+rofi.color-active: argb:00000000,  argb:99FFFFFF,  argb:00000000,  argb:11FFFFFF,  argb:FFCC575D
 
 !                  'background' , 'border'     , 'separator'
-rofi.color-window: argb:99000000, argb:99000000, argb:99000000
+rofi.color-window: argb:99000000, argb:00000000, argb:00000000
