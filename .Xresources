@@ -19,10 +19,10 @@
 *color15:    rgb:f8/fc/f8
 
 ! uxrvt settings
-
 URxvt*scrolBar:			false
 URxvt*transparent:		true
 URxvt*shading:			30
-URxvt*font:			xft:Fira Code:size=12:style=Regular:antialias=true:hinting=true, xft:octicons:size=12:style=Medium:antialias=true:hinting=true
+URxvt*font:			xft:Fira Code:size=12:style=Regular:antialias=true:hinting=true
 URxvt*mouseWhelScrollPage:	true
-!URxvt*letterSpace: 		-1
+URxvt*scrollBar:		false
+URxvt*letterSpace:	        -1
