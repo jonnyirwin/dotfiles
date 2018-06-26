@@ -47,3 +47,5 @@ antigen theme bhilburn/powerlevel9k powerlevel9k
 
 # Tell Antigen that you're done.
 antigen apply
+
+synclient TouchpadOff=1

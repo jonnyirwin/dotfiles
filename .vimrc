@@ -33,15 +33,24 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme = 'dark'
 
 syntax on
-colorscheme rupza
 
 " You Complete Me installed as vim-youcompleteme-git AUR package
 let g:ycm_global_ycm_extra_conf = '/usr/share/vim/vimfiles/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
 let g:ycm_server_python_interpreter = '/usr/bin/python2.7'
 
-" Commands to run on starting vim
-set number
-autocmd VimEnter * NERDTree
-autocmd VimEnter * wincmd p
 
 "hi Normal guibg=NONE ctermbg=NONE
+
+
+" colorscheme rupza
+
+" Commands to run on starting vim
+set number
+"autocmd VimEnter * NERDTree
+autocmd VimEnter * wincmd p
+
+let b:thisdir=expand("%:p:h")
+let b:vim=b:thisdir."/.vim"
+if (filereadable(b:vim))
+    execute "source ".b:vim
+endif
