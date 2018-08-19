@@ -19,16 +19,16 @@
 *color15:    rgb:f8/fc/f8
 
 ! uxrvt settings
-! URxvt*transparent:		true
-! URxvt*shading:			30
+ URxvt*transparent:		true
+ URxvt*shading:			30
 URxvt*font:			xft:Fira Code:size=12:style=Regular:antialias=true:hinting=true
 URxvt*mouseWhelScrollPage:	true
 URxvt*scrollBar:		false
 URxvt*letterSpace:	        -1
 
 ! transparency
-URxvt*depth: 32
-URxvt*background: rgba:0000/0000/0200/9500
+!URxvt*depth: 32
+!URxvt*background: rgba:0000/0000/0200/9500
 
 URxvt.perl-ext-common: default,matcher,selection-to-clipboard
 URxvt.url-launcher: /usr/bin/xdg-open
