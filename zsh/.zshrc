@@ -1,3 +1,11 @@
+if [ "$TERM" = "linux" ]; then
+
+export PS1="[%n@%m] %~ $"
+
+else
+
+export TERM=xterm-256color
+
 source ~/.antigen.zsh
 
 POWERLEVEL9K_INSTALLATION_PATH=$ANTIGEN_BNDLES/bhilburn/powerlevel9k
@@ -49,3 +57,5 @@ antigen theme bhilburn/powerlevel9k powerlevel9k
 antigen apply
 
 synclient TouchpadOff=1
+
+fi

@@ -213,8 +213,8 @@ exec_always feh --bg-scale /home/jonny/Pictures/Wallpapers/wallpaper.jpg
 
 default_border pixel
 
-assign [class="Firefox"] $ws2
-assign [class="Thunderbird"] $ws3
+#assign [class="Firefox"] $ws2
+#assign [class="Thunderbird"] $ws3
 
 #exec firefox
 #exec thunderbird
