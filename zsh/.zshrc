@@ -23,4 +23,8 @@ else
   POWERLINE_COMMAND=/usr/bin/powerline
   POWERLINE_CONFIG_COMMAND=/usr/bin/powerline-config 
   . /usr/lib/python3.7/site-packages/powerline/bindings/zsh/powerline.zsh
+
+  FZF_DEFAULT_COMMAND='rg --files'
+
+  PATH=/home/jonny/.local/bin:$PATH
 fi
