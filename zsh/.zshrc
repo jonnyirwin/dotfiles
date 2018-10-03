@@ -26,5 +26,9 @@ else
 
   FZF_DEFAULT_COMMAND='rg --files'
 
+  if type nvim > /dev/null 2>&1; then
+    alias vim='nvim'
+  fi 
+
   PATH=~/.local/bin:~/.npm-global/bin:$PATH
 fi
