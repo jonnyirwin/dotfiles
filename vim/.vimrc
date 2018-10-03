@@ -1,6 +1,7 @@
 packadd minpac
 call minpac#init()
 
+call minpac#add('k-takata/minpac', {'type': 'opt})
 call minpac#add('scrooloose/nerdtree')
 call minpac#add('chriskempson/base16-vim')
 call minpac#add('tpope/vim-projectionist')
@@ -14,6 +15,7 @@ call minpac#add('Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins'})
 call minpac#add('carlitux/deoplete-ternjs')
 call minpac#add('Shougo/denite.nvim')
 call minpac#add('christoomey/vim-tmux-navigator')
+call minpac#add('mustache/vim-mustache-handlebars')
 
 command! PackUpdate source $MYVIMRC | redraw | call minpac#update()
 command! PackClean source $MYVIMRC | call minpac#clean()
@@ -27,6 +29,10 @@ set number relativenumber
 set laststatus=2
 set showtabline=2
 set noshowmode
+set ignorecase
+set hlsearch
+
+au BufNewFile,BufReadPost *.stache set syntax=mustache
 
 let g:ale_linters = { 'javascript': ['eslint'] }
 let g:ale_fixers = { 'javascript': ['eslint'] }
