@@ -1,24 +1,49 @@
-python3 from powerline.vim import setup as powerline_setup
-python3 powerline_setup()
-python3 del powerline_setup
+packadd minpac
+call minpac#init()
 
+call minpac#add('scrooloose/nerdtree')
+call minpac#add('chriskempson/base16-vim')
+call minpac#add('tpope/vim-projectionist')
+call minpac#add('tpope/vim-dispatch')
+call minpac#add('w0rp/ale')
+call minpac#add('sgur/vim-editorconfig')
+call minpac#add('pangloss/vim-javascript')
+call minpac#add('elzr/vim-json')
+call minpac#add('vim-airline/vim-airline')
+call minpac#add('Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins'})
+call minpac#add('carlitux/deoplete-ternjs')
+call minpac#add('Shougo/denite.nvim')
+call minpac#add('christoomey/vim-tmux-navigator')
+
+command! PackUpdate source $MYVIMRC | redraw | call minpac#update()
+command! PackClean source $MYVIMRC | call minpac#clean()
+
+nnoremap <C-p> :<C-u>Denite file_rec<CR>
+
+colorscheme base16-oceanicnext
+syntax on
+
+set number relativenumber
 set laststatus=2
 set showtabline=2
 set noshowmode
 
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
+let g:ale_linters = { 'javascript': ['eslint'] }
+let g:ale_fixers = { 'javascript': ['eslint'] }
+let g:ale_sign_column_always = 1
 
-call plug#begin()
+nmap <silent> [W <Plug>(ale_first)
+nmap <silent> [w <Plug>(ale_previous)
+nmap <silent> ]w <Plug>(ale_next)
+nmap <silent> ]W <Plug>(ale_last)
 
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'chriskempson/base16-vim'
+" Use deoplete
+let g:deoplete#enable_at_startup = 1
 
-call plug#end()
+let g:tmux_navigator_no_mappings = 1
 
-colorscheme base16-oceanicnext
-
-set relativenumber
+nnoremap <silent> {Left-Mapping} :TmuxNavigateLeft<cr>
+nnoremap <silent> {Down-Mapping} :TmuxNavigateDown<cr>
+nnoremap <silent> {Up-Mapping} :TmuxNavigateUp<cr>
+nnoremap <silent> {Right-Mapping} :TmuxNavigateRight<cr>
+nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>

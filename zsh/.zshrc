@@ -26,5 +26,5 @@ else
 
   FZF_DEFAULT_COMMAND='rg --files'
 
-  PATH=/home/jonny/.local/bin:$PATH
+  PATH=~/.local/bin:~/.npm-global/bin:$PATH
 fi
