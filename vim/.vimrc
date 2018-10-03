@@ -1,7 +1,7 @@
 packadd minpac
 call minpac#init()
 
-call minpac#add('k-takata/minpac', {'type': 'opt})
+call minpac#add('k-takata/minpac', {'type': 'opt'})
 call minpac#add('scrooloose/nerdtree')
 call minpac#add('chriskempson/base16-vim')
 call minpac#add('tpope/vim-projectionist')
@@ -11,6 +11,7 @@ call minpac#add('sgur/vim-editorconfig')
 call minpac#add('pangloss/vim-javascript')
 call minpac#add('elzr/vim-json')
 call minpac#add('vim-airline/vim-airline')
+call minpac#add('vim-airline/vim-airline-themes')
 call minpac#add('Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins'})
 call minpac#add('carlitux/deoplete-ternjs')
 call minpac#add('Shougo/denite.nvim')
@@ -53,3 +54,7 @@ nnoremap <silent> {Down-Mapping} :TmuxNavigateDown<cr>
 nnoremap <silent> {Up-Mapping} :TmuxNavigateUp<cr>
 nnoremap <silent> {Right-Mapping} :TmuxNavigateRight<cr>
 nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
+
+let g:airline_theme='base16_oceanicnext'
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
