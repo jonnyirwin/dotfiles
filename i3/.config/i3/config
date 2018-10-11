@@ -199,8 +199,8 @@ hide_edge_borders both
 # finds out, if available)
 bar {
         i3bar_command i3bar -t
-        # status_command i3blocks -c ~/.config/i3/i3blocks.conf
-        status_command python /usr/lib/python3.7/site-packages/powerline/bindings/i3/powerline-i3.py
+        status_command i3blocks -c ~/.config/i3/i3blocks.conf
+        #status_command python /usr/lib/python3.7/site-packages/powerline/bindings/i3/powerline-i3.py
         font pango: FiraCode 10#System San Francisco Display 11
 	position top
 	colors {

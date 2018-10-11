@@ -34,6 +34,7 @@ set ignorecase
 set hlsearch
 
 au BufNewFile,BufReadPost *.stache set syntax=mustache
+au BufNewFile,BufReadPost Vagrantfile set syntax=ruby
 
 let g:ale_linters = { 'javascript': ['eslint'] }
 let g:ale_fixers = { 'javascript': ['eslint'] }
