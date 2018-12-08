@@ -199,8 +199,8 @@ hide_edge_borders both
 # finds out, if available)
 bar {
         i3bar_command i3bar -t
-        # status_command i3blocks -c ~/.config/i3/i3blocks.conf
-        status_command python /usr/lib/python3.7/site-packages/powerline/bindings/i3/powerline-i3.py
+        status_command i3blocks -c ~/.config/i3/i3blocks.conf
+        #status_command python /usr/lib/python3.7/site-packages/powerline/bindings/i3/powerline-i3.py
         font pango: FiraCode 10#System San Francisco Display 11
 	position top
 	colors {
@@ -233,9 +233,12 @@ default_border pixel
 #exec firefox
 #exec thunderbird
 
-#gaps inner 12
-#gaps outer 8 
+gaps inner 12
+gaps outer 2 
 
 exec --no-startup-id nm-applet
 
 bindsym $mod+l exec "i3lock -i /home/jonny/Pictures/Wallpapers/lock.png"
+
+#exec --no-startup-id /usr/lib/kdeconnectd
+#exec --no-startup-id indicator-kdeconnect
