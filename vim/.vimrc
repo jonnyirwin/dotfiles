@@ -37,6 +37,8 @@ set expandtab
 set noshowmode
 set ignorecase
 set hlsearch
+set undofile
+set undodir=~/.vim/undo
 
 au BufNewFile,BufReadPost *.stache set syntax=mustache
 
@@ -70,3 +72,4 @@ let g:user_emmet_settings = {
     \  },
   \ }
 
+let NERDTreeIgnore=['node_modules$[[dir]]', '\.git$[[dir]]']
