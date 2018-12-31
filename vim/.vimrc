@@ -17,6 +17,9 @@ call minpac#add('carlitux/deoplete-ternjs')
 call minpac#add('Shougo/denite.nvim')
 call minpac#add('christoomey/vim-tmux-navigator')
 call minpac#add('mustache/vim-mustache-handlebars')
+call minpac#add('mxw/vim-jsx')
+call minpac#add('mattn/emmet-vim')
+
 
 command! PackUpdate source $MYVIMRC | redraw | call minpac#update()
 command! PackClean source $MYVIMRC | call minpac#clean()
@@ -29,14 +32,15 @@ syntax on
 set number relativenumber
 set laststatus=2
 set showtabline=2
+set tabstop=2
+set shiftwidth=2
+set expandtab
 set noshowmode
 set ignorecase
 set hlsearch
 
 au BufNewFile,BufReadPost *.stache set syntax=mustache
 
-let g:ale_linters = { 'javascript': ['eslint'] }
-let g:ale_fixers = { 'javascript': ['eslint'] }
 let g:ale_sign_column_always = 1
 
 nmap <silent> [W <Plug>(ale_first)
@@ -58,3 +62,12 @@ nnoremap <silent> <C-\> :TmuxNavigatePrevious<cr>
 let g:airline_theme='base16_oceanicnext'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#ale#enabled = 1
+
+let g:user_emmet_leader_key='<Tab>'
+let g:user_emmet_settings = {
+  \  'javascript.jsx' : {
+    \    'extends' : 'jsx',
+    \  },
+  \ }
+
