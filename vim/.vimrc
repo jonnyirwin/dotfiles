@@ -20,7 +20,6 @@ call minpac#add('mustache/vim-mustache-handlebars')
 call minpac#add('mxw/vim-jsx')
 call minpac#add('mattn/emmet-vim')
 
-
 command! PackUpdate source $MYVIMRC | redraw | call minpac#update()
 command! PackClean source $MYVIMRC | call minpac#clean()
 
