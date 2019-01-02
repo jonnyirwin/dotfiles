@@ -23,6 +23,19 @@ call minpac#add('mattn/emmet-vim')
 command! PackUpdate source $MYVIMRC | redraw | call minpac#update()
 command! PackClean source $MYVIMRC | call minpac#clean()
 
+function s:MkNonExDir(file, buf)
+    if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
+        let dir=fnamemodify(a:file, ':h')
+        if !isdirectory(dir)
+            call mkdir(dir, 'p')
+        endif
+    endif
+endfunction
+augroup BWCCreateDir
+    autocmd!
+    autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
+  augroup END
+
 nnoremap <C-p> :<C-u>Denite file_rec<CR>
 
 colorscheme base16-oceanicnext
