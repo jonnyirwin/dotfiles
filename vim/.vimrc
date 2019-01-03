@@ -86,3 +86,6 @@ let g:user_emmet_settings = {
   \ }
 
 let NERDTreeIgnore=['node_modules$[[dir]]', '\.git$[[dir]]']
+
+command! Wq wq
+command! W w
