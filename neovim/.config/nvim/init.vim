@@ -1,42 +1,49 @@
-packadd minpac
-call minpac#init()
+call plug#begin('~/.local/share/nvim/plugged')
 
-call minpac#add('k-takata/minpac', {'type': 'opt'})
-call minpac#add('scrooloose/nerdtree')
-call minpac#add('chriskempson/base16-vim')
-call minpac#add('tpope/vim-projectionist')
-call minpac#add('tpope/vim-dispatch')
-call minpac#add('w0rp/ale')
-call minpac#add('sgur/vim-editorconfig')
-call minpac#add('pangloss/vim-javascript')
-call minpac#add('elzr/vim-json')
-call minpac#add('vim-airline/vim-airline')
-call minpac#add('vim-airline/vim-airline-themes')
-call minpac#add('Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins'})
-call minpac#add('carlitux/deoplete-ternjs')
-call minpac#add('Shougo/denite.nvim')
-call minpac#add('christoomey/vim-tmux-navigator')
-call minpac#add('mustache/vim-mustache-handlebars')
-call minpac#add('mxw/vim-jsx')
-call minpac#add('mattn/emmet-vim')
+Plug 'scrooloose/nerdtree'
+Plug 'chriskempson/base16-vim'
+Plug 'tpope/vim-projectionist'
+Plug 'w0rp/ale'
+Plug 'sgur/vim-editorconfig'
+Plug 'pangloss/vim-javascript', { 'for': ['javascript', 'javascript.jsx'] }
+Plug 'elzr/vim-json'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'carlitux/deoplete-ternjs', { 'for': ['javascript', 'javascript.jsx'] }
+Plug 'Shougo/denite.nvim'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'mxw/vim-jsx', { 'for': ['javascript', 'javascript.jsx'] }
+Plug 'ternjs/tern_for_vim', { 'for': ['javascript', 'javascript.jsx'] }
+Plug 'mattn/emmet-vim'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'othree/jspc.vim', { 'for': ['javascript', 'javascript.jsx'] }
 
-command! PackUpdate source $MYVIMRC | redraw | call minpac#update()
-command! PackClean source $MYVIMRC | call minpac#clean()
+call plug#end()
 
-"function s:MkNonExDir(file, buf)
-"    if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
-"        let dir=fnamemodify(a:file, ':h')
-"        if !isdirectory(dir)
-"            call mkdir(dir, 'p')
-"        endif
-"    endif
-"endfunction
-"augroup BWCCreateDir
-"    autocmd!
-"    autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
-"  augroup END
+nnoremap <C-p> :<C-u>Denite file/rec<CR>
+call denite#custom#var('file/rec', 'command',
+ \ ['rg', '--files', '--glob', '!.git'])
+call denite#custom#map(
+	      \ 'insert',
+ 	      \ '<C-j>',
+	      \ '<denite:move_to_next_line>',
+	      \ 'noremap'
+	      \)
+call denite#custom#map(
+	      \ 'insert',
+ 	      \ '<C-k>',
+ 	      \ '<denite:move_to_previous_line>',
+ 	      \ 'noremap'
+\)
 
-nnoremap <C-p> :<C-u>Denite file_rec<CR>
+let g:UltiSnipsSnippetsDir='~/.config/nvim/UltiSnips'
+let g:UltiSnipsExpandTrigger='<C-q>'
+let g:UltiSnipsListSnippet='<C-w>'
+let g:UltiSnipsJumpForwardTrigger='<C-b>'
+let g:UltiSnipsJumpBackwardTrigger='<C-z>'
+let g:UltiSnipsEditSplit="vertical"
 
 colorscheme base16-oceanicnext
 syntax on
@@ -52,10 +59,9 @@ set ignorecase
 set hlsearch
 set undofile
 set undodir=~/.vim/undo
+set noswapfile
 
 filetype plugin on
-
-au BufNewFile,BufReadPost *.stache set syntax=mustache
 
 let g:ale_sign_column_always = 1
 
@@ -66,9 +72,17 @@ nmap <silent> ]W <Plug>(ale_last)
 
 " Use deoplete
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#omni#functions = {}
+let g:deoplete#omni#functions.javascript = [
+  \ 'tern#Complete',
+  \ 'jspc#omni'
+\]
+let g:deoplete#sources = {}
+let g:deoplete#sources['javascript.jsx'] = ['file', 'ultisnips', 'tern']
+let g:tern#command = ['tern']
+let g:tern#arguments = ['--persistent']
 
 let g:tmux_navigator_no_mappings = 1
-
 nnoremap <silent> <C-h> :TmuxNavigateLeft<cr>
 nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
@@ -86,6 +100,7 @@ let g:user_emmet_settings = {
     \    'extends' : 'jsx',
     \  },
   \ }
+
 
 let NERDTreeIgnore=['node_modules$[[dir]]', '\.git$[[dir]]']
 
