@@ -1,3 +1,5 @@
+let g:powerline_loaded=1
+
 call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'scrooloose/nerdtree'

@@ -47,7 +47,7 @@
 ! uxrvt settings
 ! URxvt*transparent:		true
 ! URxvt*shading:			30
-URxvt*font:			xft:FuraCode Nerd Font Mono:size=12:style=Regular:antialias=true:hinting=true
+URxvt*font:			xft:Fira Code:size=12:style=Regular:antialias=true:hinting=true
 URxvt*mouseWhelScrollPage:	true
 URxvt*scrollBar:		false
 URxvt*letterSpace:	        -1
