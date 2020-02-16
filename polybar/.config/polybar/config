@@ -1,0 +1,212 @@
+[colors]
+transparent = #991b2b34
+base00 = ${xrdb:color0:#1b2b34}
+base01 = ${xrdb:color10:#343d46}
+base02 = ${xrdb:color11:#4f5b66}
+base03 = ${xrdb:color8:#65737e}
+base04 = ${xrdb:color12:#a7adba}
+base05 = ${xrdb:color7:#c0c5ce}
+base06 = ${xrdb:color13:#cdd3de}
+base07 = ${xrdb:color15:#d8dee9}
+base08 = ${xrdb:color1:#ec5f67}
+base09 = ${xrdb:color9:#f99157}
+base0A = ${xrdb:color3:#fac863}
+base0B = ${xrdb:color2:#99c794}
+base0C = ${xrdb:color6:#5fb3b3}
+base0D = ${xrdb:color4:#6699cc}
+base0E = ${xrdb:color5:#c594c5}
+base0F = ${xrdb:color14:#ab7967}
+
+[bar/bar1]
+bottom = true
+
+fixed-center = true
+
+width = 100%
+height = 35
+
+radius = 0.0
+
+background = #00000000
+foreground = ${colors.base00}
+
+line-size = 3
+line-color = #f00
+
+border-size = 0
+border-color = #00000000 
+
+padding-left = 0
+padding-right = 0
+
+module-margin-left = 0
+module-margin-right = 0
+
+font-0 = SF Pro Display:style=Medium:pixelsize=12;2
+font-1 = FontAwesome:pixelsize=14;2
+
+modules-left = i3
+modules-right = cpuicon cpu spacer memoryicon memory spacer pulseaudio spacer battery0 spacer battery1 spacer clockicon date spacer
+
+tray-position = right
+tray-padding = 0
+tray-background = ${colors.base00}
+
+dpi = 0
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+index-sort = true
+wrapping-scroll = false
+
+label-mode-padding = 4
+label-mode-foreground = ${colors.base00}
+label-mode-background = ${colors.base0B}
+
+label-focused = %index%
+label-focused-foreground = ${colors.base00}
+label-focused-background = ${colors.base0D}
+label-focused-padding = 3
+
+label-unfocused = %index%
+label-unfocused-foreground = ${self.label-focused-background}
+label-unfocused-background = ${self.label-focused-foreground}
+label-unfocused-padding = ${self.label-focused-padding}
+
+label-urgent = %index%
+label-urgent-foreground = ${self.label-focused-foreground}
+label-urgent-background = ${colors.base09}
+label-urgent-padding = ${self.label-focused-padding}
+
+[module/clockicon]
+type = custom/text
+content = 
+content-background = ${colors.base0D}
+content-foreground = ${colors.base00}
+content-padding = 2
+
+
+[module/date]
+type = internal/date
+
+interval = 1.0
+
+date = %d/%m/%Y
+time = %H:%M
+
+format = <label>
+format-foreground = ${colors.base05}
+format-background = ${colors.transparent}
+format-padding = 2
+
+label = %date% %time%
+
+[section/batterycommon]
+type = internal/battery
+adapter = AC
+time-format = %H:%M
+
+format-charging = <ramp-capacity><label-charging>
+label-charging = %percentage%% 
+label-charging-padding = 2
+label-charging-foreground = ${colors.base07}
+label-charging-background = ${colors.transparent}
+
+format-discharging = <ramp-capacity><label-discharging>
+label-discharging-padding = 2
+label-discharging-foreground = ${colors.base07}
+label-discharging-background = ${colors.transparent}
+
+format-full = <ramp-capacity><label-full>
+label-full = FULL 
+label-full-padding = 2
+label-full-foreground = ${colors.base07}
+label-full-background = ${colors.transparent}
+
+ramp-capacity-0 = 
+ramp-capacity-0-background = ${colors.base08}
+ramp-capacity-1 = 
+ramp-capacity-1-background = ${colors.base09}
+ramp-capacity-2 = 
+ramp-capacity-2-background = ${colors.base0A}
+ramp-capacity-3 = 
+ramp-capacity-3-background = ${colors.base0B}
+ramp-capacity-4 = 
+ramp-capacity-background = ${colors.base0B}
+ramp-capacity-padding = 2
+
+[module/battery1]
+inherit = section/batterycommon
+battery = BAT1
+full-at = 97
+label-discharging = %percentage%% (%time%)
+
+[module/battery0]
+inherit = section/batterycommon
+battery = BAT0
+full-at = 95
+label-discharging = %percentage%%
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+sink = alsa_output.pci-0000_00_1f.3.analog-stereo
+
+format-volume = <ramp-volume><label-volume>
+label-volume-foreground = ${colors.base06}
+label-volume-background = ${colors.transparent}
+label-volume-padding = 2
+
+format-muted = <ramp-volume><label-muted>
+label-muted = MUTE
+label-muted-foreground = ${colors.base06}
+label-muted-background = ${colors.transparent}
+label-muted-padding = 2
+
+ramp-volume-padding = 2
+ramp-volume-foreground = ${colors.base00}
+ramp-volume-0 = 
+ramp-volume-0-background = ${colors.base08}
+ramp-volume-1 = 
+ramp-volume-1-background = ${colors.base0D}
+ramp-volume-2 = 
+ramp-volume-2-background = ${colors.base0D}
+
+[module/spacer]
+type = custom/text
+content = aaa
+content-background = #00000000
+content-foreground = #00000000
+
+[module/memory]
+type = internal/memory
+label = %gb_used% / %gb_total%
+label-padding = 2
+label-foreground = ${colors.base07}
+label-background = ${colors.transparent}
+
+[module/memoryicon]
+type = custom/text
+content = 
+content-foreground = ${colors.base00}
+content-background = ${colors.base0A}
+content-padding = 2
+
+[module/cpu]
+type = internal/cpu
+interval = 0.5
+label = %percentage:3%%
+label-foreground = ${colors.base07}
+label-background = ${colors.transparent}
+label-padding = 2
+
+[module/cpuicon]
+type = custom/text
+content =  
+content-padding = 2
+content-foreground = ${colors.base00}
+content-background = ${colors.base0E}

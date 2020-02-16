@@ -1,4 +1,5 @@
 call plug#begin()
+
 Plug 'chriskempson/base16-vim'
 Plug 'scrooloose/nerdtree'
 Plug 'vim-airline/vim-airline'
@@ -6,10 +7,13 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'yuezk/vim-js'
 Plug 'maxmellon/vim-jsx-pretty'
+Plug 'leafgarland/typescript-vim'
+"Plug 'peitalin/vim-jsx-typescript'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'tpope/vim-projectionist'
+
 call plug#end()
 
 let base16colorspace=256
