@@ -37,6 +37,7 @@ export VISUAL=nvim
 export VIMCONFIG="$HOME/.config/nvim"
 export VIMDATA="$HOME/.local/share/nvim"
 export FZF_DEFAULT_COMMAND='rg --files'
+export QT_QPA_PLATFORMTHEME=gtk2
 
 alias vim=nvim
 alias vi=nvim
