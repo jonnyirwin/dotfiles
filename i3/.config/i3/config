@@ -193,7 +193,7 @@ bindsym $mod+r mode "resize"
 #        status_command i3status
 #}
 
-exec_always --no-startup-id feh --bg-scale /home/jonny/Pictures/Wallpaper/monkeyisland2a.png
+exec_always --no-startup-id feh --bg-scale /home/jonny/Pictures/Wallpapers/monkeyisland2a.png
 exec_always --no-startup-id /usr/bin/dunst
 exec --no-startup-id "picom -C"
 
@@ -208,5 +208,4 @@ exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
 bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
 
-bindsym $mod+z exec "i3lock -i /home/jonny/Pictures/Wallpaper/lock.png"
-
+bindsym $mod+z exec "i3lock -i /home/jonny/Pictures/Wallpapers/lock-x230.png"
