@@ -46,7 +46,7 @@ font-0 = SF Pro Display:style=Medium:pixelsize=12;2
 font-1 = FontAwesome:pixelsize=14;2
 
 modules-left = i3
-modules-right = cpuicon cpu spacer memoryicon memory spacer pulseaudio spacer battery0 spacer clockicon date spacer
+modules-right = cpuicon cpu spacer memoryicon memory spacer pulseaudio spacer battery0 spacer battery1 spacer clockicon date spacer
 
 tray-position = right
 tray-padding = 0
@@ -138,6 +138,12 @@ ramp-capacity-3-background = ${colors.base0B}
 ramp-capacity-4 = 
 ramp-capacity-background = ${colors.base0B}
 ramp-capacity-padding = 2
+
+[module/battery1]
+inherit = section batterycommon
+battery = BAT1
+full-at = 97
+label-discharging = %percentage%% (%time%)
 
 [module/battery0]
 inherit = section/batterycommon
