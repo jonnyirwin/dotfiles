@@ -33,6 +33,7 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 
 fi
 
+export TERMINAL=termite
 export VISUAL=nvim
 export VIMCONFIG="$HOME/.config/nvim"
 export VIMDATA="$HOME/.local/share/nvim"
