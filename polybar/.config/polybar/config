@@ -28,7 +28,7 @@ height = 35
 radius = 0.0
 
 background = #00000000
-foreground = ${colors.base00}
+foreground = #00000000
 
 line-size = 3
 line-color = #f00
@@ -42,8 +42,8 @@ padding-right = 0
 module-margin-left = 0
 module-margin-right = 0
 
-font-0 = SF Pro Display:style=Medium:pixelsize=12;2
-font-1 = FontAwesome:pixelsize=14;2
+font-0 = Inter:style=Regular:pixelsize=12;2
+font-1 = Font Awesome 5 Free:style=Solid:pixelsize=14;2
 
 modules-left = i3
 modules-right = cpuicon cpu spacer memoryicon memory spacer pulseaudio spacer battery0 spacer battery1 spacer clockicon date spacer
@@ -129,18 +129,24 @@ label-full-background = ${colors.transparent}
 
 ramp-capacity-0 = 
 ramp-capacity-0-background = ${colors.base08}
+ramp-capacity-0-foreground = ${colors.base00}
 ramp-capacity-1 = 
 ramp-capacity-1-background = ${colors.base09}
+ramp-capacity-1-foreground = ${colors.base00}
 ramp-capacity-2 = 
 ramp-capacity-2-background = ${colors.base0A}
+ramp-capacity-2-foreground = ${colors.base00}
 ramp-capacity-3 = 
 ramp-capacity-3-background = ${colors.base0B}
-ramp-capacity-4 = 
-ramp-capacity-background = ${colors.base0B}
+ramp-capacity-3-foreground = ${colors.base00}
+ramp-capacity-4 =  
+ramp-capacity-4-background = ${colors.base0B}
+ramp-capacity-4-foreground = ${colors.base00}
+
 ramp-capacity-padding = 2
 
 [module/battery1]
-inherit = section batterycommon
+inherit = section/batterycommon
 battery = BAT1
 full-at = 97
 label-discharging = %percentage%% (%time%)
@@ -206,7 +212,7 @@ label-padding = 2
 
 [module/cpuicon]
 type = custom/text
-content =  
+content =  
 content-padding = 2
 content-foreground = ${colors.base00}
 content-background = ${colors.base0E}
