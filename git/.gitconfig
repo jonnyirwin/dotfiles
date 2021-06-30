@@ -1,0 +1,10 @@
+[user]
+        name = Jonny Irwin
+        email = git@jbi.im
+        signingkey = B02BA0E451EA374E
+[commit]
+        gpgsign = true
+[init]
+	defaultBranch = main
+[core]
+	editor = vim
