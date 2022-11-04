@@ -1,4 +1,2 @@
 tmux-*
-vim/.vim/pack/
-neovim/.config/nvim/pack/
-vim/.vim/undo/
+packer_compiled.lua
