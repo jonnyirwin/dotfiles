@@ -1,5 +1,5 @@
 vim.opt.title = true
-vim.opt.guicursor = ""
+--vim.opt.guicursor = ""
 vim.opt.cursorline = true
 
 vim.opt.number = true
