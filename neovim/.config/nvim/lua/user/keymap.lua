@@ -7,6 +7,10 @@ vim.g.maplocalleader = " "
 
 -- Normal mode
 keymap("n", "<leader>e", ":NvimTreeToggle<cr>", opts)
+keymap("n", "<C-d>", "<c-d>zz", opts)
+keymap("n", "<C-u>", "<C-u>zz", opts)
+keymap("n", "n", "nzzzv", opts)
+keymap("n", "N", "Nzzzv", opts)
 
 -- Window navigation
 keymap("n", "<C-h>", "<C-w>h", opts)
