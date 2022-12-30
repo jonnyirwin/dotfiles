@@ -1,4 +1,11 @@
-vim.cmd [[packadd packer.nvim]]
+-- Install packer
+local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
+local is_bootstrap = false
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+  is_bootstrap = true
+  vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
+  vim.cmd [[packadd packer.nvim]]
+end
 
 local status_ok, packer = pcall(require, "packer")
 
@@ -49,12 +56,20 @@ return packer.startup(function(use)
 
 	-- Telescope
 	use 'nvim-telescope/telescope.nvim'
+	use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make', cond = vim.fn.executable 'make' == 1 }
 
 	-- Treesitter
 	use {
 		'nvim-treesitter/nvim-treesitter',
 		run = ':TSUpdate',
 	}
+	use {
+		'nvim-treesitter/nvim-treesitter-textobjects',
+		after = 'nvim-treesitter'
+	}
 	use 'JoosepAlviste/nvim-ts-context-commentstring'
+
+	-- git
+	use 'tpope/vim-fugitive'
 
 end)
