@@ -241,4 +241,7 @@ default_border none
 bindsym XF86MonBrightnessUp exec light -A 5
 bindsym XF86MonBrightnessDown exec light -U 5
 
+gaps inner 5
+
 include /etc/sway/config.d/*
+
