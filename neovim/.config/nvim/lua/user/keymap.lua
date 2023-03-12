@@ -7,7 +7,7 @@ vim.g.maplocalleader = " "
 
 -- Normal mode
 keymap("n", "<leader>e", ":NvimTreeToggle<cr>", opts)
-keymap("n", "<C-d>", "<c-d>zz", opts)
+keymap("n", "<C-d>", "<C-d>zz", opts)
 keymap("n", "<C-u>", "<C-u>zz", opts)
 keymap("n", "n", "nzzzv", opts)
 keymap("n", "N", "Nzzzv", opts)
