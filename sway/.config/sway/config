@@ -243,7 +243,7 @@ bindsym XF86MonBrightnessDown exec light -U 5
 
 #gaps inner 5
 
-bindsym $mod+Shift+d exec "echo 'swaymsg output eDP-1 disable\nswaymsg output eDP-1 enable\nswaymsg output HDMI-A-2 mode 2560x1440\nswaymsg output HDMI-A-2 mode 1920x1080\nswaymsg output HDMI-A-2 mode 3840x2160' | wofi -d | xargs -I {} kitty sh -c {}"
+bindsym $mod+Shift+d exec "echo 'swaymsg output eDP-1 scale 1.5\nswaymsg output eDP-1 scale 1\nswaymsg output eDP-1 disable\nswaymsg output eDP-1 enable\nswaymsg output HDMI-A-2 mode 2560x1440\nswaymsg output HDMI-A-2 mode 1920x1080\nswaymsg output HDMI-A-2 mode 3840x2160' | wofi -d | xargs -I {} kitty sh -c {}"
 
 include /etc/sway/config.d/*
 
