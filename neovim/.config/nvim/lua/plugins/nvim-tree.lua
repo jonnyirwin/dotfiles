@@ -4,7 +4,7 @@ return {
 		lazy = true,
 		config = true,
 		keys = {
-			{ "<leader>e", ":NvimTreeToggle<cr>", desc = "NvimTree" }			
+			{ "<leader>e", ":NvimTreeToggle<cr>", desc = "NvimTree" }
 		}
 	}
 }
