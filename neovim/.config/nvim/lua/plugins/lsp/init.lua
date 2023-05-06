@@ -9,24 +9,25 @@ return {
 		},
 		run = ":MasonUpdate",
 		config = function()
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			require("mason").setup()
-			require("mason-lspconfig").setup()
-			require("neodev").setup()
+			local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+			local lsp_attach = function(client, bufnr)
+			end
 			local lspconfig = require("lspconfig")
-			lspconfig.tsserver.setup({
-				capabilities = capabilities
-			})
-			lspconfig.lua_ls.setup({
-				capabilities = capabilities,
-				settings = {
-					Lua = {
-						completion = {
-							callSnippet = "Replace"
-						}
-					}
+			require("mason-lspconfig").setup({
+				ensure_installed = {
+					"tsserver"
 				}
 			})
+			require("mason-lspconfig").setup_handlers({
+				function(server_name)
+					lspconfig[server_name].setup({
+						on_attach = lsp_attach,
+						capabilities = lsp_capabilities
+					})
+				end
+			})
+			require("neodev").setup()
 		end
 	}
 }
