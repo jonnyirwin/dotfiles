@@ -15,8 +15,5 @@ return {
 				},
 			}
 		end,
-		keys = {
-			{ "<leader>pf", ":lua vim.lsp.buf.format()<CR>", desc = "Format" },
-		},
 	},
 }
