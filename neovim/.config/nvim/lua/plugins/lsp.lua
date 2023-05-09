@@ -7,7 +7,7 @@ return {
 			"hrsh7th/cmp-nvim-lsp",
 			"folke/neodev.nvim",
 		},
-		run = ":MasonUpdate",
+		build = ":MasonUpdate",
 		keys = {
 			{ "gD", ":lua vim.lsp.buf.declaration()<CR>", desc = "Go to declaration" },
 			{ "gd", ":lua vim.lsp.buf.definition()<CR>", desc = "" },

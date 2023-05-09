@@ -1,7 +1,7 @@
 return {
 	{
 		"jose-elias-alvarez/null-ls.nvim",
-		dependenies = {
+		dependencies = {
 			"nvim-lua/plenary.nvim",
 		},
 		opts = function()
