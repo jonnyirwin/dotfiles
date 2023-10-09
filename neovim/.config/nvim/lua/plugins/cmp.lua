@@ -33,12 +33,12 @@ return {
 					fields = { "kind", "abbr", "menu" },
 					format = function(entry, vim_item)
 						local kind_icons = {
-							Text = "",
+							Text = "",
 							Method = "m",
 							Function = "λ",
 							Constructor = "",
 							Field = "",
-							Variable = "",
+							Variable = "",
 							Class = "",
 							Interface = "",
 							Module = "",
@@ -48,16 +48,16 @@ return {
 							Enum = "",
 							Keyword = "",
 							Snippet = "",
-							Color = "",
-							File = "",
+							Color = "",
+							File = "",
 							Reference = "",
-							Folder = "",
+							Folder = "",
 							EnumMember = "",
-							Constant = "",
+							Constant = "",
 							Struct = "",
 							Event = "",
 							Operator = "",
-							TypeParameter = "",
+							TypeParameter = " "
 						}
 						vim_item.kind = string.format("%s", kind_icons[vim_item.kind])
 						vim_item.menu = ({
