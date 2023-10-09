@@ -49,6 +49,7 @@ window#waybar.hidden {
 #tray,
 #mode,
 #idle_inhibitor,
+#custom-keyboard-battery,
 #mpd {
     padding: 0 10px;
     color: #ffffff;

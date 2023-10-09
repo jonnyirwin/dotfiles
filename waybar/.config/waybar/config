@@ -1,47 +1,67 @@
 {
-    "layer": "top",
-    "position": "top",
-    "modules-left": ["sway/workspaces", "sway/mode"],
-    "modules-center": ["clock", "idle_inhibitor"],
-    "modules-right": ["pulseaudio", "bluetooth", "battery", "tray"],
-    "sway/window": {
-        "max-length": 50
-    },
-    "battery": {
-    	"bat": "BAT1",
-        "format": "🔋 {capacity}%",
-    },
-    "clock": {
-        "format": "🕰️ {:%a, %d. %b  %H:%M}"
-    },
-    "bluetooth": {
-	"format": "🦷 {status}", 
-	"format-connected": " {num_connections} connected",
-	"tooltip-format": "{controller_alias}\t{controller_address}",
-	"tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
-	"tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-    },
-    "idle_inhibitor": {
-        "format":  "{icon}", 
-	"format-icons": {
-	    "activated": "☕",
-	    "deactivated": "💤"
-	}
-    },
-    "pulseaudio": {
-        "format": "{icon} {volume}%",
+  "layer": "top",
+  "position": "top",
+  "modules-left": [
+    "sway/workspaces",
+    "sway/mode"
+  ],
+  "modules-center": [
+    "clock",
+    "idle_inhibitor"
+  ],
+  "modules-right": [
+		"custom/keyboard-battery",
+    "pulseaudio",
+    "bluetooth",
+    "battery",
+    "tray"
+  ],
+  "sway/window": {
+    "max-length": 50
+  },
+  "battery": {
+    "bat": "BAT1",
+    "format": "🔋 {capacity}%"
+  },
+  "clock": {
+    "format": "🕰️ {:%a, %d. %b  %H:%M}"
+  },
+  "bluetooth": {
+    "format": "🦷 {status}",
+    "format-connected": " {num_connections} connected",
+    "tooltip-format": "{controller_alias}\t{controller_address}",
+    "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}"
+  },
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+      "activated": "☕",
+      "deactivated": "💤"
+    }
+  },
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
     "format-bluetooth": "{icon} {volume}%",
     "format-muted": "",
     "format-icons": {
-        "headphone": "",
-        "hands-free": "",
-        "headset": "",
-        "phone": "",
-        "portable": "",
-        "car": "",
-        "default": ["", ""]
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": [
+        "",
+        ""
+      ]
     },
     "scroll-step": 1,
     "on-click": "pavucontrol"
-    }
+  },
+	"custom/keyboard-battery": {
+		"exec": "upower -i /org/freedesktop/UPower/devices/keyboard_dev_EF_4A_E2_5B_42_72 | grep percentage | grep -Poe [0-9]+",
+		"format": "  {}%",
+		"interval": 60
+	}
 }
