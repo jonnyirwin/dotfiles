@@ -2,12 +2,8 @@
 
 return {
   {
-    "blink-cmp/blink-cmp",
+    "Saghen/blink.cmp",
     dependencies = {
-      "blink-cmp/cmp-lsp",
-      "blink-cmp/cmp-buffer",
-      "blink-cmp/cmp-path",
-      "blink-cmp/cmp-luasnip",
       "L3MON4D3/LuaSnip",
       "rafamadriz/friendly-snippets",
     },
