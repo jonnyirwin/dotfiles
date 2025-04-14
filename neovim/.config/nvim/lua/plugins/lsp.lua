@@ -24,7 +24,7 @@
             "lua_ls",
             "ts_ls",
             "csharp_ls",
-            "ruby_ls",     -- Changed from solargraph to ruby_ls
+            "ruby_lsp",
             "pyright",
             "html",
             "cssls",
@@ -96,7 +96,7 @@
         local servers = { 
         "ts_ls", 
         "csharp_ls", 
-        "ruby_ls",     -- Changed from solargraph to ruby_ls
+        "ruby_lsp",
         "pyright", 
         "html", 
         "cssls", 

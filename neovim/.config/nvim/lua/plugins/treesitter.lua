@@ -27,7 +27,6 @@ return {
           "bash",
           "yaml",
           "embedded_template", -- For ERB files
-          "haml",          -- Added HAML support
         },
       
         -- Install parsers synchronously (only applied to `ensure_installed`)
