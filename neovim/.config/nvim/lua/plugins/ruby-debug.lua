@@ -56,9 +56,9 @@ return {
     end
   },
   
-  -- Ruby Pry snippets and highlighting
+  -- Ruby  snippets and highlighting
   {
-    "janko-m/vim-pry",
+    "BlakeWilliams/vim-pry",
     ft = { "ruby" },
     config = function()
       -- Add pry require snippet

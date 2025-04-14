@@ -26,8 +26,8 @@ return {
           "markdown",
           "bash",
           "yaml",
-          "haml",          -- Added HAML support
           "embedded_template", -- For ERB files
+          "haml",          -- Added HAML support
         },
       
         -- Install parsers synchronously (only applied to `ensure_installed`)
