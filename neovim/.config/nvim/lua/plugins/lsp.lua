@@ -101,22 +101,12 @@
         "html", 
         "cssls", 
         "jsonls",
-        -- Added functional programming language servers
-        "haskell_language_server",
         "elmls",
         "elixirls",
       }
       
       -- Language-specific settings
       local server_settings = {
-        haskell_language_server = {
-          settings = {
-            haskell = {
-              formattingProvider = "stylish-haskell",
-              checkProject = true,
-            }
-          }
-        },
         elmls = {
           settings = {
             elm = {
