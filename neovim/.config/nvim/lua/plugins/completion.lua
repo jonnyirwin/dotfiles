@@ -1,14 +1,17 @@
 return {
   'saghen/blink.cmp',
-  version = '1.*',
-  -- !Important! Make sure you're using the latest release of LuaSnip
-  -- `main` does not work at the moment
-  dependencies = { 'L3MON4D3/LuaSnip', version = 'v2.*' },
+  version = '1.1.1',
+  dependencies = { 'rafamadriz/friendly-snippets',
+		{
+			'L3NON4D3/LuaSnip',
+			tag = "v2.3.0",
+			run = 'make install_jsregexp'
+		}
+	},
   opts = {
     snippets = { preset = 'luasnip' },
-    -- ensure you have the `snippets` source (enabled by default)
     sources = {
       default = { 'lsp', 'path', 'snippets', 'buffer' },
-    },
+    }
   }
 }
