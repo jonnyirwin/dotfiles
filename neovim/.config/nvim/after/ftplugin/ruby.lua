@@ -3,5 +3,5 @@ vim.bo.tabstop = 2
 vim.bo.shiftwidth = 2
 vim.bo.softtabstop = 2
 
-vim.bo.textwidth = 100
-vim.wo.colorcolumn = "100"
+vim.bo.textwidth = 120
+vim.wo.colorcolumn = "120"
