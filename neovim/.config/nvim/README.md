@@ -86,9 +86,9 @@ lib/nvim/
 
 ## Keybindings
 
-For a complete list of keybindings, see the [KEYBINDINGS.md](./KEYBINDINGS.md) file.
+> Note: Space is the leader key (`<leader>`)
 
-Some key namespaces for common operations:
+### Key Namespaces
 
 | Prefix          | Purpose                      |
 |-----------------|------------------------------|
@@ -109,6 +109,155 @@ Some key namespaces for common operations:
 | `<leader>o`     | Oil File Explorer            |
 | `<leader>v`     | Vimux                        |
 | `<leader>m`     | Manage/Motion                |
+
+### File Navigation
+
+- `<leader>pv` - Open Oil file explorer
+- `-` - Open parent directory in Oil
+- `<leader>pf` - Open Oil in float window
+- `<leader>os` - Open Oil in horizontal split
+- `<leader>o|` - Open Oil in vertical split
+
+### Search
+
+- `<leader>ff` - Find files
+- `<leader>fg` - Find text (grep)
+- `<leader>fb` - Find buffers
+- `<leader>fh` - Find help
+- `<leader>fo` - Find recent files
+- `<leader>fc` - Find current word
+- `<leader>fd` - Find diagnostics
+- `<leader>fs` - Find document symbols
+
+### Windows & Tabs
+
+- `<C-h/j/k/l>` - Navigate between windows/tmux panes
+- `<leader>wv` - Split window vertically
+- `<leader>wh` - Split window horizontally
+- `<leader>we` - Make splits equal size
+- `<leader>wx` - Close current split
+- `<leader>ao` - Open new tab
+- `<leader>ax` - Close current tab
+- `<leader>an` - Next tab
+- `<leader>ap` - Previous tab
+
+### Buffers (with barbar)
+
+- `Alt+,/.` - Previous/next buffer
+- `Alt+1-9` - Go to buffer by position
+- `Alt+c` - Close buffer
+- `<leader>bc` - Close buffer
+- `<leader>bp` - Previous buffer
+- `<leader>bn` - Next buffer
+- `<leader>bd` - Delete buffer
+
+### Code
+
+- `gd` - Go to definition
+- `gr` - Go to references
+- `gR` - List references (Trouble)
+- `K` - Show hover information
+- `<leader>ca` - Code actions
+- `<leader>cf` - Format code
+- `<leader>cl` - Refresh diagnostics
+- `<leader>rn` - Rename symbol
+
+### Git
+
+- `<leader>gg` - Git status (fugitive)
+- `<leader>gl` - LazyGit (terminal UI)
+- `<leader>gb` - Git blame
+- `<leader>gc` - Git commit
+- `<leader>gd` - Git diff/toggle deleted
+- `<leader>gp` - Git push
+- `<leader>hs` - Stage hunk
+- `<leader>hr` - Reset hunk
+- `<leader>hS` - Stage buffer
+- `<leader>hp` - Preview hunk
+- `]c/[c` - Next/previous change
+
+### Diagnostics (Trouble)
+
+- `<leader>dd` - Toggle Trouble
+- `<leader>dw` - Workspace diagnostics
+- `<leader>df` - Document diagnostics
+- `<leader>dq` - Quickfix list
+- `<leader>dl` - Location list
+
+### Debugging
+
+- `<leader>db` - Toggle breakpoint
+- `<leader>dc` - Continue debugging
+- `<leader>ds` - Step over
+- `<leader>di` - Step into
+- `<leader>do` - Step out
+
+### Folding
+
+- `za` - Toggle current fold
+- `zR` - Open all folds
+- `zM` - Close all folds
+- `zr` - Open one level of folds
+- `zm` - Close one level of folds
+- `zp` - Peek inside a fold
+
+### UI Toggles
+
+- `<leader>uu` - Toggle undotree
+- `<leader>uh` - Clear search highlights
+- `<leader>ub` - Toggle line blame
+
+### Editor Features
+
+- `<leader>is` - Sort functions alphabetically
+- `<leader>iS` - Sort treesitter nodes
+- `<leader>s` - Sort selected lines (visual mode)
+
+### Marks
+
+- `m[a-z]` - Set lowercase mark
+- `m[A-Z]` - Set global mark
+- `'[a-z]` - Jump to lowercase mark
+- `'[A-Z]` - Jump to global mark
+- `dm[a-z]` - Delete mark
+
+### Copilot
+
+- `<leader>cp` - Copilot panel
+- `<leader>cc` - Copilot chat
+- `<leader>ce` - Explain code
+- `<leader>ct` - Generate tests
+- `<leader>cr` - Review code
+- `<leader>cR` - Refactor code
+- `<leader>ci` - Edit code based on instructions
+- `Alt+l/j/k` - Accept suggestion/line/word
+
+### Terminal
+
+- `<leader>xf` - Float terminal
+- `<leader>xh` - Horizontal terminal
+- `<leader>xv` - Vertical terminal
+- `<C-\>` - Toggle terminal
+- `<esc>/jk` - Exit terminal mode
+
+### Rails Development
+
+- `<leader>rs` - Start Rails server
+- `<leader>rc` - Rails console
+- `<leader>rd` - Debug nearest RSpec test
+- `<leader>rD` - Debug all tests in file
+- `<leader>rv` - Controller/View toggle
+- `<leader>rV` - View Rails routes
+- `<leader>rS` - View database schema
+- `<leader>r` - Rails commands
+
+### Testing
+
+- `<leader>tf` - Test file
+- `<leader>tn` - Test nearest
+- `<leader>ts` - Test suite
+- `<leader>tl` - Test last
+- `<leader>tv` - Test visit
 
 ## Treesitter Text Objects
 

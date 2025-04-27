@@ -41,6 +41,4 @@ opt.undofile = true
 
 opt.scrolloff = 8
 
-vim.schedule(function()
-	opt.clipboard = 'unnamedplus'
-end)
+opt.clipboard = 'unnamedplus'
