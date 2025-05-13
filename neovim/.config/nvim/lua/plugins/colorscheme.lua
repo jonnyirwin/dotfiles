@@ -16,5 +16,14 @@ return {
       })
 
       vim.cmd("colorscheme catppuccin")
+			vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
+			vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
+			vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'none' })
+			vim.api.nvim_set_hl(0, 'Pmenu', { bg = 'none' })
+			vim.api.nvim_set_hl(0, 'Terminal', { bg = 'none' })
+			vim.api.nvim_set_hl(0, 'EndOfBuffer', { bg = 'none' })
+			vim.api.nvim_set_hl(0, 'FoldColumn', { bg = 'none' })
+			vim.api.nvim_set_hl(0, 'Folded', { bg = 'none' })
+			vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'none' })
     end
   }
