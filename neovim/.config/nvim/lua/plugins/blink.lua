@@ -22,9 +22,9 @@ return {
             ['<C-u>'] = { 'scroll_documentation_up', 'fallback' },
             ['<C-d>'] = { 'scroll_documentation_down', 'fallback' },
         },
-				sources = {
-					default = { 'lsp', 'path', 'snippets', 'buffer' },
-				},
+        sources = {
+            default = { 'lsp', 'path', 'snippets', 'buffer' },
+        },
         completion = { 
             documentation = { auto_show = true },
             menu = {
@@ -38,5 +38,5 @@ return {
         fuzzy = { implementation = 'prefer_rust_with_warning' },
     },
     opts_extend = { "sources.default" },
-		config = true,
-	}
+    config = true,
+}

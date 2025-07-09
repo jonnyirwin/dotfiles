@@ -44,8 +44,12 @@ return {
 					}
 				})
 
+				-- Setup capabilities for blink.cmp
+				local capabilities = require('blink.cmp').get_lsp_capabilities()
+
 				local lspconfig = require("lspconfig")
 				lspconfig.ruby_lsp.setup({
+					capabilities = capabilities,
 					settings = {
 						rubyLsp = {
 							enabledFeatures = {
@@ -55,6 +59,10 @@ return {
 								"semanticHighlighting",
 								"formatting",
 								"codeActions",
+								"completion",
+								"hover",
+								"documentHighlight",
+								"inlayHint",
 							},
 						},
 					},
@@ -67,7 +75,9 @@ return {
 						vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, bufopts)
 					end,
 				})
-				lspconfig.ts_ls.setup({})
+				lspconfig.ts_ls.setup({
+					capabilities = capabilities,
+				})
 
 				vim.keymap.set("n", "<leader>lD", vim.lsp.buf.declaration, { desc = "Declaration" })
 				vim.keymap.set("n", "<leader>ld", vim.lsp.buf.definition, { desc = "Definition" })

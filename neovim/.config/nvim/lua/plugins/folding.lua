@@ -6,11 +6,21 @@ return {
     },
     event = "BufReadPost",
     config = function()
-        -- Enable fold column
+        -- Enable fold column with triangle icons
         vim.o.foldcolumn = '1'
         vim.o.foldlevel = 99
         vim.o.foldlevelstart = 99
         vim.o.foldenable = true
+        
+        -- Set fold column icons to triangles
+        vim.opt.fillchars = {
+            foldopen = "▼",
+            foldclose = "►", 
+            fold = " ",
+            foldsep = " ",
+            diff = "╱",
+            eob = " ",
+        }
 
         -- Use treesitter and LSP for folding
         require('ufo').setup({
