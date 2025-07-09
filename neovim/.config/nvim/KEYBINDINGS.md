@@ -19,18 +19,17 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 | `<leader>i`     | Swap/Sort                     |
 | `<leader>u`     | UI Toggles                    |
 | `<leader>h`     | Hunks (Git)                   |
-| `<leader>p`     | Project/Files                 |
-| `<leader>o`     | Oil File Explorer             |
+| `<leader>e`     | File Explorer (Oil)           |
+| `<leader>l`     | LSP                           |
 | `<leader>v`     | Vimux                         |
 | `<leader>m`     | Manage/Motion                 |
 
 ## File Navigation
 
-- `<leader>pv` - Open Oil file explorer
+- `<leader>e` - Open Oil file explorer (float)
 - `-` - Open parent directory in Oil
-- `<leader>pf` - Open Oil in float window
-- `<leader>os` - Open Oil in horizontal split
-- `<leader>o|` - Open Oil in vertical split
+- `<leader>eh` - Oil horizontal split
+- `<leader>ev` - Oil vertical split
 
 ## Window Management
 
@@ -49,14 +48,12 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 
 ## Find with Telescope
 
-- `<leader>ff` - Find files
-- `<leader>fg` - Find text (grep)
+- `<leader>ff` - Find files (including hidden)
+- `<leader>fg` - Find text (grep, including hidden)
 - `<leader>fb` - Find buffers
 - `<leader>fh` - Find help
-- `<leader>fo` - Find recent files
-- `<leader>fc` - Find current word
-- `<leader>fd` - Find diagnostics
-- `<leader>fs` - Find document symbols
+- `<leader>fa` - Find all files (ignore gitignore)
+- `<leader>fd` - Find files in current directory
 
 ## Git
 
@@ -73,37 +70,44 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 
 ## Code & LSP
 
-- `<leader>cf` - Format buffer
-- `<leader>cl` - Refresh diagnostics
+- `<leader>lf` - Format buffer
+- `<leader>lD` - Go to declaration
+- `<leader>ld` - Go to definition
+- `<leader>lh` - Show hover information
+- `<leader>li` - Go to implementation
+- `<leader>ls` - Show signature help
+- `<leader>lr` - Show references
+- `<leader>lc` - Rename symbol
+- `<leader>la` - Code actions
+- `<leader>lj` - Next diagnostic
+- `<leader>lk` - Previous diagnostic
 - `gd` - Go to definition
 - `gr` - Go to references
-- `gR` - List references
 - `K` - Show hover information
-- `<leader>ca` - Code actions
-- `<leader>rn` - Rename symbol
 
 ## Copilot
 
-- `<leader>cp` - Copilot panel
-- `<leader>cc` - Copilot chat
-- `<leader>ce` - Explain code
-- `<leader>ct` - Generate tests
-- `<leader>cr` - Review code
-- `<leader>cR` - Refactor code
-- `<leader>ci` - Edit with instructions
+- `<leader>cc` - Copilot chat toggle
+- `<leader>cm` - Copilot chat models
+- `<leader>ce` - Copilot enable
+- `<leader>cd` - Copilot disable
+- `<leader>cs` - Copilot setup
+- `<leader>c?` - Copilot status
 
 ## Diagnostics & Debug
 
-- `<leader>dd` - Toggle Trouble
-- `<leader>dw` - Workspace diagnostics
-- `<leader>df` - Document diagnostics
-- `<leader>dq` - Quickfix list
-- `<leader>dl` - Location list
+- `<leader>dr` - Refresh diagnostics
 - `<leader>db` - Toggle breakpoint
+- `<leader>dB` - Set conditional breakpoint
 - `<leader>dc` - Continue debugging
 - `<leader>ds` - Step over
 - `<leader>di` - Step into
 - `<leader>do` - Step out
+- `<leader>dt` - Terminate debugging
+- `<leader>du` - Toggle debug UI
+- `<leader>de` - Evaluate expression
+- `<leader>dl` - Run last debug session
+- `<leader>dr` - Open debug REPL
 
 ## Testing
 
@@ -111,7 +115,9 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 - `<leader>tn` - Test nearest
 - `<leader>ts` - Test suite
 - `<leader>tl` - Test last
-- `<leader>tv` - Test visit
+- `<leader>tv` - Test output panel
+- `<leader>tS` - Test summary
+- `<leader>to` - Test output
 
 ## Terminal
 
@@ -139,13 +145,17 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 
 ## Rails/Ruby
 
-- `<leader>rd` - Debug nearest RSpec test
-- `<leader>rD` - Debug file RSpec tests
-- `<leader>rs` - Start Rails server
-- `<leader>rc` - Rails console
 - `<leader>rv` - Controller/View toggle
 - `<leader>rV` - View Rails routes
 - `<leader>rS` - View database schema
+- `<leader>rm` - Go to model
+- `<leader>rg` - Go to migration
+- `<leader>rt` - Run Rake task
+- `<leader>rc` - Rails console (terminal)
+- `<leader>rs` - Rails server (terminal)
+- `<leader>rd` - Debug nearest RSpec test
+- `<leader>rD` - Debug RSpec file
+- `<leader>rC` - Go to controller (HAML files only)
 
 ## Functional Languages
 

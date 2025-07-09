@@ -1,6 +1,33 @@
 return {
   "folke/trouble.nvim",
-  opts = {}, -- for default options, refer to the configuration section for custom setup.
+  opts = {
+    -- Configure Trouble to be more stable
+    auto_close = false,
+    auto_open = false,
+    auto_preview = true,
+    auto_refresh = true,
+    auto_jump = false,
+    focus = false,
+    restore = true,
+    follow = true,
+    indent_guides = true,
+    max_items = 200,
+    multiline = true,
+    pinned = false,
+    warn_no_results = true,
+    open_no_results = false,
+    win = {
+      type = "split",
+      relative = "editor",
+      size = 0.3,
+      position = "bottom",
+    },
+    -- Add safer cursor handling
+    preview = {
+      type = "main",
+      scratch = true,
+    },
+  },
   cmd = "Trouble",
   keys = {
     {

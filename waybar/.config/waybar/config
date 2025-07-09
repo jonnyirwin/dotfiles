@@ -1,47 +1,83 @@
 {
     "layer": "top",
     "position": "top",
-    "modules-left": ["sway/workspaces", "sway/mode"],
-    "modules-center": ["clock", "idle_inhibitor"],
-    "modules-right": ["pulseaudio", "bluetooth", "battery", "tray"],
-    "sway/window": {
+    "modules-left": ["sway/workspaces"],
+    "modules-center": ["custom/music", "custom/pomodoro"],
+    "modules-right": ["pulseaudio", "backlight", "battery", "clock", "tray", "custom/lock", "custom/power", "idle_inhibitor"],
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "sort-by-name": true,
+        "format": " {name} ",
+        "format-icons": {
+            "default": ""
+        }
+    },
+    "tray": {
+        "icon-size": 21,
+        "spacing": 10
+    },
+    "custom/music": {
+        "format": "  {}",
+        "escape": true,
+        "interval": 5,
+        "tooltip": false,
+        "exec": "playerctl metadata --format='{{ title }}'",
+        "on-click": "playerctl play-pause",
         "max-length": 50
     },
-    "battery": {
-    	"bat": "BAT1",
-        "format": "🔋 {capacity}%",
+    "custom/pomodoro": {
+        "format": "{}",
+        "return-type": "json",
+        "interval": 1,
+        "exec": "~/.config/waybar/scripts/pomodoro.sh display",
+        "on-click": "~/.config/waybar/scripts/pomodoro-menu.sh",
+        "escape": true
     },
     "clock": {
-        "format": "🕰️ {:%a, %d. %b  %H:%M}"
+        "timezone": "Europe/Isle_of_Man",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format-alt": " {:%Y-%m-%d}",
+        "format": " {:%H:%M}"
     },
-    "bluetooth": {
-	"format": "🦷 {status}", 
-	"format-connected": " {num_connections} connected",
-	"tooltip-format": "{controller_alias}\t{controller_address}",
-	"tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
-	"tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+    "backlight": {
+        "device": "intel_backlight",
+        "format": "{icon} {percent}%",
+        "format-icons": ["󰃞", "󰃟", "󰃠"]
     },
-    "idle_inhibitor": {
-        "format":  "{icon}", 
-	"format-icons": {
-	    "activated": "☕",
-	    "deactivated": "💤"
-	}
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-plugged": "󱐥 {capacity}%",
+        "format-alt": "{icon}",
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
     },
     "pulseaudio": {
         "format": "{icon} {volume}%",
-    "format-bluetooth": "{icon} {volume}%",
-    "format-muted": "",
-    "format-icons": {
-        "headphone": "",
-        "hands-free": "",
-        "headset": "",
-        "phone": "",
-        "portable": "",
-        "car": "",
-        "default": ["", ""]
+        "format-muted": "󰝟",
+        "format-icons": {
+            "default": ["󰕿", "󰖀", "󰕾"]
+        },
+        "on-click": "pavucontrol"
     },
-    "scroll-step": 1,
-    "on-click": "pavucontrol"
+    "custom/lock": {
+        "tooltip": false,
+        "on-click": "sh -c '(sleep 0.5s; swaylock --grace 0)' & disown",
+        "format": "󰍁"
+    },
+    "custom/power": {
+        "tooltip": false,
+        "on-click": "wlogout &",
+        "format": "󰐥"
+    },
+    "idle_inhibitor": {
+        "format": "{icon} ",
+        "format-icons": {
+            "activated": "󰅶",
+            "deactivated": "󰾪"
+        }
     }
 }

@@ -45,7 +45,28 @@ return {
 				})
 
 				local lspconfig = require("lspconfig")
-				lspconfig.ruby_lsp.setup({})
+				lspconfig.ruby_lsp.setup({
+					settings = {
+						rubyLsp = {
+							enabledFeatures = {
+								"documentSymbols",
+								"foldingRanges",
+								"selectionRanges",
+								"semanticHighlighting",
+								"formatting",
+								"codeActions",
+							},
+						},
+					},
+					on_attach = function(client, bufnr)
+						-- Enable completion triggered by <c-x><c-o>
+						vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+						
+						-- Ruby-specific keybindings
+						local bufopts = { noremap=true, silent=true, buffer=bufnr }
+						vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, bufopts)
+					end,
+				})
 				lspconfig.ts_ls.setup({})
 
 				vim.keymap.set("n", "<leader>lD", vim.lsp.buf.declaration, { desc = "Declaration" })
