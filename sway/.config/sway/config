@@ -4,6 +4,13 @@
 #
 # Read `man 5 sway` for a complete reference.
 
+# Environment variables for GTK theme
+exec systemctl --user import-environment
+exec_always {
+    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+}
+
 ### Variables
 #
 # Logo key. Use Mod1 for Alt.
@@ -14,18 +21,29 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
+# Recommends: foot
 set $term kitty
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
-# set $menu dmenu_path | dmenu | xargs swaymsg exec --
-set $menu wofi | xargs swaymsg exec --
+# Recommends: rofi-wayland
+set $rofi_cmd rofi \
+        -terminal '$term'
+# Shows a combined list of the applications with desktop files and
+# executables from PATH.
+# TODO: add window with the next release of rofi-wayland
+# set $menu $rofi_cmd -show combi -combi-modes drun#run -modes combi
+set $menu $rofi_cmd -show drun -show-icons -lines 5
 
-
-### Output configuration
+### Output configuration 
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg ~/Pictures/wallpaper.png fill
+# Requires: desktop-backgrounds-compat, swaybg, jxl-pixbuf-loader
+output * bg ~/Pictures/Wallpaper/wallpaper.jpg fill
+
+# Include persistent display settings (managed by resolution-switcher script)
+include ~/.config/sway/config.d/display-settings.conf
+
 #
 # Example configuration:
 #
@@ -33,23 +51,14 @@ output * bg ~/Pictures/wallpaper.png fill
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 
-
-output HDMI-A-2 {
-	mod 1920x1080
-}
-
 ### Idle configuration
 #
-# Example configuration:`
+# Example configuration:
 #
-
-exec swayidle -w \
-                timeout 300 'swaylock -f -c 000000' \
-                timeout 600 'swaymsg "output * dpms off"' \
-                     resume 'swaymsg "output * dpms on"' \
-                before-sleep 'swaylock -f -c 000000'	 
-
-bindSym $mod+l exec swaylock -f -c 000000	 
+# exec swayidle -w \
+#          timeout 300 'swaylock -f -c 000000' \
+#          timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+#          before-sleep 'swaylock -f -c 000000'
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -86,6 +95,9 @@ input * {
     # Start your launcher
     bindsym $mod+d exec $menu
 
+    # Resolution switcher
+    bindsym $mod+Shift+d exec ~/.config/sway/scripts/resolution-switcher.sh
+
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
     # Despite the name, also works for non-floating windows.
@@ -97,15 +109,15 @@ input * {
     bindsym $mod+Shift+c reload
 
     # Exit sway (logs you out of your Wayland session)
-    bindsym $mod+Shift+e exec swaynag -t warning -m 'What do you want to do?' -B 'Power off' 'systemctl poweroff' -B 'Reboot' 'systemctl reboot' -B 'Logout' 'swaymsg exit'
+    bindsym $mod+Shift+e exec ~/.config/sway/scripts/power-menu.sh
 #
 # Moving around:
 #
     # Move your focus around
-    #bindsym $mod+$left focus left
-    #bindsym $mod+$down focus down
-    #bindsym $mod+$up focus up
-    #bindsym $mod+$right focus right
+    bindsym $mod+$left focus left
+    bindsym $mod+$down focus down
+    bindsym $mod+$up focus up
+    bindsym $mod+$right focus right
     # Or use $mod+[up|down|left|right]
     bindsym $mod+Left focus left
     bindsym $mod+Down focus down
@@ -134,7 +146,7 @@ input * {
     bindsym $mod+1 workspace number 1
     bindsym $mod+2 workspace number 2
     bindsym $mod+3 workspace number 3
-    bindsym YC$mod+4 workspace number 4
+    bindsym $mod+4 workspace number 4
     bindsym $mod+5 workspace number 5
     bindsym $mod+6 workspace number 6
     bindsym $mod+7 workspace number 7
@@ -160,7 +172,7 @@ input * {
     # You can "split" the current object of your focus with
     # $mod+b or $mod+v, for horizontal and vertical splits
     # respectively.
-    bindsym $mod+h splith
+    bindsym $mod+b splith
     bindsym $mod+v splitv
 
     # Switch the current container between different layout styles
@@ -194,61 +206,47 @@ input * {
 #
 # Resizing containers:
 #
-    mode "resize" {
-# left will shrink the containers width
-# right will grow the containers width
-# up will shrink the containers height
-# down will grow the containers height
-	    bindsym $left resize shrink width 10px
-		    bindsym $down resize grow height 10px
-		    bindsym $up resize shrink height 10px
-		    bindsym $right resize grow width 10px
+mode "resize" {
+    # left will shrink the containers width
+    # right will grow the containers width
+    # up will shrink the containers height
+    # down will grow the containers height
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
 
-# Ditto, with arrow keys
-		    bindsym Left resize shrink width 10px
-		    bindsym Down resize grow height 10px
-		    bindsym Up resize shrink height 10px
-		    bindsym Right resize grow width 10px
+    # Ditto, with arrow keys
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
 
-# Return to default mode
-		    bindsym Return mode "default"
-		    bindsym Escape mode "default"
-    }
+    # Return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
 bindsym $mod+r mode "resize"
 
+# Include configs from 3 locations:
+#  - /usr/share/sway/config.d
+#  - /etc/sway/config.d
+#  - $XDG_CONFIG_HOME/sway/config.d ($HOME/.config/sway/config.d)
 #
-# Status Bar:
+# If multiple directories contain the files with the same name, the later
+# directory takes precedence; `$XDG_CONFIG_HOME/sway/config.d/20-swayidle.conf`
+# will always be loaded instead of `/usr/share/sway/config.d/20-swayidle.conf`
+# or `/etc/sway/config.d/20-swayidle.conf`
 #
-# Read `man 5 sway-bar` for more information about this section.
-bar {
-	position top
-
-# When the status_command prints a new line to stdout, swaybar updates.
-    # The default just shows the current date and time.
-    # status_command while date +'%Y-%m-%d %I:%M:%S %p'; do sleep 1; done
-    
-    swaybar_command waybar
-
-    colors {
-        statusline #ffffff
-        background #323232
-        inactive_workspace #32323200 #32323200 #5c5c5c
-    }
-}
-
-title_align center
-default_border none
-
-###
-### Screen brightness
-###
-
-bindsym XF86MonBrightnessUp exec light -A 5
-bindsym XF86MonBrightnessDown exec light -U 5
-
-#gaps inner 5
-
-bindsym $mod+Shift+d exec "echo 'swaymsg output eDP-1 scale 1.5\nswaymsg output eDP-1 scale 1\nswaymsg output eDP-1 disable\nswaymsg output eDP-1 enable\nswaymsg output HDMI-A-2 mode 2560x1440\nswaymsg output HDMI-A-2 mode 1920x1080\nswaymsg output HDMI-A-2 mode 3840x2160' | wofi -d | xargs -I {} kitty sh -c {}"
-
-include /etc/sway/config.d/*
-
+# This mechanism permits overriding our default configuration per-system
+# (/etc) or per-user ($XDG_CONFIG_HOME) basis. Just create the file you
+# want to modify/override in the higher-level directory.
+#
+# For example, to disable the default bar from Fedora configs, you'll need to
+#     $ echo -n > "$HOME/.config/sway/config.d/90-bar.conf"
+#
+# Note the quoting, the $() and the arguments quoting. All the parts are equally
+# important to make the magic work. And if you want to learn the secret behind
+# the trick, it's all in the `wordexp(3)`.
+#
+include '$(/usr/libexec/sway/layered-include "/usr/share/sway/config.d/*.conf" "/etc/sway/config.d/*.conf" "${XDG_CONFIG_HOME:-$HOME/.config}/sway/config.d/*.conf")'
