@@ -34,10 +34,9 @@ return {
 				pickers = {
 					find_files = {
 						hidden = true,
-						no_ignore = true,
 						-- Follow symbolic links
 						follow = true,
-						-- Additional find command arguments for better hidden file support
+						-- Show hidden files but respect gitignore for performance
 						find_command = { 'rg', '--files', '--hidden', '--glob', '!.git/*' },
 					},
 					live_grep = {
@@ -48,8 +47,18 @@ return {
 				},
 			}
 
+			-- Load fzf extension for better performance
+			telescope.load_extension('fzf')
+
 			-- Enhanced keybindings for file finding
-			vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope: Find Files (inc. hidden)' })
+			vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope: Find Files (hidden, respects gitignore)' })
+			vim.keymap.set('n', '<leader>fi', function()
+				builtin.find_files({ 
+					no_ignore = true, 
+					hidden = true,
+					find_command = { 'rg', '--files', '--hidden', '--no-ignore', '--glob', '!.git/*' }
+				})
+			end, { desc = 'Telescope: Find Files (including ignored)' })
 			vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope: Live Grep (inc. hidden)' })
 			vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope: Buffers' })
 			vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope: Help Tags' })

@@ -88,6 +88,40 @@ return {
             },
           },
         },
+        ["Workspace Analysis"] = {
+          strategy = "chat",
+          description = "Analyze entire Rails workspace structure",
+          opts = {
+            index = 5,
+            is_slash_cmd = true,
+            short_name = "workspace",
+          },
+          prompts = {
+            {
+              role = "system",
+              content = "You are a Rails expert analyzing a complete Rails application. Review the project structure, identify patterns, suggest improvements, and understand the overall architecture.",
+            },
+            {
+              role = "user",
+              content = "Please analyze this Rails project structure. Here's the current working directory and key files:\n\nProject Root: {{cwd}}\nCurrent File: {{filename}}\n\nPlease examine the overall architecture and suggest improvements.",
+            },
+          },
+        },
+        ["File Explorer"] = {
+          strategy = "chat", 
+          description = "Explore and understand project files",
+          opts = {
+            index = 6,
+            is_slash_cmd = true,
+            short_name = "explore",
+          },
+          prompts = {
+            {
+              role = "user",
+              content = "Help me explore this Rails project. What files should I examine for: {{input}}",
+            },
+          },
+        },
       },
       
       -- Display options
@@ -168,6 +202,64 @@ return {
         use_default_actions = true,
         -- Enable system messages
         system_prompt = "You are an expert Rails developer. Provide code that follows Rails conventions and best practices.",
+        -- Enable workspace awareness for agents
+        auto_insert_mode = true,
+        send_buffer = true,
+      },
+      
+      -- Enhanced workspace context for agents
+      workspace = {
+        auto_include_workspace_context = true,
+        max_context_files = 10,
+        context_patterns = {
+          "*.rb",
+          "*.erb", 
+          "Gemfile",
+          "config/routes.rb",
+          "config/application.rb",
+          "db/schema.rb",
+          "spec/**/*.rb",
+          "test/**/*.rb",
+        },
+      },
+      
+      -- Enable tools for better agent file access
+      tools = {
+        opts = {
+          default_tools = {
+            "file_search",
+            "read_file", 
+            "grep_search",
+            "get_changed_files",
+          },
+        },
+      },
+      
+      -- More autonomous agent configurations
+      agents = {
+        -- Enable auto-tool mode for smoother experience
+        auto_tool_mode = false, -- Can be toggled with 'gta' in chat
+        -- Make agents more proactive
+        system_prompts = {
+          autonomous_rails_dev = [[You are an autonomous Rails development agent. You have access to powerful tools:
+          
+- @file_search - Use this to find files when you need to understand project structure
+- @read_file - Use this to examine specific files when you need their content  
+- @grep_search - Use this to search for patterns across the codebase
+- @create_file - Use this to create new files (controllers, models, views, etc.)
+- @insert_edit_into_file - Use this to edit existing files
+- @get_changed_files - Use this to see recent changes
+
+IMPORTANT: You should proactively use these tools when they would help answer questions or complete tasks. Don't wait for explicit instructions to use tools - use your judgment about when file access, creation, or editing would be beneficial.
+
+For Rails development:
+1. When asked about code, use @grep_search or @file_search to find relevant files first
+2. Use @read_file to understand current implementations
+3. Create new files with @create_file when building features
+4. Edit existing files with @insert_edit_into_file when modifying code
+
+Be proactive and autonomous in using these tools to provide the best assistance.]],
+        },
       },
     })
   end,

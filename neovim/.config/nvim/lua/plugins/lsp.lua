@@ -48,6 +48,14 @@ return {
 				local capabilities = require('blink.cmp').get_lsp_capabilities()
 
 				local lspconfig = require("lspconfig")
+				
+				-- Stop any existing ruby_lsp clients to prevent duplicates
+				for _, client in ipairs(vim.lsp.get_clients()) do
+					if client.name == "ruby_lsp" then
+						client.stop()
+					end
+				end
+				
 				lspconfig.ruby_lsp.setup({
 					capabilities = capabilities,
 					settings = {
@@ -89,6 +97,20 @@ return {
 				vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, { desc = "Code Action" })
 				vim.keymap.set("n", "<leader>lj", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
 				vim.keymap.set("n", "<leader>lk", vim.diagnostic.goto_prev, { desc = "Prev diagnostic" })
+				
+				-- Command to restart Ruby LSP if multiple clients get started
+				vim.api.nvim_create_user_command("RestartRubyLsp", function()
+					-- Stop all ruby_lsp clients
+					for _, client in ipairs(vim.lsp.get_clients()) do
+						if client.name == "ruby_lsp" then
+							client.stop()
+						end
+					end
+					-- Wait a moment then restart
+					vim.defer_fn(function()
+						vim.cmd("LspStart ruby_lsp")
+					end, 500)
+				end, { desc = "Restart Ruby LSP (stops duplicates)" })
 			end
 		},
 }
