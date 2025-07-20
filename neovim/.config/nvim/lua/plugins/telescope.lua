@@ -71,5 +71,15 @@ return {
 			vim.keymap.set('n', '<leader>fd', function()
 				builtin.find_files({ cwd = vim.fn.expand('%:p:h') })
 			end, { desc = 'Telescope: Files in current directory' })
+			
+			-- Diagnostic viewing with Telescope
+			vim.keymap.set('n', '<leader>fe', builtin.diagnostics, { desc = 'Telescope: All diagnostics (workspace)' })
+			vim.keymap.set('n', '<leader>fE', function()
+				builtin.diagnostics({ bufnr = 0 })
+			end, { desc = 'Telescope: Current buffer diagnostics' })
+			
+			-- LSP pickers for additional context
+			vim.keymap.set('n', '<leader>fs', builtin.lsp_document_symbols, { desc = 'Telescope: Document symbols' })
+			vim.keymap.set('n', '<leader>fS', builtin.lsp_workspace_symbols, { desc = 'Telescope: Workspace symbols' })
 		end
 }

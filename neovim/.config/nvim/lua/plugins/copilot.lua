@@ -1,281 +1,251 @@
--- codecompanion.nvim keybindings
--- The main plugin configuration is in codecompanion.lua
--- This file contains only the keybindings for consistency with other plugins
-
-local function setup_codecompanion_keybindings()
-    -- Main CodeCompanion keybindings
-    vim.keymap.set("n", "<leader>cc", "<cmd>CodeCompanionChat Toggle<cr>", { desc = "Toggle CodeCompanion Chat" })
-    vim.keymap.set("v", "<leader>cc", "<cmd>CodeCompanionChat Add<cr>", { desc = "Add selection to CodeCompanion Chat" })
-    vim.keymap.set("n", "<leader>ca", "<cmd>CodeCompanionActions<cr>", { desc = "CodeCompanion Action Palette" })
-    vim.keymap.set("v", "<leader>ca", "<cmd>CodeCompanionActions<cr>", { desc = "CodeCompanion Action Palette" })
-    vim.keymap.set("n", "<leader>ci", "<cmd>CodeCompanion<cr>", { desc = "Inline CodeCompanion" })
-    vim.keymap.set("v", "<leader>ci", "<cmd>CodeCompanion<cr>", { desc = "Inline CodeCompanion" })
-    vim.keymap.set("n", "<leader>ce", "<cmd>CodeCompanionChat Add<cr>", { desc = "Add to CodeCompanion Chat" })
-    
-    -- Rails-specific AI shortcuts using codecompanion.nvim slash commands
-    vim.keymap.set("v", "<leader>cr", function()
-        vim.cmd("CodeCompanionChat Add")
-        vim.defer_fn(function()
-            vim.api.nvim_feedkeys("/rails", "n", false)
-        end, 100)
-    end, { desc = "Rails best practices review" })
-    
-    vim.keymap.set("v", "<leader>ct", function()
-        vim.cmd("CodeCompanionChat Add")
-        vim.defer_fn(function()
-            vim.api.nvim_feedkeys("/test", "n", false)
-        end, 100)
-    end, { desc = "Generate Rails tests" })
-    
-    vim.keymap.set("v", "<leader>cf", function()
-        vim.cmd("CodeCompanion")
-        vim.defer_fn(function()
-            vim.api.nvim_feedkeys("/refactor", "n", false)
-        end, 100)
-    end, { desc = "Refactor Rails code" })
-    
-    vim.keymap.set("n", "<leader>cm", function()
-        vim.cmd("CodeCompanionChat")
-        vim.defer_fn(function()
-            vim.api.nvim_feedkeys("/migrate ", "n", false)
-        end, 100)
-    end, { desc = "Generate Rails migration" })
-    
-    -- Additional useful keybindings
-    vim.keymap.set("n", "<leader>cs", "<cmd>CodeCompanionChat New<cr>", { desc = "New CodeCompanion Chat" })
-    vim.keymap.set("n", "<leader>cl", "<cmd>CodeCompanionChat Load<cr>", { desc = "Load CodeCompanion Chat" })
-    
-    -- Workspace-aware agent commands
-    vim.keymap.set("n", "<leader>cw", function()
-        require("codecompanion").chat({
-            args = {
-                args = "Please analyze this Rails project structure and current file context.",
-            }
-        })
-    end, { desc = "CodeCompanion with workspace context" })
-    
-    vim.keymap.set("n", "<leader>cp", function()
-        local current_file = vim.fn.expand('%:.')
-        require("codecompanion").chat({
-            args = {
-                args = "I'm working in " .. current_file .. ". Please help me with this file.",
-            }
-        })
-    end, { desc = "CodeCompanion with current file context" })
-    
-    -- Advanced workspace exploration
-    vim.keymap.set("n", "<leader>cW", function()
-        local cwd = vim.fn.getcwd()
-        local current_file = vim.fn.expand('%:.')
-        local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+return {
+  {
+    -- Core Copilot plugin
+    'github/copilot.vim',
+    event = 'InsertEnter',
+    config = function()
+      -- Disable default Tab mapping to prevent conflicts with blink.cmp
+      vim.g.copilot_no_tab_map = true
+      
+      -- Configure reasonable idle delay (default is 15ms, we use 100ms for less aggressive suggestions)
+      vim.g.copilot_idle_delay = 100
+      
+      -- Don't hide suggestions during completion menu (works better with blink.cmp)
+      vim.g.copilot_hide_during_completion = 0
+      
+      -- Set up keymaps that don't conflict with your existing setup
+      local opts = { silent = true, expr = true, replace_keycodes = false }
+      
+      -- Accept suggestion with Ctrl-Y (common completion accept key)
+      vim.keymap.set('i', '<C-y>', 'copilot#Accept("\\<CR>")', opts)
+      
+      -- Accept word with Ctrl-Right (intuitive forward word motion)
+      vim.keymap.set('i', '<C-Right>', 'copilot#AcceptWord()', opts)
+      
+      -- Accept line with Ctrl-Shift-Right
+      vim.keymap.set('i', '<C-S-Right>', 'copilot#AcceptLine()', opts)
+      
+      -- Navigate suggestions with Alt+[ and Alt+]
+      vim.keymap.set('i', '<M-[>', '<Plug>(copilot-previous)', { silent = true })
+      vim.keymap.set('i', '<M-]>', '<Plug>(copilot-next)', { silent = true })
+      
+      -- Dismiss suggestion with Escape (additional to default Ctrl-])
+      vim.keymap.set('i', '<C-e>', '<Plug>(copilot-dismiss)', { silent = true })
+      
+      -- Manually trigger suggestions
+      vim.keymap.set('i', '<C-\\>', '<Plug>(copilot-suggest)', { silent = true })
+      
+      -- Additional configuration for better UX
+      vim.g.copilot_filetypes = {
+        ['*'] = true,
+        ['gitcommit'] = false,
+        ['gitrebase'] = false,
+        ['help'] = false,
+        ['markdown'] = true,
+        ['yaml'] = true,
+        ['json'] = true,
+      }
+    end,
+  },
+  
+  {
+    -- Copilot Chat plugin
+    'CopilotC-Nvim/CopilotChat.nvim',
+    dependencies = {
+      { 'github/copilot.vim' },
+      { 'nvim-lua/plenary.nvim', branch = "master" },
+    },
+    lazy = false,
+    opts = {
+      -- Enhanced headers with Nerd Font icons
+      question_header = ' User ',
+      answer_header = ' Copilot ',
+      error_header = ' Error ',
+      separator = '───────',
+      
+      -- Mappings for chat window
+      mappings = {
+        complete = {
+          detail = 'Use @<Tab> or /<Tab> for options.',
+          insert = '<Tab>',
+        },
+        close = {
+          normal = 'q',
+          insert = '<C-c>'
+        },
+        reset = {
+          normal = '<C-r>',
+          insert = '<C-r>'
+        },
+        submit_prompt = {
+          normal = '<CR>',
+          insert = '<C-s>'
+        },
+        accept_diff = {
+          normal = '<C-y>',
+          insert = '<C-y>'
+        },
+        yank_diff = {
+          normal = 'gy',
+        },
+        show_diff = {
+          normal = 'gd'
+        },
+        show_system_prompt = {
+          normal = 'gp'
+        },
+        show_user_selection = {
+          normal = 'gs'
+        },
+      },
+      
+      -- Window configuration
+      window = {
+        layout = 'vertical',    -- 'vertical', 'horizontal', 'float'
+        width = 0.4,           -- fractional width of parent
+        height = 0.6,          -- fractional height of parent
+        -- Options for float layout
+        row = nil,             -- row position of the window, default is centered
+        col = nil,             -- column position of the window, default is centered
+        relative = 'editor',   -- 'editor', 'win', 'cursor', 'mouse'
+        border = 'rounded',    -- 'none', single', 'double', 'rounded', 'solid', 'shadow'
+        title = '   Copilot Chat ',
+        footer = '  Press q to close  ⮀  ? for help ',
+        zindex = 1,            -- determines if window is on top or below other floating windows
+      },
+      
+      -- Custom prompts with beautiful icons and Rails focus
+      prompts = {
+        -- Enhanced default prompts with icons
+        Explain = {
+          prompt = "Please explain how this code works.",
+          system_prompt = "You are a helpful coding tutor. Provide clear, step-by-step explanations.",
+          description = " Code Explanation",
+        },
+        Review = {
+          prompt = "Review this code for potential improvements, bugs, and best practices.",
+          system_prompt = "You are an experienced code reviewer. Focus on code quality, security, and maintainability.",
+          description = " Code Review",
+        },
+        Fix = {
+          prompt = "There is a problem in this code. Rewrite the code to fix the issue.",
+          system_prompt = "You are a debugging expert. Identify and fix issues while explaining the problems.",
+          description = " Bug Fix",
+        },
+        Optimize = {
+          prompt = "Optimize the selected code to improve performance and readability.",
+          system_prompt = "You are a performance optimization expert. Focus on efficiency and clean code principles.",
+          description = " Performance Optimization",
+        },
+        Docs = {
+          prompt = "Please add documentation comment for the following code.",
+          system_prompt = "You are a technical documentation expert. Create clear, comprehensive documentation.",
+          description = " Documentation",
+        },
+        Tests = {
+          prompt = "Please generate tests for this code.",
+          system_prompt = "You are a testing expert. Create thorough, meaningful tests with good coverage.",
+          description = " Test Generation",
+        },
         
-        local context_text = string.format(
-            "WORKSPACE CONTEXT:\nProject Root: %s\nGit Root: %s\nCurrent File: %s\nCurrent Directory: %s\n\nPlease analyze this Rails project structure and help me with:",
-            cwd, git_root or "Not a git repo", current_file, vim.fn.expand('%:h')
-        )
+        -- Rails-specific prompts with Ruby icons
+        RailsExplain = {
+          prompt = "Explain this Ruby/Rails code, focusing on Rails conventions and patterns.",
+          system_prompt = "You are a Ruby on Rails expert. Explain code with focus on Rails conventions, patterns, and best practices.",
+          description = " Rails Code Explanation",
+        },
+        RailsOptimize = {
+          prompt = "Optimize this Ruby/Rails code for performance and Rails best practices. Focus on N+1 queries, database optimization, and Rails performance patterns.",
+          system_prompt = "You are a Ruby on Rails performance expert. Focus on ActiveRecord optimization, caching, and Rails-specific performance improvements.",
+          description = " Rails Performance Optimization",
+        },
+        RailsTest = {
+          prompt = "Generate RSpec tests for this Ruby/Rails code following Rails testing best practices.",
+          system_prompt = "You are a Rails testing expert. Write comprehensive RSpec tests following Rails testing conventions, using factories, and testing Rails-specific behavior.",
+          description = " Rails RSpec Tests",
+        },
+        RailsSecurity = {
+          prompt = "Review this Rails code for security vulnerabilities and suggest improvements.",
+          system_prompt = "You are a Rails security expert. Focus on common Rails security issues like SQL injection, XSS, authorization, and Rails security best practices.",
+          description = " Rails Security Review",
+        },
+        RailsRefactor = {
+          prompt = "Refactor this Rails code to follow Rails conventions and best practices.",
+          system_prompt = "You are a Rails refactoring expert. Focus on Rails patterns, service objects, concerns, and maintainable Rails architecture.",
+          description = " Rails Refactoring",
+        },
         
-        require("codecompanion").chat({
-            args = { args = context_text }
-        })
-    end, { desc = "Advanced workspace context analysis" })
-    
-    -- Multi-file context builder
-    vim.keymap.set("n", "<leader>cM", function()
-        local context_text = "MULTI-FILE ANALYSIS:\nI'm going to show you several related files. Please analyze them together.\n\nFile 1 (" .. vim.fn.expand('%:.') .. "):"
-        require("codecompanion").chat({
-            args = { args = context_text }
-        })
-    end, { desc = "Multi-file context builder" })
-    
-    -- Rails-specific workspace commands
-    vim.keymap.set("n", "<leader>cR", function()
-        local rails_files = {
-            "config/routes.rb",
-            "Gemfile",
-            "config/application.rb",
-            "db/schema.rb"
-        }
+        -- Git and workflow prompts
+        CommitConventional = {
+          prompt = "Write a commit message for the change with commitizen convention.",
+          system_prompt = "You are a Git expert. Write concise, informative commit messages following conventional commits format.",
+          description = " Conventional Commit",
+        },
         
-        local existing_files = {}
-        for _, file in ipairs(rails_files) do
-            if vim.fn.filereadable(file) == 1 then
-                table.insert(existing_files, file)
-            end
-        end
-        
-        local context_text = "RAILS PROJECT ANALYSIS:\nKey files to consider: " .. table.concat(existing_files, ", ") .. "\n\nCurrent focus: " .. vim.fn.expand('%:.') .. "\n\nWhat would you like to know about this Rails project?"
-        
-        require("codecompanion").chat({
-            args = { args = context_text }
-        })
-    end, { desc = "Rails-specific workspace analysis" })
+        -- Additional development prompts
+        APIDesign = {
+          prompt = "Review and suggest improvements for this API design.",
+          system_prompt = "You are an API design expert. Focus on RESTful principles, consistency, and developer experience.",
+          description = " API Design Review",
+        },
+        DatabaseOptimize = {
+          prompt = "Review and optimize this database query or schema design.",
+          system_prompt = "You are a database optimization expert. Focus on query performance, indexing, and schema design.",
+          description = " Database Optimization",
+        },
+        Accessibility = {
+          prompt = "Review this code for accessibility improvements.",
+          system_prompt = "You are an accessibility expert. Focus on WCAG compliance, semantic HTML, and inclusive design.",
+          description = " Accessibility Review",
+        },
+      },
+    },
     
-    -- Advanced workspace utilities
-    vim.keymap.set("n", "<leader>cF", function()
-        require('utils.workspace_context').pick_context_files()
-    end, { desc = "Pick related files for context" })
-    
-    vim.keymap.set("n", "<leader>cA", function()
-        require('utils.workspace_context').add_rails_context_files()
-    end, { desc = "Auto-add Rails context files" })
-    
-    vim.keymap.set("n", "<leader>cX", function()
-        local context = require('utils.workspace_context').format_context_for_ai()
-        require("codecompanion").chat({
-            args = { args = context }
-        })
-    end, { desc = "Full workspace context analysis" })
-    
-    -- VS Code-like @workspace command
-    vim.keymap.set("n", "<leader>c@", function()
-        vim.ui.input({ prompt = "Ask @workspace: " }, function(query)
-            if query then
-                local workspace_context = require('utils.workspace_context')
-                local template = workspace_context.create_workspace_template()
-                local suggestions = workspace_context.suggest_relevant_files(query)
-                
-                local full_text = template
-                if #suggestions > 0 then
-                    full_text = full_text .. "SUGGESTED FILES FOR YOUR QUERY:\n" .. table.concat(suggestions, "\n") .. "\n\n"
-                end
-                full_text = full_text .. "@workspace " .. query .. "\n\nPlease analyze the workspace and answer this question using the project context above."
-                
-                require("codecompanion").chat({
-                    args = { args = full_text }
-                })
-            end
-        end)
-    end, { desc = "VS Code-like @workspace query" })
-    
-    -- Agent with explicit file access tools
-    vim.keymap.set("n", "<leader>cT", function()
-        require("codecompanion").chat({
-            args = { args = "I'm a Rails developer agent with file access tools. I can use @file_search to find files, @read_file to examine code, @grep_search to explore the codebase, @create_file to make new files, and @insert_edit_into_file to edit existing files. How can I help you with your Rails project?" }
-        })
-    end, { desc = "Agent with File Tools" })
-    
-    -- Quick file creation agent
-    vim.keymap.set("n", "<leader>cN", function()
-        require("codecompanion").chat({
-            args = { args = "I can create new files for you using the @{create_file} tool. What files would you like me to create for your Rails project?" }
-        })
-    end, { desc = "File creation agent" })
-    
-    -- Autonomous Rails agent (more intelligent)
-    vim.keymap.set("n", "<leader>cA", function()
-        local workspace_context = require('utils.workspace_context')
-        local autonomous_template = workspace_context.create_autonomous_agent_template()
-        
-        require("codecompanion").chat({
-            args = { args = autonomous_template .. "\n\nWhat would you like help with in your Rails project?" }
-        })
-    end, { desc = "Autonomous Rails agent" })
-    
-    -- Toggle auto-tool mode for less interruptions  
-    vim.keymap.set("n", "<leader>cG", function()
-        if vim.g.codecompanion_auto_tool_mode then
-            vim.g.codecompanion_auto_tool_mode = nil
-            vim.notify("Auto-tool mode DISABLED - tools will require approval", vim.log.levels.INFO)
-        else
-            vim.g.codecompanion_auto_tool_mode = true
-            vim.notify("Auto-tool mode ENABLED - tools will run automatically", vim.log.levels.WARN)
-        end
-    end, { desc = "Toggle auto-tool mode" })
-    
-    -- Task-specific agents that are more directive
-    vim.keymap.set("n", "<leader>cB", function()
-        vim.ui.input({ prompt = "What feature do you want to build? " }, function(feature)
-            if feature then
-                local build_prompt = string.format([[I need to build: %s
-
-Please follow this process:
-1. First use @file_search to understand the current project structure
-2. Use @read_file to examine relevant existing files
-3. Use @create_file to create any new files needed (models, controllers, views, tests)
-4. Use @insert_edit_into_file to modify existing files as needed
-
-Start by using @file_search "*.rb" to see the current structure, then ask me any clarifying questions about the feature requirements.]], feature)
-                
-                require("codecompanion").chat({
-                    args = { args = build_prompt }
-                })
-            end
-        end)
-    end, { desc = "Build feature agent" })
-    
-    vim.keymap.set("n", "<leader>cD", function()
-        vim.ui.input({ prompt = "Describe the bug or issue: " }, function(issue)
-            if issue then
-                local debug_prompt = string.format([[I'm having this issue: %s
-
-Please help me debug it by:
-1. Using @get_changed_files to see recent changes
-2. Using @grep_search to find relevant code
-3. Using @read_file to examine the problematic files
-4. Using @insert_edit_into_file to fix the issue
-
-Start by using @get_changed_files to see what's been modified recently.]], issue)
-                
-                require("codecompanion").chat({
-                    args = { args = debug_prompt }
-                })
-            end
-        end)
-    end, { desc = "Debug issue agent" })
-    
-    vim.keymap.set("n", "<leader>cR", function()
-        local current_file = vim.fn.expand('%:.')
-        if current_file == '' then
-            vim.notify("Please open a file first", vim.log.levels.WARN)
-            return
-        end
-        
-        local refactor_prompt = string.format([[I want to refactor this file: %s
-
-Please:
-1. Use @read_file "%s" to examine the current code
-2. Analyze the code for improvements (performance, readability, Rails conventions)
-3. Use @insert_edit_into_file to make the improvements
-4. Explain what changes you made and why
-
-Start by reading the file now.]], current_file, current_file)
-        
-        require("codecompanion").chat({
-            args = { args = refactor_prompt }
-        })
-    end, { desc = "Refactor current file" })
-    
-    -- Edit selected code with context
-    vim.keymap.set("v", "<leader>cE", function()
-        local start_pos = vim.fn.getpos("'<")
-        local end_pos = vim.fn.getpos("'>")
-        local lines = vim.api.nvim_buf_get_lines(0, start_pos[2]-1, end_pos[2], false)
-        local content = table.concat(lines, "\n")
-        local filename = vim.fn.expand('%:.')
-        
-        local edit_prompt = string.format([[Here's code from %s (lines %d-%d):
-
-```ruby
-%s
-```
-
-Please use @insert_edit_into_file to improve this code. Consider:
-- Rails conventions and best practices
-- Performance optimizations  
-- Code readability and maintainability
-- Security concerns
-
-What changes should I make to this code?]], filename, start_pos[2], end_pos[2], content)
-        
-        require("codecompanion").chat({
-            args = { args = edit_prompt }
-        })
-    end, { desc = "Edit selected code" })
-end
-
--- Setup keybindings when this file is loaded
-setup_codecompanion_keybindings()
-
--- Return empty table since this is just for keybindings
--- The actual codecompanion.nvim plugin is configured in codecompanion.lua
-return {}
+    config = function(_, opts)
+      local chat = require("CopilotChat")
+      chat.setup(opts)
+      
+      -- Set up your custom keymaps with enhanced descriptions
+      vim.keymap.set('n', '<leader>cc', '<CMD>CopilotChatToggle<CR>', { desc = ' Toggle Copilot Chat' })
+      vim.keymap.set('n', '<leader>cr', '<CMD>CopilotChatReset<CR>', { desc = ' Reset Copilot Chat' })
+      vim.keymap.set('n', '<leader>cs', '<CMD>Copilot setup<CR>', { desc = ' Copilot setup' })
+      vim.keymap.set('n', '<leader>c?', '<CMD>Copilot status<CR>', { desc = ' Copilot status' })
+      vim.keymap.set('n', '<leader>cp', '<CMD>Copilot panel<CR>', { desc = ' Copilot panel' })
+      
+      -- Model and agent selection (uses proper CopilotChat commands)
+      vim.keymap.set('n', '<leader>cm', function() 
+        require("CopilotChat").select_model() 
+      end, { desc = ' Select Model' })
+      vim.keymap.set('n', '<leader>ca', function() 
+        require("CopilotChat").select_agent() 
+      end, { desc = ' Select Agent' })
+      
+      -- Quick chat commands with descriptive icons
+      vim.keymap.set('v', '<leader>ce', '<CMD>CopilotChatExplain<CR>', { desc = ' Explain selection' })
+      vim.keymap.set('v', '<leader>cf', '<CMD>CopilotChatFix<CR>', { desc = ' Fix selection' })
+      vim.keymap.set('v', '<leader>co', '<CMD>CopilotChatOptimize<CR>', { desc = ' Optimize selection' })
+      vim.keymap.set('v', '<leader>cd', '<CMD>CopilotChatDocs<CR>', { desc = ' Add documentation' })
+      vim.keymap.set('v', '<leader>ct', '<CMD>CopilotChatTests<CR>', { desc = ' Generate tests' })
+      
+      -- Rails-specific commands
+      vim.keymap.set('v', '<leader>cre', ':CopilotChat RailsExplain<CR>', { desc = ' Rails Explanation' })
+      vim.keymap.set('v', '<leader>cro', ':CopilotChat RailsOptimize<CR>', { desc = ' Rails Optimization' })
+      vim.keymap.set('v', '<leader>crt', ':CopilotChat RailsTest<CR>', { desc = ' Rails RSpec Tests' })
+      vim.keymap.set('v', '<leader>crs', ':CopilotChat RailsSecurity<CR>', { desc = ' Rails Security Review' })
+      vim.keymap.set('v', '<leader>crr', ':CopilotChat RailsRefactor<CR>', { desc = ' Rails Refactoring' })
+      
+      -- Additional helpful prompts
+      vim.keymap.set('v', '<leader>cR', '<CMD>CopilotChatReview<CR>', { desc = ' Code Review' })
+      vim.keymap.set('v', '<leader>cA', ':CopilotChat APIDesign<CR>', { desc = ' API Design Review' })
+      vim.keymap.set('v', '<leader>cdb', ':CopilotChat DatabaseOptimize<CR>', { desc = ' Database Optimization' })
+      vim.keymap.set('v', '<leader>cac', ':CopilotChat Accessibility<CR>', { desc = ' Accessibility Review' })
+      
+      -- Git workflow
+      vim.keymap.set('n', '<leader>cgc', ':CopilotChat CommitConventional<CR>', { desc = ' Generate Commit Message' })
+      
+      -- Enable/disable commands
+      vim.keymap.set('n', '<leader>cE', '<CMD>Copilot enable<CR>', { desc = ' Enable Copilot' })
+      vim.keymap.set('n', '<leader>cD', '<CMD>Copilot disable<CR>', { desc = ' Disable Copilot' })
+    end,
+  }
+}

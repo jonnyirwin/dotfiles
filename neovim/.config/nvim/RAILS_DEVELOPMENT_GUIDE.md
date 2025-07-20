@@ -23,14 +23,18 @@ This setup delivers all of this and more, with keybindings so intuitive they bec
 Your Telescope integration transforms file discovery from a chore into a superpower:
 
 ```
-<leader>ff  - Find any file in your project (including hidden files like .env)
-<leader>fg  - Search text across your entire codebase
-<leader>fa  - Find absolutely everything (ignores .gitignore)
+<leader>ff  - Find files (includes hidden files, respects gitignore)
+<leader>fi  - Find files (includes ignored files)
+<leader>fg  - Search text across your entire codebase (includes hidden files)
+<leader>fa  - Find all files (ignores gitignore completely)
 <leader>fd  - Focus on current directory only
 <leader>fb  - Jump between open buffers
+<leader>fh  - Find help tags
 ```
 
-**Pro Tip**: Use `<leader>ff` and start typing partial filenames. Looking for a user model? Type "user" and see `app/models/user.rb` instantly appear. Need that specific migration? Type "add_user" and find `20231215_add_user_index.rb` in milliseconds.
+**Pro Tip**: Your configuration now shows hidden files by default while respecting `.gitignore` for performance. Type `<leader>ff` and start typing partial filenames. Looking for `.env.example`? It appears immediately. Need that `.rubocop.yml` config? Telescope finds it instantly.
+
+**Enhanced Hidden File Support**: Unlike basic setups, your Telescope configuration intelligently handles hidden files - showing useful ones like `.env`, `.rubocop.yml`, and `.github/workflows/` while ignoring performance-heavy directories like `.git/` contents.
 
 ### Rails-Specific Navigation Magic
 
@@ -45,6 +49,102 @@ The real magic happens with Rails-aware navigation:
 ```
 
 **Workflow Example**: You're in `users_controller.rb` editing the `show` action. Press `<leader>rv` and you're instantly in `users/show.html.haml`. Make your view changes, press `<leader>rv` again, and you're back in the controller. No more manual file hunting!
+
+---
+
+## 🚂 Vim-Rails: The Ultimate Rails Integration
+
+Your setup includes **vim-rails** by Tim Pope, which transforms Neovim into a Rails-native editor. This isn't just syntax highlighting—it's deep Rails understanding.
+
+### **Intelligent File Navigation**
+
+**The `:R` command family** - Navigate Rails files by convention:
+```bash
+:R              # Related file (controller ↔ view, model ↔ test)
+:A              # Alternate file (implementation ↔ test)
+:Rcontroller    # Jump to controller
+:Rmodel         # Jump to model  
+:Rview          # Jump to view
+:Rmigration     # Jump to migration
+:Rspec          # Jump to spec file
+```
+
+**Context-Aware Commands**:
+```bash
+# From anywhere in your Rails app:
+:Ruser          # Opens app/models/user.rb
+:Ruser!         # Creates app/models/user.rb if it doesn't exist
+:RSuser         # Opens user.rb in horizontal split
+:RVuser         # Opens user.rb in vertical split
+:RTuser         # Opens user.rb in new tab
+```
+
+### **Rails-Aware Gf (Go to File)**
+
+**Enhanced `gf` command** - Press `gf` on Rails references:
+```ruby
+# Press 'gf' on any of these:
+User            # → app/models/user.rb
+UsersController # → app/controllers/users_controller.rb
+'users/show'    # → app/views/users/show.html.erb
+partial 'form'  # → app/views/users/_form.html.erb
+```
+
+### **Automatic File Type Detection**
+
+**Smart file recognition**:
+- Detects Rails file types automatically
+- Sets appropriate syntax highlighting
+- Configures buffer-local settings
+- Enables Rails-specific commands
+
+### **Command Integration**
+
+**Rails command shortcuts**:
+```bash
+:Rails console  # Start Rails console
+:Rails server   # Start Rails server  
+:Rails generate # Run Rails generators
+:Rails dbconsole # Database console
+:Rake          # Run rake tasks with completion
+```
+
+### **Enhanced Syntax & Highlighting**
+
+**Rails-specific syntax support**:
+- ERB templates with Ruby highlighting
+- HAML with proper indentation
+- Rails keywords and methods
+- Association and validation highlighting
+- Route syntax recognition
+
+### **Projectionist Integration**
+
+**Custom file relationships** (via vim-projectionist):
+```json
+{
+  "app/models/*.rb": {
+    "type": "model",
+    "alternate": "spec/models/{}_spec.rb"
+  },
+  "app/controllers/*_controller.rb": {
+    "type": "controller", 
+    "alternate": "spec/controllers/{}_controller_spec.rb"
+  }
+}
+```
+
+### **RSpec Integration**
+
+**vim-rspec commands** (configured with vim-dispatch):
+```bash
+:RunCurrentSpecFile    # Run current spec file
+:RunNearestSpec        # Run spec under cursor
+:RunLastSpec           # Re-run last spec
+:RunAllSpecs           # Run entire suite
+```
+
+**Your configuration runs tests asynchronously** using vim-dispatch, so you can continue coding while tests run in the background!
 
 ### Harpoon: Your Favorite Files at Your Fingertips
 
@@ -522,21 +622,118 @@ zp  # Shows method contents in floating window
     # Press [ or ] to jump in preview
 ```
 
-**3. Custom Fold Text**
-UFO shows helpful information in fold lines:
+**3. Clean Fold Text**
+UFO shows streamlined information in fold lines:
 ```ruby
-# Standard Vim folding might show:
-def create_user # +12 lines
-
-# UFO shows:
-def create_user  󰁂 12  # Shows icon + line count
+# Your configuration shows clean fold indicators:
+def create_user  󰁂   # Clean icon without line counts
 ```
 
 **4. Fold Column Integration**
-UFO displays fold levels in the fold column (left gutter):
-- Shows fold depth visually
-- Click to toggle folds
-- Hover for fold information
+UFO displays fold levels with triangle icons:
+- **▼** - Open fold (expanded)
+- **►** - Closed fold (collapsed)
+- Click triangles to toggle folds
+- Clear visual hierarchy
+
+#### Manual Folding with Comments
+
+You can create **custom fold regions** using special comments that work perfectly with Rails code organization:
+
+```ruby
+class User < ApplicationRecord
+  # Associations {{{
+  has_many :posts, dependent: :destroy
+  has_many :comments, through: :posts
+  belongs_to :organization, optional: true
+  # }}}
+
+  # Validations {{{
+  validates :email, presence: true, uniqueness: true
+  validates :name, presence: true, length: { minimum: 2 }
+  validates :age, numericality: { greater_than: 0 }, allow_nil: true
+  # }}}
+
+  # Scopes {{{
+  scope :active, -> { where(active: true) }
+  scope :premium, -> { where(subscription_type: 'premium') }
+  scope :recent, -> { where('created_at > ?', 1.week.ago) }
+  # }}}
+
+  # Instance Methods {{{
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
+  def avatar_url(size: :medium)
+    # Avatar logic here
+  end
+  # }}}
+
+  # Class Methods {{{
+  def self.find_by_email_or_username(identifier)
+    where('email = ? OR username = ?', identifier, identifier).first
+  end
+  # }}}
+
+  private
+
+  # Private Methods {{{
+  def normalize_email
+    self.email = email.downcase.strip if email.present?
+  end
+  # }}}
+end
+```
+
+**Manual Folding Commands:**
+```bash
+# Create folds
+zf{motion}  # Create fold (e.g., zfap for paragraph, zf} for to closing brace)
+zfa{        # Fold everything inside braces
+zfat        # Fold HTML/XML tag contents
+
+# The {{{ and }}} markers
+# - Automatically create folds between matching markers
+# - Perfect for organizing large Rails files
+# - Work with any indentation level
+# - Can be nested for complex organization
+```
+
+**Rails File Organization Strategy:**
+```ruby
+# In controllers - organize by responsibility
+class UsersController < ApplicationController
+  # Setup & Filters {{{
+  before_action :authenticate_user!
+  before_action :set_user, only: [:show, :edit, :update]
+  # }}}
+
+  # CRUD Actions {{{
+  def index
+    # ...
+  end
+
+  def show
+    # ...
+  end
+  # }}}
+
+  # Custom Actions {{{
+  def activate
+    # ...
+  end
+  # }}}
+
+  private
+
+  # Private Methods {{{
+  def set_user
+    # ...
+  end
+  # }}}
+end
+```
 
 #### Rails-Specific UFO Workflows
 
@@ -557,7 +754,7 @@ class User < ApplicationRecord
   # }}} # Folded to one line
   
   # Methods are automatically foldable by UFO
-  def complex_calculation
+  def complex_calculation  󰁂
     # Long implementation
     # UFO folds this entire method
   end
@@ -578,15 +775,15 @@ class UsersController < ApplicationController
   before_action :authenticate_user!  # Can be part of setup fold
   before_action :set_user, only: [:show, :edit]
   
-  def index  # Entire method folds
+  def index  󰁂  # Entire method folds cleanly
     @users = User.all.includes(:posts)
     respond_to do |format|
       format.html
       format.json { render json: @users }
     end
-  end  # UFO shows: def index  󰁂 6
+  end
   
-  def show  # Another foldable method
+  def show  󰁂  # Another foldable method
     respond_to do |format|
       format.html
       format.json { render json: @user }
@@ -627,7 +824,7 @@ class CreateComplexUserSystem < ActiveRecord::Migration[7.0]
     # and why it's structured this way
     
     add_foreign_key :posts, :users
-  end  # Shows: def up  󰁂 15
+  end  # Shows: def up  󰁂
   
   def down  # Another foldable method
     drop_table :users
@@ -643,19 +840,19 @@ RSpec.describe User, type: :model do  # Entire describe block folds
       user = User.new(name: 'John')
       expect(user).to_not be_valid
       expect(user.errors[:email]).to include("can't be blank")
-    end  # Shows: it 'requires an email'  󰁂 4
+    end  # Shows: it 'requires an email'  󰁂
     
     it 'requires a unique email' do
       existing_user = create(:user, email: 'test@example.com')
       user = User.new(email: 'test@example.com')
       expect(user).to_not be_valid
     end
-  end  # Shows: context 'validations'  󰁂 12
+  end  # Shows: context 'validations'  󰁂
   
   context 'associations' do
     # More tests
   end
-end  # Shows: RSpec.describe User  󰁂 25
+end  # Shows: RSpec.describe User  󰁂
 
 # UFO Testing Workflow:
 zM    # See test structure overview
@@ -774,16 +971,15 @@ UFO transforms code navigation from linear scrolling to semantic jumping, making
 
 ### Code Snippets: Turbocharge Your Rails Development
 
-Code snippets are your secret weapon for writing Rails code at lightning speed. Think of them as intelligent templates that expand into full code blocks with just a few keystrokes.
+Code snippets are your secret weapon for writing Rails code at lightning speed. Your setup includes comprehensive Rails snippets from multiple sources: **friendly-snippets**, **vim-snippets**, and **custom Rails-specific snippets**.
 
 ```bash
 # Core Snippet Commands
 Ctrl-k    - Expand snippet or jump to next placeholder
 Ctrl-j    - Jump back to previous placeholder
-Tab       - In some contexts, expand snippet (via completion)
 ```
 
-#### Essential Rails Snippet Categories
+#### **Essential Rails Snippet Categories**
 
 ### **1. Debugging & Inspection Snippets**
 
@@ -826,6 +1022,9 @@ belongs_to  →  belongs_to :association
 
 # Type "val" + Ctrl-k
 val  →  validates :attribute, presence: true
+
+# Type "scope" + Ctrl-k
+scope  →  scope :name, -> { where(active: true) }
 ```
 
 **Real Model Building Workflow**:
@@ -913,7 +1112,7 @@ Rails.application.routes.draw do
 end
 ```
 
-### **6. Testing Snippets (RSpec)**
+### **6. Testing Snippets (RSpec & Factory Bot)**
 
 **Test-Driven Development Acceleration**:
 ```ruby
@@ -937,6 +1136,12 @@ factory :user do
   name { 'John Doe' }
   email { 'john@example.com' }
 end
+
+# Type: create + Ctrl-k (in tests)
+create(:user)
+
+# Type: build + Ctrl-k (in tests)
+build(:user)
 ```
 
 ### **7. Rails Console Snippets**
@@ -953,6 +1158,16 @@ User.find(1)
 # Type: where + Ctrl-k
 User.where(active: true)
 ```
+
+### **Complete Snippet Reference**
+
+**Debugging**: `pry`, `dbg`, `pp`, `log`
+**Models**: `val`, `has_many`, `belongs_to`, `scope`
+**Controllers**: `before`, `private`, `strong`, `redirect`, `render`
+**Routes**: `resources`, `get`, `post`
+**Migrations**: `migration`, `add_column`, `create_table`
+**Testing**: `describe`, `context`, `it`, `expect`, `let`, `factory`, `create`, `build`
+**Console**: `reload!`, `User.find`, `where`
 
 #### Advanced Snippet Strategies
 
@@ -1093,287 +1308,68 @@ Snippets transform Rails development from typing-heavy to thought-heavy, letting
 
 ### GitHub Copilot: Your Rails-Aware Partner
 
-**Now powered by codecompanion.nvim** - A superior AI experience that uses your existing Copilot subscription but provides enhanced chat capabilities, agents, and Rails-specific workflows.
+**Dual-plugin setup** - Your configuration uses both official GitHub Copilot for fast inline suggestions and CopilotChat.nvim for conversational AI assistance.
 
+### **Inline Suggestions (Insert Mode)**
 ```
-<leader>cc  - Toggle CodeCompanion Chat (persistent conversations)
-<leader>ca  - CodeCompanion Action Palette (pre-built prompts)
-<leader>ci  - Inline CodeCompanion (direct buffer editing)
-<leader>ce  - Add to CodeCompanion Chat
-<leader>cs  - New CodeCompanion Chat session
-<leader>cl  - Load previous chat session
+Ctrl+Y        - Accept full suggestion (most used)
+Ctrl+Right    - Accept next word only
+Ctrl+Shift+Right - Accept current line
+Alt+[         - Previous suggestion
+Alt+]         - Next suggestion  
+Ctrl+E        - Dismiss suggestion
+Ctrl+\        - Manual trigger
+```
+
+### **Chat & Management (Normal Mode)**
+```
+<leader>cc  - Toggle Copilot Chat
+<leader>cr  - Reset Chat
+<leader>cs  - Copilot Setup
+<leader>c?  - Copilot Status
+<leader>cp  - Copilot Panel
+<leader>cE  - Enable Copilot
+<leader>cD  - Disable Copilot
+```
+
+### **Code Analysis (Visual Mode)**
+```
+<leader>ce  - Explain selected code
+<leader>cf  - Fix issues in selection
+<leader>co  - Optimize performance
+<leader>cd  - Add documentation
+<leader>ct  - Generate tests
+<leader>cR  - Comprehensive code review
 ```
 
 ### Rails-Specific AI Workflows
 
-**Specialized Rails Commands**:
+**Specialized Rails Commands (Visual Mode)**:
 ```
-<leader>cr  - Rails best practices review (visual mode)
-<leader>ct  - Generate Rails tests (visual mode)  
-<leader>cf  - Refactor Rails code (visual mode)
-<leader>cm  - Generate Rails migration
-```
-
-### Agentic Coding with CodeCompanion
-
-**The Game-Changer**: CodeCompanion transforms from simple autocomplete to an agentic coding assistant:
-
-1. **Persistent Chat Sessions** - Conversations continue across sessions
-2. **Multiple Chat Windows** - Work on different features simultaneously  
-3. **File Context Integration** - Reference files directly in conversations
-4. **Agents and Tools** - LLM can execute actions like running tests, editing files
-5. **Rails-Aware Prompts** - Built-in understanding of Rails conventions
-
-### Understanding Agentic AI: Your Autonomous Coding Partner
-
-**What Makes It "Agentic"?**
-
-Traditional AI assistants provide suggestions. Agentic AI takes *action*. CodeCompanion can:
-- **Execute terminal commands** to run tests, start servers, or install gems
-- **Edit multiple files** simultaneously across your Rails application
-- **Navigate your codebase** to understand context and relationships
-- **Apply changes** based on test results and error feedback
-- **Iterate on solutions** until they work correctly
-
-### Core Agentic Features
-
-#### 1. **Autonomous Code Execution**
-```bash
-# You can say to CodeCompanion:
-"Run the test suite and fix any failing tests"
-
-# The agent will:
-1. Execute: bundle exec rspec
-2. Analyze failing tests
-3. Identify root causes
-4. Edit relevant files
-5. Run tests again
-6. Repeat until tests pass
+<leader>cre - Rails-focused explanation
+<leader>cro - Rails performance optimization  
+<leader>crt - Generate RSpec tests
+<leader>crs - Rails security review
+<leader>crr - Rails refactoring suggestions
 ```
 
-#### 2. **Multi-File Refactoring**
-```bash
-# Request: "Extract this method into a service object"
-# The agent will:
-1. Create app/services/user_service.rb
-2. Move method logic to the service
-3. Update the controller to use the service
-4. Update related tests
-5. Ensure all references are updated
-```
+### Enhanced Chat Experience
 
-#### 3. **Context-Aware Problem Solving**
-```bash
-# Agent maintains context across conversations:
-- Remembers previous discussions about your codebase
-- Understands your Rails app structure
-- Knows your coding patterns and preferences
-- Can reference earlier solutions
-```
+**Beautiful Interface**: CopilotChat features enhanced visuals with Nerd Font icons:
+- **Headers**: ` User ` and ` Copilot ` with clean styling
+- **Window Title**: ` Copilot Chat ` with helpful footer
+- **Rails-Aware Prompts**: Pre-built prompts understand Rails conventions
 
-#### 4. **Iterative Development**
-```bash
-# Agent can work through complex problems:
-1. "Let's add user authentication to this Rails app"
-2. Agent analyzes current state
-3. Plans authentication strategy
-4. Implements step-by-step
-5. Tests each step
-6. Adjusts based on results
-```
+### Rails Development Example Workflow
 
-### Advanced Agentic Workflows
-
-#### **The "Feature Development" Agent**
-```bash
-# Command: "Implement password reset functionality"
-
-# Agent's autonomous workflow:
-1. Analyze existing user model and authentication
-2. Generate password reset migration
-3. Add routes for password reset
-4. Create controller actions
-5. Generate views (email, reset form)
-6. Add mailer for reset emails
-7. Write comprehensive tests
-8. Run test suite and fix any issues
-9. Update documentation
-```
-
-#### **The "Bug Investigation" Agent**
-```bash
-# Command: "Fix the N+1 query issue in the users index"
-
-# Agent's autonomous workflow:
-1. Analyze the users controller
-2. Identify N+1 queries using includes/joins
-3. Examine related models and associations
-4. Implement optimized queries
-5. Run performance tests
-6. Verify memory usage improvements
-7. Update related views if needed
-```
-
-#### **The "Code Quality" Agent**
-```bash
-# Command: "Refactor this controller to follow Rails best practices"
-
-# Agent's autonomous workflow:
-1. Analyze controller complexity
-2. Identify violations of Rails conventions
-3. Extract service objects for complex logic
-4. Implement proper error handling
-5. Add missing validations
-6. Update tests to match new structure
-7. Ensure all tests pass
-```
-
-### Rails-Specific Agentic Capabilities
-
-#### **Database Operations**
-```bash
-# The agent can:
-- Analyze your schema and suggest improvements
-- Generate migrations based on model changes
-- Optimize database queries automatically
-- Handle data migrations safely
-- Update seeds and fixtures
-```
-
-#### **Test Generation and Maintenance**
-```bash
-# The agent can:
-- Generate comprehensive RSpec tests
-- Update tests when code changes
-- Create factory definitions
-- Generate integration tests
-- Maintain test data consistency
-```
-
-#### **Security and Performance**
-```bash
-# The agent can:
-- Identify security vulnerabilities
-- Implement proper authorization
-- Optimize slow queries
-- Add caching strategies
-- Update gems and handle deprecations
-```
-
-### Using Agents with Tools
-
-#### **Available Tools**
-- **@cmd_runner** - Execute terminal commands
-- **@file_editor** - Edit files directly
-- **@rails_console** - Interact with Rails console
-- **@test_runner** - Run and analyze tests
-- **@git_helper** - Git operations and analysis
-- **@docs_generator** - Generate documentation
-
-#### **Tool Combinations**
-```bash
-# Example: "Set up a new Rails feature with tests"
-# Agent uses multiple tools:
-
-@file_editor: Create new controller
-@cmd_runner: Generate migration
-@rails_console: Test data relationships
-@test_runner: Run new tests
-@git_helper: Commit changes
-@docs_generator: Update API docs
-```
-
-### Advanced Agent Prompting
-
-#### **Contextual Instructions**
-```bash
-# Instead of: "Fix this code"
-# Use: "Refactor this Rails controller following DRY principles, 
-#       extracting common patterns into private methods, 
-#       and ensuring proper error handling"
-```
-
-#### **Multi-Step Workflows**
-```bash
-# Complex request example:
-"I need to add API versioning to this Rails app. 
- Please:
- 1. Set up v1 and v2 API namespaces
- 2. Move existing API endpoints to v1
- 3. Create v2 with enhanced responses
- 4. Add proper documentation
- 5. Ensure backward compatibility
- 6. Add integration tests for both versions"
-```
-
-#### **Continuous Improvement**
-```bash
-# The agent learns from your codebase:
-- Understands your architectural patterns
-- Follows your naming conventions
-- Maintains your code style
-- Respects your testing approach
-- Adapts to your Rails configuration
-```
-
-### Agent Supervision and Control
-
-#### **Approval Workflows**
-```bash
-# For safety, agents can ask for approval:
-- Before running destructive commands
-- When making significant architectural changes
-- Before committing code to git
-- When installing new dependencies
-```
-
-#### **Monitoring Agent Actions**
-```bash
-# You can:
-- See all agent actions in real-time
-- Interrupt long-running operations
-- Review changes before applying
-- Rollback agent modifications
-- Guide agent decision-making
-```
-
-### Best Practices for Agentic Development
-
-#### **1. Clear Problem Definition**
-```bash
-# Good: "Add user roles (admin, moderator, user) with proper authorization"
-# Bad: "Make users better"
-```
-
-#### **2. Incremental Requests**
-```bash
-# Start with: "Add basic user authentication"
-# Then: "Add role-based permissions"
-# Finally: "Add admin dashboard for user management"
-```
-
-#### **3. Context Preservation**
-```bash
-# Reference previous work:
-"Building on the authentication system we just added, 
- now implement password complexity requirements"
-```
-
-#### **4. Verification Steps**
-```bash
-# Always include: "Run the full test suite and fix any failures"
-# This ensures agent changes don't break existing functionality
-```
-
-### Enhanced Rails Workflow
 ```ruby
-# Select problematic code and press <leader>cr
+# Select problematic code and press <leader>cf
 def create
   @user = User.new(params[:user])
   @user.save
 end
 
-# CodeCompanion with Rails expertise suggests:
+# Copilot with Rails expertise suggests:
 def create
   @user = User.new(user_params)
   
@@ -1391,11 +1387,18 @@ def user_params
 end
 ```
 
-**Advanced Features**:
-- **Slash Commands**: `/rails`, `/test`, `/migrate`, `/refactor`
-- **Variables**: Inject dynamic content like `{{selection}}`, `{{buffer}}`
-- **Workflows**: Pre-configured automation sequences
-- **Multiple Models**: Switch between different AI models as needed
+**Powerful Chat Capabilities**:
+- **Context-aware conversations** about your Rails codebase
+- **Code explanations** tailored to Rails patterns
+- **Performance optimization** with Rails-specific suggestions
+- **Test generation** following Rails conventions
+- **Security reviews** for common Rails vulnerabilities
+
+**Daily Development Integration**:
+1. **Code while typing** - Copilot suggests Rails-appropriate code
+2. **Select and analyze** - Use visual mode commands for deeper insights  
+3. **Chat for complex questions** - Open discussions about architecture
+4. **Generate comprehensive tests** - RSpec tests that follow Rails patterns
 
 ### LSP: Intelligent Code Understanding
 
@@ -1413,6 +1416,307 @@ Your Ruby LSP provides IDE-level intelligence:
 **Mind-Blowing Example**: Cursor on a method name, press `<leader>lr`, and see every place that method is called across your entire Rails app. Press `<leader>lc` to rename it everywhere at once.
 
 ---
+
+## 🔍 Diagnostic Viewing: All the Ways to See Code Issues
+
+Your setup provides comprehensive diagnostic viewing options that go far beyond simple error messages. You have multiple powerful ways to view, navigate, and fix code issues.
+
+### Built-in Diagnostic Methods
+
+#### **1. Gutter Signs** (Always Active)
+Visual indicators in the sign column showing diagnostic severity:
+- **E** - Errors (red)
+- **W** - Warnings (yellow)  
+- **I** - Information (blue)
+- **H** - Hints (gray)
+
+#### **2. Code Underlines** (Always Active)
+Text underlines indicating problematic code:
+- **Wavy red** - Errors
+- **Wavy yellow** - Warnings
+- **Dotted blue** - Information
+- **Dotted gray** - Hints
+
+#### **3. Diagnostic Popup** - `<leader>le`
+Shows detailed diagnostic information in a floating window:
+```
+• Error details at cursor position
+• Full diagnostic message
+• Source (ruby_lsp, rubocop, etc.)
+• Diagnostic code/rule name
+• Quick access without leaving current position
+```
+
+#### **4. Virtual Text Toggle** - `<leader>lv`
+Inline diagnostic messages at end of lines:
+```ruby
+def broken_method
+  undefined_variable.call  # Error: undefined local variable
+end
+```
+**Note**: Can be visually noisy, so it's toggleable.
+
+#### **5. Location List** - `<leader>lq`
+Buffer-specific diagnostic list in a split window:
+- Shows all diagnostics for current file only
+- Navigate with `:lnext` and `:lprev` (or `]l` and `[l`)
+- Automatically updates as you fix issues
+- Perfect for working through file-specific problems
+
+#### **6. Quickfix List** - `<leader>lQ`
+Global diagnostic list across all open buffers:
+- Shows diagnostics from entire workspace
+- Navigate with `:cnext` and `:cprev` (or `]q` and `[q`)
+- Great for project-wide issue resolution
+- Persistent across buffer switches
+
+### Enhanced Plugin-Based Viewing
+
+#### **7. Trouble.nvim** - Dedicated Diagnostics Window
+Your most powerful diagnostic viewing tool with multiple modes:
+
+**General Diagnostics**:
+```
+<leader>xx  - All diagnostics (workspace overview)
+<leader>xw  - Workspace diagnostics (project-wide)
+<leader>xd  - Document diagnostics (current file only)
+```
+
+**List Views**:
+```
+<leader>xl  - Location list in Trouble format
+<leader>xq  - Quickfix list in Trouble format
+```
+
+**Advanced Features**:
+- **Grouping**: By file, by severity, by diagnostic source
+- **Filtering**: Focus on errors only, specific file types, etc.
+- **Context**: Shows surrounding code for each diagnostic
+- **Jump Navigation**: Click or press enter to jump to issues
+- **Auto-refresh**: Updates as you fix problems
+
+#### **8. Telescope Diagnostics** - Fuzzy Search Interface
+Powerful search and navigation for diagnostics:
+
+**Workspace Diagnostics** - `<leader>fe`:
+```
+• Search all diagnostics across entire project
+• Fuzzy search by error message content
+• Filter by file, severity, or diagnostic text
+• Preview problematic code before jumping
+• Great for finding similar issues across files
+```
+
+**Current Buffer Diagnostics** - `<leader>fE`:
+```
+• Focus only on current file issues
+• Same fuzzy search capabilities
+• Perfect for file-specific debugging
+• Less overwhelming than workspace view
+```
+
+**LSP Symbol Integration**:
+```
+<leader>fs  - Document symbols (navigate by methods/classes)
+<leader>fS  - Workspace symbols (find definitions across project)
+```
+
+### Navigation Between Diagnostics
+
+#### **Quick Navigation**
+```
+]d  - Next diagnostic (any severity)
+[d  - Previous diagnostic (any severity)
+]e  - Next error (errors only)
+[e  - Previous error (errors only)
+```
+
+#### **Location List Navigation**
+```
+]l  - Next location list item
+[l  - Previous location list item
+```
+
+#### **Quickfix Navigation**
+```
+]q  - Next quickfix item
+[q  - Previous quickfix item
+```
+
+### Ruby LSP Specific Diagnostics
+
+With all Ruby LSP features enabled, you get comprehensive diagnostics for:
+
+**Syntax Errors**:
+- Missing `end` statements
+- Unclosed parentheses/brackets
+- Invalid Ruby syntax
+
+**Semantic Analysis**:
+- Undefined methods/variables
+- Type mismatches (when possible to detect)
+- Unused variables
+
+**Style and Formatting**:
+- Code style violations (via RuboCop integration)
+- Indentation issues
+- Line length violations
+
+**Rails-Specific Issues**:
+- Missing associations
+- Invalid route definitions
+- Deprecated Rails methods
+
+### Choosing the Right Diagnostic View
+
+#### **For Quick Fixes** (Most Common)
+1. **Gutter signs** - See issues at a glance
+2. **`]d` and `[d`** - Navigate quickly between issues
+3. **`<leader>le`** - Get details without losing context
+
+#### **For File-Focused Work**
+1. **Location List** (`<leader>lq`) - All issues in current file
+2. **Telescope Buffer Diagnostics** (`<leader>fE`) - Searchable file issues
+3. **Trouble Document** (`<leader>xd`) - Rich file diagnostic view
+
+#### **For Project-Wide Issues**
+1. **Trouble Workspace** (`<leader>xw`) - Comprehensive project overview  
+2. **Telescope Workspace Diagnostics** (`<leader>fe`) - Searchable project issues
+3. **Quickfix List** (`<leader>lQ`) - Traditional project error list
+
+#### **For Deep Investigation**
+1. **Trouble with filtering** - Group by severity or source
+2. **Telescope with search** - Find specific error patterns
+3. **Virtual text** (`<leader>lv`) - See all issues inline
+
+### Advanced Diagnostic Workflows
+
+#### **The "Clean Sweep" Workflow**
+```bash
+# 1. Get project overview
+<leader>xw          # See all workspace issues in Trouble
+
+# 2. Focus on errors first  
+Filter by severity  # In Trouble, focus on red errors
+
+# 3. Tackle file by file
+Jump to file        # From Trouble, press Enter
+<leader>lq          # Open location list for file
+]l                  # Navigate through file issues
+```
+
+#### **The "Pattern Hunt" Workflow**  
+```bash
+# 1. Search for specific error patterns
+<leader>fe          # Open workspace diagnostics in Telescope
+
+# 2. Search for error text
+Type: "undefined"   # Find all undefined variable errors
+                   # Or "missing" for missing method errors
+
+# 3. Fix systematically
+Jump to each        # Preview and fix similar issues
+```
+
+#### **The "Context Focus" Workflow**
+```bash
+# 1. Start with inline context
+<leader>le          # Popup diagnostic at cursor
+
+# 2. Need more context?
+<leader>xd          # Trouble document view with code context
+
+# 3. Need project context?
+<leader>fe          # Search diagnostics across project
+```
+
+#### **The "Performance Debug" Workflow**
+```bash
+# 1. Find performance issues
+<leader>fe          # Telescope diagnostics
+Type: "performance" # Search for performance warnings
+
+# 2. Group similar issues  
+<leader>xw          # Trouble workspace view
+Group by source     # See RuboCop performance issues together
+```
+
+### Ruby-Specific Diagnostic Patterns
+
+#### **Common Ruby LSP Diagnostics**
+```ruby
+# Undefined method calls
+user.nonexistent_method  # Error: undefined method
+
+# Unused variables
+def process(data, unused) # Warning: unused parameter
+  data.process
+end
+
+# Missing require statements  
+JSON.parse(data)  # Error: uninitialized constant JSON
+
+# Type-related issues
+"string".length.to_s.length.invalid # Error: undefined method
+```
+
+#### **Rails-Specific Diagnostics**
+```ruby
+# Missing associations
+class Post < ApplicationRecord
+  belongs_to :nonexistent  # Error: undefined association
+end
+
+# Invalid route references
+redirect_to nonexistent_path  # Error: undefined route
+
+# Deprecated Rails methods
+Post.find_by_sql(sql)  # Warning: deprecated method
+```
+
+### Diagnostic Configuration Tips
+
+#### **Adjusting Diagnostic Display**
+Your configuration supports customization:
+- **Sign priority**: Control which signs show in gutter
+- **Virtual text**: Toggle inline messages on/off
+- **Underline styles**: Customize error underline appearance
+- **Floating window**: Adjust popup diagnostic styling
+
+#### **Performance Considerations**
+- **Location list**: Lightweight, updates quickly
+- **Quickfix list**: More memory usage with many diagnostics  
+- **Trouble**: Rich features but heavier resource usage
+- **Virtual text**: Can slow editing with many inline diagnostics
+
+### Integration with Other Tools
+
+#### **With Testing**
+```bash
+# Diagnostics work alongside testing:
+<leader>tn          # Run test under cursor
+# See test failures as diagnostics
+<leader>xd          # View test failures in Trouble
+```
+
+#### **With Debugging**
+```bash  
+# Diagnostics guide debugging focus:
+<leader>fe          # Find error patterns
+Jump to error       # Set breakpoint at problematic line
+<leader>db          # Set DAP breakpoint  
+<leader>rd          # Debug test that triggers error
+```
+
+#### **With Git Workflow**
+```bash
+# Fix diagnostics before commits:
+<leader>xw          # See all project issues
+Fix critical errors # Address red errors first
+git add/commit      # Commit clean code
+```
+
+Now you have **8 different ways** to view diagnostics, from quick inline popups to comprehensive project overviews. Each method serves different workflows, and you can seamlessly switch between them based on your current debugging needs!
 
 ## 🌳 Treesitter Text Objects: Code Structure Mastery
 
@@ -1727,14 +2031,23 @@ class User < ApplicationRecord
 ### DAP: Professional Debugging Experience
 
 ```
-<leader>db  - Toggle breakpoint (the red dot appears in the gutter)
+<leader>db  - Toggle breakpoint (● appears in the gutter)
+<leader>dB  - Conditional breakpoint (◐ for conditional)
 <leader>dc  - Continue execution
 <leader>ds  - Step over (next line)
 <leader>di  - Step into (dive into methods)
 <leader>do  - Step out (back to caller)
 <leader>du  - Toggle the visual debug UI
 <leader>de  - Evaluate any expression
+<leader>dt  - Terminate debugging session
 ```
+
+**Enhanced Visual Indicators**:
+- **●** - Active breakpoint (red)
+- **◐** - Conditional breakpoint (orange)
+- **◆** - Log point (blue)  
+- **▶** - Current execution line (green)
+- **○** - Rejected/disabled breakpoint (gray)
 
 **Rails-Specific Debugging**:
 ```
@@ -1748,11 +2061,1414 @@ class User < ApplicationRecord
 - The ability to evaluate any Ruby expression
 - Step-by-step execution control
 
-**Pro Debugging Scenario**: Your user creation is failing. Set a breakpoint in the `create` action, debug the test, and when it hits your breakpoint, press `<leader>de` and type `params` to see exactly what data was submitted. Type `@user.errors` to see validation failures. No more `puts` debugging!
+**Pro Rails Debugging Scenario**: Your user creation is failing. Set a breakpoint in the `create` action with `<leader>db`, debug the test with `<leader>rd`, and when it hits your breakpoint, press `<leader>de` and type `params` to see exactly what data was submitted. Type `@user.errors.full_messages` to see validation failures. No more `puts` debugging!
 
 ---
 
-## 🗄️ Database: Explore Your Data Visually
+## 🔧 Complete DAP Setup Guide for Rails Development
+
+Your DAP configuration provides **professional-grade debugging** for Rails applications. Here's the complete setup and workflow to get the most out of visual debugging.
+
+### **Required Rails Configuration**
+
+#### 1. **Development Environment Setup**
+
+Add this line to the **top** of `config/environments/development.rb`:
+
+```ruby
+require "debug/open_nonstop"
+
+Rails.application.configure do
+  # ... rest of your development config
+end
+```
+
+**Why at the top?** This ensures the debug server starts immediately when Rails loads, before any application code runs.
+
+#### 2. **Environment Variables (.env file)**
+
+Add these variables to your `.env` file:
+
+```bash
+# Enable Ruby debug server
+RUBY_DEBUG_OPEN=true
+RUBY_DEBUG_HOST=127.0.0.1
+RUBY_DEBUG_PORT=38698
+RUBY_DEBUG_SOCK_PATH=
+```
+
+**Critical Detail**: `RUBY_DEBUG_SOCK_PATH` **must be blank**! Here's why:
+
+- **When set**: Ruby debug uses Unix sockets (file-based communication)
+- **When blank**: Ruby debug uses TCP connections (network-based communication)
+- **DAP requirement**: DAP (Debug Adapter Protocol) requires TCP connections to communicate between Neovim and the Ruby debugger
+- **Unix sockets**: Only work for local, same-machine debugging
+- **TCP connections**: Work across networks and with external debugging tools like DAP
+
+### **How the Debugging Flow Works**
+
+#### **The Complete Debug Chain**
+
+```
+1. Rails Server (with debug/open_nonstop)
+   ↓ (listens on TCP port 38698)
+2. Your Ruby Code (with breakpoints)
+   ↓ (hits breakpoint, sends debug info)
+3. Ruby Debug Server 
+   ↓ (communicates via TCP)
+4. DAP Adapter (nvim-dap-ruby)
+   ↓ (translates debug protocol)
+5. Neovim DAP UI
+   ↓ (shows variables, stack, etc.)
+6. You (inspect, step, continue)
+```
+
+### **Setting Up Debug Sessions**
+
+#### **Method 1: Debug Rails Server Directly**
+
+```bash
+# 1. Start Rails with debug support
+rails server
+
+# 2. In Neovim, set breakpoints in your code
+# Open a controller: app/controllers/users_controller.rb
+def create
+  @user = User.new(user_params)  # <- Press <leader>db here
+  
+  if @user.save
+    redirect_to @user
+  else
+    render :new
+  end
+end
+
+# 3. Attach DAP to the running server
+# Use the "debug with binding.break" configuration
+# When prompted, enter port: 38698
+```
+
+#### **Method 2: Debug via RSpec Tests**
+
+```bash
+# 1. Set breakpoints in your code (models, controllers, etc.)
+# 2. Set breakpoints in your test files
+# 3. Use Rails-specific debug commands:
+
+<leader>rd  # Debug the RSpec test under your cursor
+<leader>rD  # Debug all tests in current file
+```
+
+### **Advanced Debugging Techniques**
+
+#### **Debugging Rails Controllers**
+
+```ruby
+class UsersController < ApplicationController
+  def create
+    # Set breakpoint here: <leader>db
+    @user = User.new(user_params)
+    
+    # When breakpoint hits, you can:
+    # - Press <leader>de and type: params
+    # - Press <leader>de and type: @user.attributes
+    # - Press <leader>de and type: @user.valid?
+    # - Press <leader>de and type: @user.errors.full_messages
+    
+    if @user.save
+      # Another breakpoint location
+      redirect_to @user, notice: 'User created successfully'
+    else
+      # Debug validation failures here
+      render :new, status: :unprocessable_entity
+    end
+  end
+  
+  private
+  
+  def user_params
+    # Breakpoint here to inspect parameter filtering
+    params.require(:user).permit(:name, :email, :age)
+  end
+end
+```
+
+#### **Debugging Rails Models**
+
+```ruby
+class User < ApplicationRecord
+  validates :email, presence: true, uniqueness: true
+  
+  def full_name
+    # Set breakpoint: <leader>db
+    # Inspect: first_name, last_name variables
+    # Check for nil values, formatting issues
+    "#{first_name} #{last_name}".strip
+  end
+  
+  def calculate_age
+    # Complex business logic debugging
+    return nil unless birth_date
+    
+    # Breakpoint here: <leader>db
+    today = Date.current
+    age = today.year - birth_date.year
+    
+    # Step through logic: <leader>ds
+    age -= 1 if today < birth_date + age.years
+    
+    age
+  end
+end
+```
+
+#### **Debugging Database Queries**
+
+```ruby
+def index
+  # Set breakpoint before query: <leader>db
+  @users = User.includes(:posts)
+              .where(active: true)
+              .order(:name)
+  
+  # When breakpoint hits:
+  # <leader>de → @users.to_sql  (see generated SQL)
+  # <leader>de → @users.explain (see query execution plan)
+  # <leader>ds to step to next line
+  # <leader>de → @users.count   (see how many records)
+end
+```
+
+### **DAP UI Features During Debug Sessions**
+
+When debugging is active, your DAP UI shows:
+
+#### **Variables Panel** (Left Side)
+- **Local variables**: Method parameters, local assignments
+- **Instance variables**: `@user`, `@posts`, etc.
+- **Class variables**: Shared across instances
+- **Global variables**: Application-wide state
+
+#### **Call Stack Panel** (Left Side)
+- **Current method**: Where execution is paused
+- **Calling method**: How you got here
+- **Full stack trace**: Complete execution path
+- **Click any frame**: Jump to that level in the stack
+
+#### **Watches Panel** (Left Side)
+Add expressions to monitor:
+```bash
+# Add watches for Rails-specific monitoring:
+@user.errors.full_messages
+params[:user]
+current_user&.id
+session[:user_id]
+```
+
+#### **Console Panel** (Bottom)
+Interactive Ruby evaluation:
+```ruby
+# Type any Ruby code:
+User.count
+Rails.env
+@user.attributes
+params.to_unsafe_h
+```
+
+### **Common Rails Debugging Scenarios**
+
+#### **1. Authentication Issues**
+```ruby
+# In ApplicationController or Devise setup
+def authenticate_user!
+  # Breakpoint: <leader>db
+  # Inspect: session, current_user, request headers
+  unless user_signed_in?
+    redirect_to new_user_session_path
+  end
+end
+
+# Debug session:
+# <leader>de → session.to_h
+# <leader>de → cookies.to_h  
+# <leader>de → request.headers['Authorization']
+```
+
+#### **2. N+1 Query Problems**
+```ruby
+def index
+  # Breakpoint before query: <leader>db
+  @posts = Post.all  # Suspected N+1 query
+  
+  # Step to view rendering: <leader>ds
+  # In view, breakpoint on: @posts.each do |post|
+  #   post.user.name  # <- This triggers N+1
+  
+  # Solution: @posts = Post.includes(:user)
+end
+```
+
+#### **3. Validation Failures**
+```ruby
+def create
+  @user = User.new(user_params)
+  
+  # Breakpoint: <leader>db
+  if @user.save
+    # Success path
+  else
+    # Breakpoint here: <leader>db
+    # Inspect validation errors:
+    # <leader>de → @user.errors.full_messages
+    # <leader>de → @user.errors.details
+    render :new
+  end
+end
+```
+
+#### **4. Complex Business Logic**
+```ruby
+class OrderProcessor
+  def process_payment(order)
+    # Multiple breakpoints for complex flow
+    return false unless order.valid?  # <- Breakpoint 1
+    
+    payment_result = charge_card(order.total)  # <- Breakpoint 2
+    
+    if payment_result.success?  # <- Breakpoint 3
+      order.update!(status: 'paid')
+      send_confirmation_email(order)  # <- Breakpoint 4
+      true
+    else
+      order.errors.add(:payment, payment_result.error)  # <- Breakpoint 5
+      false
+    end
+  end
+end
+```
+
+### **Debugging Best Practices**
+
+#### **Strategic Breakpoint Placement**
+1. **Entry points**: Controller action beginnings
+2. **Decision points**: Before if/unless statements
+3. **Data transformation**: Before complex calculations
+4. **Error boundaries**: In rescue blocks
+5. **Exit points**: Before redirects/renders
+
+#### **Efficient Debug Sessions**
+```bash
+# Quick debug workflow:
+<leader>db   # Set breakpoint
+<leader>rd   # Start debug session (via test)
+<leader>de   # Evaluate expressions
+<leader>ds   # Step through code
+<leader>dc   # Continue to next breakpoint
+<leader>dt   # Terminate when done
+```
+
+#### **Information Gathering Commands**
+```ruby
+# Essential Rails debugging expressions:
+params.to_unsafe_h           # All parameters
+session.to_h                 # Current session data
+current_user&.attributes     # User details (if using Devise)
+@instance_variable.inspect   # Any instance variable
+ActionController::Base.logger.debug("Debug message")
+Rails.logger.info(variable.inspect)
+```
+
+### **Troubleshooting Common Issues**
+
+#### **DAP Won't Connect**
+```bash
+# Check if debug server is running:
+lsof -i :38698
+
+# Verify environment variables:
+echo $RUBY_DEBUG_OPEN
+echo $RUBY_DEBUG_HOST  
+echo $RUBY_DEBUG_PORT
+
+# Restart Rails server:
+rails server
+```
+
+#### **Breakpoints Not Hit**
+1. **Verify file path**: DAP uses absolute paths
+2. **Check Rails loading**: Ensure code is actually executed
+3. **Restart debug session**: Sometimes connection gets stale
+4. **Verify environment**: Must be in development mode
+
+#### **Performance Considerations**
+- **Remove breakpoints**: When not debugging (they slow down code)
+- **Close DAP UI**: When not needed (`<leader>du`)
+- **Terminate sessions**: Don't leave debug sessions running (`<leader>dt`)
+
+This setup transforms Rails debugging from guesswork into **surgical precision**. You can inspect every variable, step through every line, and understand exactly what your Rails application is doing at any moment! 🎯
+
+---
+
+## � The Complete Rails Development Workflow
+
+Your development environment extends far beyond Neovim. Here's how to create the ultimate Rails development workflow using tmux, mise, Rails console, and essential Rails commands.
+
+---
+
+## 📊 Tmux: Orchestrating Your Development Session
+
+Tmux transforms your terminal into a powerful development workspace where you can manage multiple Rails processes, maintain persistent sessions, and organize your work efficiently.
+
+### Essential Tmux Setup for Rails
+
+#### **Basic Tmux Commands**
+```bash
+# Session management
+tmux new-session -s rails-project    # Create named session
+tmux attach-session -t rails-project # Attach to existing session  
+tmux list-sessions                    # See all sessions
+tmux kill-session -t rails-project   # End session
+
+# Within tmux session:
+Ctrl+b c        # Create new window
+Ctrl+b n        # Next window
+Ctrl+b p        # Previous window
+Ctrl+b 0-9      # Jump to window number
+Ctrl+b ,        # Rename current window
+Ctrl+b %        # Split pane vertically
+Ctrl+b "        # Split pane horizontally
+Ctrl+b x        # Kill current pane
+Ctrl+b d        # Detach from session (keeps running)
+```
+
+### The Ultimate Rails Development Tmux Layout
+
+Create a comprehensive Rails development environment with dedicated panes for different tasks:
+
+```bash
+#!/bin/bash
+# Save as: ~/bin/rails-tmux-setup.sh
+# Make executable: chmod +x ~/bin/rails-tmux-setup.sh
+
+PROJECT_NAME=$1
+if [ -z "$PROJECT_NAME" ]; then
+    echo "Usage: rails-tmux-setup.sh <project-name>"
+    exit 1
+fi
+
+# Create new tmux session
+tmux new-session -d -s "$PROJECT_NAME"
+
+# Window 1: Editor (Neovim)
+tmux rename-window -t "$PROJECT_NAME:0" "editor"
+tmux send-keys -t "$PROJECT_NAME:editor" "nvim ." C-m
+
+# Window 2: Rails Server
+tmux new-window -t "$PROJECT_NAME" -n "server"
+tmux send-keys -t "$PROJECT_NAME:server" "rails server" C-m
+
+# Window 3: Rails Console & Database
+tmux new-window -t "$PROJECT_NAME" -n "console"
+tmux split-window -t "$PROJECT_NAME:console" -h
+tmux send-keys -t "$PROJECT_NAME:console.0" "rails console" C-m
+tmux send-keys -t "$PROJECT_NAME:console.1" "# Database commands ready" C-m
+
+# Window 4: Tests & Background Jobs
+tmux new-window -t "$PROJECT_NAME" -n "testing"
+tmux split-window -t "$PROJECT_NAME:testing" -h
+tmux send-keys -t "$PROJECT_NAME:testing.0" "# Tests ready" C-m
+tmux send-keys -t "$PROJECT_NAME:testing.1" "# Background jobs ready" C-m
+
+# Window 5: Git & System
+tmux new-window -t "$PROJECT_NAME" -n "git"
+tmux send-keys -t "$PROJECT_NAME:git" "git status" C-m
+
+# Window 6: Logs & Monitoring  
+tmux new-window -t "$PROJECT_NAME" -n "logs"
+tmux split-window -t "$PROJECT_NAME:logs" -h
+tmux send-keys -t "$PROJECT_NAME:logs.0" "tail -f log/development.log" C-m
+tmux send-keys -t "$PROJECT_NAME:logs.1" "# System monitoring ready" C-m
+
+# Return to editor window
+tmux select-window -t "$PROJECT_NAME:editor"
+
+# Attach to session
+tmux attach-session -t "$PROJECT_NAME"
+```
+
+#### **Usage**:
+```bash
+# Start your Rails development session
+./rails-tmux-setup.sh my-rails-app
+
+# You now have:
+# Window 0: Neovim with your project open
+# Window 1: Rails server running
+# Window 2: Rails console + database terminal
+# Window 3: Testing + background job terminal
+# Window 4: Git commands
+# Window 5: Log monitoring + system monitoring
+```
+
+### Advanced Tmux Rails Workflows
+
+#### **The "Feature Development" Layout**
+```bash
+# Create specialized layout for feature work
+tmux new-session -d -s feature-work
+
+# Split into quarters for comprehensive development
+tmux split-window -v    # Top/bottom split
+tmux split-window -h    # Bottom right split  
+tmux select-pane -t 0
+tmux split-window -h    # Top right split
+
+# Pane 0 (top-left): Neovim
+tmux send-keys -t 0 "nvim app/controllers/users_controller.rb" C-m
+
+# Pane 1 (top-right): Tests
+tmux send-keys -t 1 "# Test commands ready" C-m
+
+# Pane 2 (bottom-left): Rails console
+tmux send-keys -t 2 "rails console" C-m
+
+# Pane 3 (bottom-right): Server/logs
+tmux send-keys -t 3 "rails server" C-m
+```
+
+#### **The "Debugging Session" Layout**
+```bash
+# Specialized layout for debugging complex issues
+tmux new-session -d -s debug-session
+
+# Three-pane horizontal layout
+tmux split-window -v
+tmux split-window -v
+tmux select-layout even-vertical
+
+# Pane 0: Neovim with breakpoints
+tmux send-keys -t 0 "nvim" C-m
+
+# Pane 1: Rails console for investigation  
+tmux send-keys -t 1 "rails console" C-m
+
+# Pane 2: Test execution with debugging
+tmux send-keys -t 2 "# Debug tests here" C-m
+```
+
+### Tmux Session Persistence
+
+#### **Save and Restore Sessions**
+```bash
+# Install tmux-resurrect plugin (add to ~/.tmux.conf):
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+
+# Save current session
+Ctrl+b Ctrl+s
+
+# Restore saved session  
+Ctrl+b Ctrl+r
+
+# Auto-save every 15 minutes
+set -g @continuum-save-interval '15'
+```
+
+#### **Project-Specific Tmux Scripts**
+```bash
+# Create project-specific tmux startup script
+# ~/.tmux-sessions/my-rails-app.sh
+
+#!/bin/bash
+cd ~/projects/my-rails-app
+
+tmux new-session -d -s my-rails-app -x 120 -y 40
+
+# Set up development environment
+tmux new-window -n editor
+tmux send-keys 'nvim .' C-m
+
+tmux new-window -n server  
+tmux send-keys 'bundle exec rails server' C-m
+
+tmux new-window -n console
+tmux send-keys 'bundle exec rails console' C-m
+
+tmux new-window -n tests
+tmux send-keys 'bundle exec rspec' C-m
+
+tmux attach-session -t my-rails-app
+```
+
+### Rails-Specific Tmux Productivity Tips
+
+#### **Quick Commands in Tmux**
+```bash
+# Set up tmux aliases for common Rails commands
+# Add to ~/.bashrc or ~/.zshrc
+
+alias rs='rails server'
+alias rc='rails console'  
+alias rr='rails routes'
+alias rg='rails generate'
+alias rdb='rails db:migrate'
+alias rtest='rails test'
+alias rspec='bundle exec rspec'
+
+# Tmux-specific Rails shortcuts
+alias tmux-rails='tmux new-session -s $(basename $(pwd))'
+alias tmux-attach='tmux attach-session -t $(basename $(pwd))'
+```
+
+#### **Background Process Management**
+```bash
+# Window for background jobs (in tmux)
+# Pane 1: Sidekiq
+bundle exec sidekiq
+
+# Pane 2: Rails server
+bundle exec rails server
+
+# Pane 3: Webpacker dev server (if using)  
+./bin/webpack-dev-server
+
+# Pane 4: Database monitoring
+watch -n 2 'echo "SELECT COUNT(*) FROM users;" | rails dbconsole'
+```
+
+---
+
+## 🛠️ Mise: Ruby Version and Environment Management
+
+Mise (formerly rtx) is a fast, polyglot tool version manager that makes managing Ruby versions and project environments effortless.
+
+### Basic Mise Setup for Rails
+
+#### **Installing Ruby Versions**
+```bash
+# Install latest Ruby
+mise install ruby@latest
+
+# Install specific Ruby version
+mise install ruby@3.2.0
+mise install ruby@3.1.4
+
+# List available Ruby versions
+mise list-all ruby
+
+# List installed versions  
+mise list ruby
+
+# Set global Ruby version
+mise use -g ruby@3.2.0
+
+# Set local Ruby version for project
+cd my-rails-project
+mise use ruby@3.2.0
+```
+
+#### **Project-Specific Configuration**
+Create a `.mise.toml` file in your Rails project root:
+
+```toml
+# .mise.toml - Project configuration
+[tools]
+ruby = "3.2.0"
+node = "18.17.0"    # For asset pipeline
+bundler = "2.4.15"  # Specific Bundler version
+
+[env]  
+RAILS_ENV = "development"
+DATABASE_URL = "postgresql://localhost/myapp_development"
+REDIS_URL = "redis://localhost:6379/0"
+
+# Rails-specific environment variables
+RAILS_LOG_LEVEL = "debug"
+RAILS_MAX_THREADS = "5"
+
+# Development-specific settings
+DISABLE_SPRING = "true"  # Disable Spring for consistency
+```
+
+#### **Environment Variables Management**
+```bash
+# Create environment-specific configs
+
+# .mise.production.toml
+[env]
+RAILS_ENV = "production"
+DATABASE_URL = "postgresql://prod-server/myapp_production"
+RAILS_LOG_LEVEL = "info"
+RAILS_SERVE_STATIC_FILES = "true"
+
+# .mise.test.toml  
+[env]
+RAILS_ENV = "test"
+DATABASE_URL = "postgresql://localhost/myapp_test"
+DISABLE_SPRING = "true"
+```
+
+### Advanced Mise Rails Workflows
+
+#### **Multi-Project Ruby Management**
+```bash
+# Different Rails projects with different Ruby versions
+cd rails-app-legacy
+mise use ruby@2.7.6    # Older Rails app
+
+cd rails-app-modern  
+mise use ruby@3.2.0    # Modern Rails app
+
+cd rails-app-edge
+mise use ruby@3.3.0    # Cutting edge Rails app
+
+# Mise automatically switches when you cd between projects
+```
+
+#### **Mise with Rails New Projects**
+```bash
+# Create new Rails project with specific versions
+mise use ruby@3.2.0
+gem install rails -v 7.0.6
+
+# Create new app with mise configuration
+rails new my-app --database=postgresql
+
+cd my-app
+
+# Set up mise for the new project
+mise use ruby@3.2.0
+mise use node@18.17.0
+
+# Create .mise.toml with project settings
+echo '[tools]
+ruby = "3.2.0"
+node = "18.17.0"
+
+[env]
+RAILS_ENV = "development"
+DATABASE_URL = "postgresql://localhost/my_app_development"' > .mise.toml
+```
+
+#### **Mise + Bundler Integration**
+```bash
+# Install project-specific Bundler
+mise install bundler@2.4.15
+mise use bundler@2.4.15
+
+# Install gems with mise-managed Bundler
+bundle install
+
+# Run Rails commands with proper environment
+mise exec -- rails server
+mise exec -- rails console
+mise exec -- bundle exec rspec
+```
+
+### Mise Development Workflows
+
+#### **The "Clean Environment" Approach**
+```bash
+# Start with fresh shell environment
+mise deactivate     # Clear current mise environment
+cd my-rails-project # Activates project-specific mise config
+mise current        # Verify correct versions loaded
+
+# Now your environment is exactly what .mise.toml specifies
+rails server        # Uses project Ruby/Bundler/Node versions
+```
+
+#### **Environment Debugging with Mise**
+```bash
+# Check what mise has loaded
+mise current
+mise env            # Show all environment variables
+mise which ruby     # Show path to Ruby executable
+mise which bundle   # Show path to Bundler
+
+# Troubleshoot environment issues
+mise doctor         # Check mise installation
+mise env | grep -i rails  # Check Rails-specific variables
+```
+
+#### **Mise + Docker Integration**
+```dockerfile
+# Dockerfile using mise
+FROM ubuntu:22.04
+
+# Install mise
+RUN curl https://mise.run | sh
+ENV PATH="/root/.local/share/mise/bin:$PATH"
+
+# Install project tools from mise config
+COPY .mise.toml .
+RUN mise install
+
+# Use mise to run Rails
+CMD ["mise", "exec", "--", "rails", "server", "-b", "0.0.0.0"]
+```
+
+---
+
+## 🎯 Rails Console: Your Interactive Development Powerhouse
+
+The Rails console is your direct line to your application. Master it for debugging, data exploration, testing ideas, and rapid development.
+
+### Essential Rails Console Techniques
+
+#### **Starting and Configuring Console**
+```bash
+# Basic console startup
+rails console
+rails c                    # Shortcut
+
+# Environment-specific consoles  
+rails console production   # Production console (be careful!)
+rails console test        # Test environment console
+rails console staging     # Staging environment console
+
+# Console with specific options
+rails console --sandbox   # Rollback all changes on exit
+rails console --help      # See all options
+```
+
+#### **Console Configuration**
+Add to `~/.irbrc` for enhanced console experience:
+```ruby
+# ~/.irbrc - IRB configuration
+require 'irb/completion'
+require 'irb/ext/save-history'
+
+IRB.conf[:SAVE_HISTORY] = 1000
+IRB.conf[:HISTORY_FILE] = "#{ENV['HOME']}/.irb_history"
+IRB.conf[:AUTO_INDENT] = true
+IRB.conf[:USE_READLINE] = true
+IRB.conf[:LOAD_MODULES] = []
+
+# Rails-specific helpers (only loaded in Rails context)
+if defined?(Rails)
+  # Custom helper methods
+  def reload!
+    Rails.application.reloader.reload!
+  end
+  
+  def sql_last
+    ActiveRecord::Base.connection.execute("SELECT last_query FROM pg_stat_activity WHERE application_name = 'Rails Console'").first
+  end
+  
+  # Quick access to common models (customize for your app)
+  def u(id = nil)
+    id ? User.find(id) : User
+  end
+  
+  def p(id = nil)  
+    id ? Post.find(id) : Post
+  end
+end
+```
+
+### Rails Console Mastery for Development
+
+#### **Model Exploration and Testing**
+```ruby
+# Quick model inspection
+User.column_names
+User.attribute_names  
+User.validators
+User.reflections.keys  # See associations
+
+# Test validations quickly
+user = User.new
+user.valid?
+user.errors.full_messages
+
+# Explore associations
+user = User.first
+user.posts.count
+user.posts.where(published: true).count
+
+# Test scopes and queries
+User.where(active: true).to_sql  # See generated SQL
+User.joins(:posts).explain       # See query execution plan
+```
+
+#### **Rapid Data Creation and Testing**
+```ruby
+# Create test data quickly
+user = User.create!(
+  name: 'Test User', 
+  email: 'test@example.com',
+  role: 'admin'
+)
+
+# Test associations
+user.posts.create!(
+  title: 'Test Post',
+  content: 'Test content',
+  published: true
+)
+
+# Bulk data creation
+10.times do |i|
+  User.create!(
+    name: "User #{i}",
+    email: "user#{i}@example.com"
+  )
+end
+```
+
+#### **Debugging with Console**
+```ruby
+# Inspect objects in detail
+user.inspect
+user.attributes
+user.changes          # See what changed before save
+user.changed?          # Has anything changed?
+user.previous_changes  # What changed after last save
+
+# Query debugging
+User.joins(:posts).to_sql
+User.includes(:posts).load  # Force query execution
+ActiveRecord::Base.logger = Logger.new(STDOUT)  # See all SQL
+
+# Performance analysis  
+Benchmark.measure { User.all.to_a }
+User.count vs User.all.size vs User.all.length
+```
+
+#### **Testing Controllers and Routes**
+```ruby
+# Test routes
+app.users_path
+app.user_path(1)
+app.get '/users'
+app.response.status
+app.response.body
+
+# Test helpers
+helper.number_to_currency(1234.56)
+helper.time_ago_in_words(2.days.ago)
+helper.pluralize(2, 'user')
+
+# Access controller instance
+controller = UsersController.new
+controller.params = { id: 1 }
+```
+
+### Advanced Console Workflows
+
+#### **Database Administration**
+```ruby
+# Connection management
+ActiveRecord::Base.connection.execute("SELECT version()")
+ActiveRecord::Base.connection.tables
+ActiveRecord::Base.connection.indexes(:users)
+
+# Migration testing
+ActiveRecord::Migration.check_pending!
+ActiveRecord::Migrator.current_version
+
+# Database queries
+ActiveRecord::Base.connection.execute(
+  "SELECT COUNT(*) FROM users WHERE created_at > '#{1.week.ago}'"
+).first
+
+# Index analysis  
+ActiveRecord::Base.connection.execute("EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'test@example.com'")
+```
+
+#### **Performance Profiling**
+```ruby
+# Memory usage analysis
+require 'objspace'
+ObjectSpace.count_objects
+
+# Query performance
+ActiveRecord::QueryTrace.enabled = true  # If gem installed
+User.all.to_a  # Shows stack trace for queries
+
+# Benchmark different approaches
+Benchmark.bm do |x|
+  x.report("joins") { User.joins(:posts).count }
+  x.report("includes") { User.includes(:posts).map(&:posts).flatten.count }
+end
+```
+
+#### **Testing and Mocking**
+```ruby
+# Time manipulation
+Time.stub(:current, 1.year.from_now) do
+  User.create!(name: 'Future User')
+end
+
+# Environment simulation
+Rails.stub(:env, 'production') do
+  # Test production-only code paths
+end
+
+# Factory testing (if using FactoryBot)
+FactoryBot.create(:user)
+FactoryBot.build(:user, email: 'custom@example.com')
+```
+
+### Console Productivity Tips
+
+#### **History and Shortcuts**
+```ruby
+# Access command history
+hist            # Show history (if configured)
+_               # Result of last expression
+exit            # Leave console (Ctrl+D also works)
+
+# Multi-line editing
+def test_method
+  puts "This is"
+  puts "a multi-line"
+  puts "method"
+end
+```
+
+#### **Loading External Scripts**
+```ruby
+# Load external Ruby file
+load 'script/data_migration.rb'
+load 'lib/utility_methods.rb'
+
+# Require gems not in Gemfile (temporarily)  
+require 'benchmark'
+require 'csv'
+```
+
+#### **Console-Specific Debugging**
+```ruby
+# Enable detailed logging
+ActiveRecord::Base.logger.level = 0  # Show all SQL queries
+
+# Debug specific components
+Rails.logger.level = :debug
+ActionController::Base.logger.level = :debug
+
+# Clear cache (for development)
+Rails.cache.clear
+```
+
+---
+
+## ⚡ Essential Rails Commands: Your CLI Toolkit
+
+Master these Rails commands for efficient development, from project creation to database management.
+
+### Rails New: Project Creation
+
+#### **Basic Project Creation**
+```bash
+# Standard Rails application
+rails new my_app
+
+# Rails API (no views, minimal features)
+rails new my_api --api
+
+# Rails with specific database
+rails new my_app --database=postgresql
+rails new my_app --database=mysql
+rails new my_app --database=sqlite3
+
+# Skip specific features
+rails new my_app --skip-test        # Skip test framework
+rails new my_app --skip-bundle      # Skip bundle install
+rails new my_app --skip-git         # Skip git init
+rails new my_app --skip-coffee      # Skip CoffeeScript
+rails new my_app --skip-javascript  # Skip JavaScript
+rails new my_app --skip-turbolinks  # Skip Turbolinks
+```
+
+#### **Advanced Project Creation**
+```bash
+# Modern Rails setup with multiple options
+rails new my_modern_app \
+  --database=postgresql \
+  --skip-test \
+  --css=tailwind \
+  --javascript=esbuild \
+  --git \
+  --force
+
+# Rails with specific Ruby version (using mise/rbenv)
+mise use ruby@3.2.0
+rails new my_app --ruby=3.2.0
+
+# Rails application template
+rails new my_app -m https://raw.githubusercontent.com/user/rails-template/main/template.rb
+rails new my_app -m ~/templates/my_template.rb
+```
+
+#### **Project Creation Best Practices**
+```bash
+# Complete modern Rails setup
+rails new my_project \
+  --database=postgresql \
+  --skip-test \
+  --css=tailwind \
+  --javascript=importmap \
+  --force
+
+cd my_project
+
+# Set up development environment
+mise use ruby@3.2.0
+bundle install
+rails db:create
+rails db:migrate
+
+# Add testing framework (RSpec)
+echo "gem 'rspec-rails', '~> 6.0'" >> Gemfile
+bundle install
+rails generate rspec:install
+
+# Initialize git
+git init
+git add .
+git commit -m "Initial Rails application"
+```
+
+### Rails Generate: Code Generation
+
+#### **Model Generation**
+```bash
+# Basic model
+rails generate model User name:string email:string
+
+# Model with various field types
+rails generate model Post \
+  title:string \
+  content:text \
+  published:boolean \
+  published_at:datetime \
+  user:references \
+  view_count:integer \
+  rating:decimal{5,2}
+
+# Model with indexes
+rails generate model User \
+  name:string \
+  email:string:uniq \
+  phone:string:index
+
+# Generate migration only (no model file)
+rails generate migration AddAgeToUsers age:integer
+rails generate migration CreateJoinTableUsersRoles user:references role:references
+```
+
+#### **Controller Generation**
+```bash
+# Basic controller
+rails generate controller Users
+
+# Controller with actions
+rails generate controller Users index show new create edit update destroy
+
+# API controller
+rails generate controller Api::Users index show create update destroy --no-template-engine
+
+# Controller with specific route namespace
+rails generate controller Admin::Users index show
+```
+
+#### **Resource Generation**
+```bash
+# Generate model + controller + routes + views
+rails generate scaffold User name:string email:string age:integer
+
+# API scaffold (JSON responses only)
+rails generate scaffold User name:string email:string --api
+
+# Resource without scaffolding (routes + controller)
+rails generate resource User name:string email:string
+```
+
+#### **View and Helper Generation**
+```bash
+# Generate views for existing controller
+rails generate controller Users index show --no-controller
+
+# Generate helper
+rails generate helper Users
+rails generate helper Application
+```
+
+#### **Advanced Generators**
+```bash
+# Migration generators
+rails generate migration AddIndexToUsers email:index
+rails generate migration RemoveAgeFromUsers age:integer
+rails generate migration ChangeUserEmailToNotNull
+rails generate migration CreateJoinTableAuthorsBooks author:references book:references
+
+# Mailer generation
+rails generate mailer UserMailer welcome_email password_reset
+
+# Job generation (Active Job)
+rails generate job ProcessPayment
+rails generate job EmailNotification
+
+# Channel generation (Action Cable)
+rails generate channel Chat
+rails generate channel Notifications
+
+# Stimulus controller (if using)
+rails generate stimulus hello
+```
+
+#### **Custom Generators**
+```bash
+# Create custom generator
+rails generate generator my_generator
+
+# Use custom generator
+rails generate my_generator ModelName field:type
+```
+
+### Rails Database Commands
+
+#### **Basic Database Operations**
+```bash
+# Database creation and setup
+rails db:create          # Create development and test databases
+rails db:create:all      # Create all environment databases
+rails db:drop           # Drop development and test databases  
+rails db:drop:all       # Drop all environment databases
+
+# Schema operations
+rails db:migrate        # Run pending migrations
+rails db:migrate:up VERSION=20210101000000    # Run specific migration
+rails db:migrate:down VERSION=20210101000000  # Rollback specific migration
+rails db:rollback       # Rollback last migration
+rails db:rollback STEP=3  # Rollback last 3 migrations
+rails db:migrate:redo   # Rollback and re-run last migration
+rails db:migrate:status # Show migration status
+```
+
+#### **Advanced Database Management**
+```bash
+# Schema management
+rails db:schema:load    # Load schema.rb into database
+rails db:schema:dump    # Dump current database to schema.rb
+rails db:structure:dump # Dump database structure (includes views, triggers, etc.)
+rails db:structure:load # Load structure.sql into database
+
+# Reset and setup
+rails db:reset          # Drop, create, load schema, seed
+rails db:setup          # Create, load schema, seed
+rails db:prepare        # Create if needed, then migrate
+
+# Environment-specific operations
+rails db:create RAILS_ENV=production
+rails db:migrate RAILS_ENV=test
+rails db:seed RAILS_ENV=staging
+```
+
+#### **Database Seeding and Testing**
+```bash
+# Seed database
+rails db:seed           # Run db/seeds.rb
+rails db:seed:replant   # Truncate tables and re-seed
+
+# Test database management
+rails db:test:prepare   # Prepare test database
+rails db:test:load      # Load schema into test database
+rails db:test:purge     # Empty test database
+
+# Custom seed files
+rails db:seed:development  # If you have db/seeds/development.rb
+rails db:seed:production   # If you have db/seeds/production.rb
+```
+
+### Rails Server and Console Commands
+
+#### **Server Management**
+```bash
+# Start server
+rails server            # Default (port 3000)
+rails s                # Shortcut
+rails server -p 4000   # Custom port
+rails server -b 0.0.0.0  # Bind to all interfaces
+rails server -e production  # Specific environment
+
+# Server with specific configurations
+rails server --daemon   # Run as daemon (background)
+rails server --debugger # With debugger support
+rails server --pid=tmp/pids/server.pid  # Custom PID file
+```
+
+#### **Console Variations**
+```bash
+# Console access
+rails console           # Development console
+rails c                # Shortcut
+rails console production  # Production console
+rails console --sandbox  # Rollback changes on exit
+rails console test      # Test environment console
+
+# Database console
+rails dbconsole         # Direct database access
+rails db               # Shortcut
+rails dbconsole -p     # Include password in connection
+```
+
+### Rails Maintenance Commands
+
+#### **Application Information**
+```bash
+# Application details
+rails about            # Show Rails and gem versions
+rails version          # Show Rails version only
+rails stats            # Show code statistics
+rails routes           # Show all routes
+rails routes -g user   # Filter routes containing 'user'
+rails routes --expanded  # Show expanded route information
+
+# Environment information
+rails runner "puts Rails.env"  # Show current environment
+rails runner "puts Rails.root" # Show application root
+```
+
+#### **Code Quality and Maintenance**  
+```bash
+# Notes and annotations
+rails notes            # Show TODO, FIXME, OPTIMIZE comments
+rails notes:todo       # Show only TODO comments
+rails notes:fixme      # Show only FIXME comments
+rails notes:optimize   # Show only OPTIMIZE comments
+rails notes:custom ANNOTATION=REFACTOR  # Show custom annotations
+
+# Security and updates
+bundle audit           # Check for security vulnerabilities
+rails security:check   # Check for security issues (if brakeman installed)
+```
+
+#### **Asset and Cache Management**
+```bash
+# Asset pipeline
+rails assets:precompile    # Precompile assets
+rails assets:clean         # Clean old assets
+rails assets:clobber       # Delete all assets
+
+# Cache management  
+rails dev:cache           # Toggle development caching
+rails cache:clear         # Clear application cache (if configured)
+```
+
+### Rails Testing Commands
+
+#### **Test Execution**
+```bash
+# Rails test framework (Minitest)
+rails test               # Run all tests
+rails test test/models/  # Run model tests
+rails test test/controllers/  # Run controller tests
+rails test test/models/user_test.rb  # Run specific test file
+rails test test/models/user_test.rb:test_should_be_valid  # Run specific test
+
+# Test with options
+rails test --verbose     # Verbose output
+rails test --seed=1234   # Run with specific seed
+rails test --profile     # Show slowest tests
+```
+
+#### **RSpec Integration**
+```bash
+# If using RSpec (after installing rspec-rails gem)
+bundle exec rspec        # Run all specs
+bundle exec rspec spec/models/  # Run model specs
+bundle exec rspec spec/models/user_spec.rb  # Run specific spec file
+bundle exec rspec --format documentation  # Detailed output
+bundle exec rspec --tag focus  # Run specs tagged with :focus
+```
+
+### Environment-Specific Rails Commands
+
+#### **Production Commands**
+```bash
+# Production-specific operations
+RAILS_ENV=production rails assets:precompile
+RAILS_ENV=production rails db:migrate
+RAILS_ENV=production rails server -d  # Daemonize
+
+# Production console (be careful!)
+RAILS_ENV=production rails console --sandbox
+```
+
+#### **Development Helpers**
+```bash
+# Development-specific commands
+rails generate controller welcome index
+rails server --binding=0.0.0.0 --port=3000
+rails runner "puts User.count"  # Run arbitrary Ruby code
+```
+
+### Creating Rails Command Aliases
+
+Add these to your shell configuration (`~/.bashrc`, `~/.zshrc`):
+
+```bash
+# Rails aliases for speed
+alias rs='rails server'
+alias rc='rails console'
+alias rr='rails routes'  
+alias rg='rails generate'
+alias rd='rails destroy'
+alias rdb='rails db:migrate'
+alias rdbc='rails dbconsole'
+alias rdbr='rails db:rollback'
+alias rdbs='rails db:seed'
+alias rt='rails test'
+
+# Environment-specific aliases
+alias rcp='RAILS_ENV=production rails console --sandbox'
+alias rsp='RAILS_ENV=production rails server'
+alias rdbp='RAILS_ENV=production rails db:migrate'
+
+# Complex operations
+alias rsetup='rails db:drop db:create db:migrate db:seed'
+alias rreset='rails db:reset'
+alias rfresh='rails db:drop db:create db:schema:load db:seed'
+```
+
+### Rails Command Best Practices
+
+#### **Safe Command Practices**
+```bash
+# Always use --sandbox in production console
+RAILS_ENV=production rails console --sandbox
+
+# Double-check environment before destructive operations
+echo $RAILS_ENV  
+rails db:drop    # Make sure you're not in production!
+
+# Use version control before major changes
+git add . && git commit -m "Before running migrations"
+rails db:migrate
+```
+
+#### **Development Workflow Integration**
+```bash
+# Complete feature development cycle
+git checkout -b new-feature
+rails generate model Feature name:string description:text
+rails db:migrate
+rails test
+git add . && git commit -m "Add Feature model"
+
+rails generate controller Features index show new create
+rails test test/controllers/features_controller_test.rb  
+git add . && git commit -m "Add Features controller"
+```
+
+This comprehensive Rails workflow guide covers everything from tmux session management to essential Rails CLI commands, making it perfect for beginners who want to understand the complete development ecosystem beyond just the editor!
+
+---
+
+## �🗄️ Database: Explore Your Data Visually
 
 ### Dadbod: Database Explorer
 
@@ -2421,7 +4137,9 @@ User.count  # Check current data
 ```bash
 # Press <leader>cc and ask: "How should I structure this validation?"
 # Get Rails-specific advice from Copilot
-# Use suggestions with <Tab>
+# Select problematic code and press <leader>cf for fixes
+# Use <leader>cre for Rails-specific explanations
+# Accept inline suggestions with Ctrl+Y
 ```
 
 ### 5. 🐛 Debugging Phase
@@ -2459,11 +4177,18 @@ At the start of each feature, harpoon your key files:
 
 Now use `<leader>1-4` to jump instantly between them.
 
-### 2. **Copilot Pair Programming**
-Use Copilot Chat as your pair programming partner:
-- "What edge cases should I consider for this method?"
-- "How can I make this more performant?"
-- "What's the Rails convention for this pattern?"
+### 2. **Copilot Partnership**
+Use Copilot as your development partner:
+- Let inline suggestions guide you with **Ctrl+Y** acceptance
+- Select code and ask **"What edge cases should I consider?"** via `<leader>ce`
+- Use **Rails-specific commands** like `<leader>cro` for performance advice
+- Chat about architecture decisions with `<leader>cc`
+
+### 3. **Enhanced File Discovery**
+Your Telescope setup shows hidden files intelligently:
+- `<leader>ff` finds `.env`, `.rubocop.yml`, and config files instantly
+- `<leader>fi` includes ignored files when you need them
+- `<leader>fg` searches inside hidden files for comprehensive results
 
 ### 3. **Database-Driven Development**
 Use the database UI to understand existing data before coding:
@@ -2505,29 +4230,38 @@ This isn't just a development environment—it's a force multiplier for your Rub
 
 ### Essential Daily Commands
 ```bash
-<leader>ff  # Find files          | <leader>rv  # Controller/View toggle
-<leader>fg  # Find text           | <leader>rc  # Rails console  
-<leader>tn  # Test nearest        | <leader>db  # Debug breakpoint
-<leader>cc  # Copilot Chat        | <leader>lf  # Format code
-<leader>e   # File explorer       | <leader>md  # Database UI
-<leader>xx  # All errors/warnings | <leader>xX  # File errors only
+<leader>ff  # Find files (inc. hidden)  | <leader>rv  # Controller/View toggle
+<leader>fg  # Search text (inc. hidden) | <leader>rc  # Rails console  
+<leader>tn  # Test nearest             | <leader>db  # Debug breakpoint
+<leader>cc  # Copilot Chat             | <leader>lf  # Format code
+<leader>e   # File explorer            | <leader>md  # Database UI
+<leader>xx  # All errors/warnings      | <leader>xX  # File errors only
+```
+
+### AI & Code Analysis (Visual Mode)
+```bash
+<leader>ce  # Explain code             | <leader>cre # Rails explanation
+<leader>cf  # Fix issues               | <leader>cro # Rails optimization
+<leader>co  # Optimize performance     | <leader>crt # Rails RSpec tests
+<leader>cd  # Add documentation        | <leader>crs # Rails security review
+<leader>ct  # Generate tests           | <leader>crr # Rails refactoring
+<leader>cR  # Code review              | <leader>cgc # Generate commit message
 ```
 
 ### Code Quality Commands
 ```bash
-<leader>xx  # All diagnostics     | <leader>la  # Code actions
-<leader>xX  # Current file only   | <leader>lc  # Rename symbol
-<leader>xQ  # Quickfix list       | <leader>lr  # Find references
-<leader>xl  # LSP definitions     | <leader>ld  # Go to definition
+<leader>xx  # All diagnostics          | <leader>la  # Code actions
+<leader>xX  # Current file only        | <leader>lc  # Rename symbol
+<leader>xQ  # Quickfix list            | <leader>lr  # Find references
+<leader>xl  # LSP definitions          | <leader>ld  # Go to definition
 ```
 
-### Treesitter Navigation & Selection
+### Advanced Navigation & Folding
 ```bash
-]m / [m     # Next/prev method     | vaf / vif   # Select function
-]] / [[     # Next/prev class      | vac / vic   # Select class
-]l / [l     # Next/prev loop       | val / vil   # Select loop
-]a / [a     # Next/prev parameter  | vaa / via   # Select parameter
-<leader>na  # Swap param next      | <leader>nf  # Swap function next
+zM / zR     # Close/open all folds     | ]m / [m     # Next/prev method
+zp          # Peek fold or hover       | ]] / [[     # Next/prev class  
+]z / [z     # Next/prev fold (centered)| vaf / vif   # Select function
+<leader>ma  # Mark with Harpoon        | <leader>1-4 # Jump to harpoon marks
 ```
 
 **Remember**: Press `<leader>` and wait—Which-Key will show you all available options with descriptions. You're never lost!

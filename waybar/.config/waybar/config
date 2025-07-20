@@ -3,7 +3,7 @@
     "position": "top",
     "modules-left": ["sway/workspaces"],
     "modules-center": ["custom/music", "custom/pomodoro"],
-    "modules-right": ["pulseaudio", "backlight", "battery", "clock", "tray", "custom/lock", "custom/power", "idle_inhibitor"],
+    "modules-right": ["pulseaudio", "backlight", "battery", "clock", "tray", "idle_inhibitor"],
     "sway/workspaces": {
         "disable-scroll": true,
         "sort-by-name": true,
@@ -36,13 +36,13 @@
     "clock": {
         "timezone": "Europe/Isle_of_Man",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": " {:%Y-%m-%d}",
-        "format": " {:%H:%M}"
+        "format-alt": "\uf073 {:%Y-%m-%d}",
+        "format": "\uf017 {:%H:%M}"
     },
     "backlight": {
         "device": "intel_backlight",
         "format": "{icon} {percent}%",
-        "format-icons": ["󰃞", "󰃟", "󰃠"]
+        "format-icons": ["\uf185", "\uf186", "\uf042"]
     },
     "battery": {
         "states": {
@@ -57,16 +57,16 @@
     },
     "pulseaudio": {
         "format": "{icon} {volume}%",
-        "format-muted": "󰝟",
+        "format-muted": "\uf6a9",
         "format-icons": {
-            "default": ["󰕿", "󰖀", "󰕾"]
+            "default": ["\uf026", "\uf027", "\uf028"]
         },
         "on-click": "pavucontrol"
     },
     "custom/lock": {
         "tooltip": false,
         "on-click": "sh -c '(sleep 0.5s; swaylock --grace 0)' & disown",
-        "format": "󰍁"
+        "format": ""
     },
     "custom/power": {
         "tooltip": false,
@@ -76,8 +76,8 @@
     "idle_inhibitor": {
         "format": "{icon} ",
         "format-icons": {
-            "activated": "󰅶",
-            "deactivated": "󰾪"
+            "activated": "\uf0f4",
+            "deactivated": "\uf186"
         }
     }
 }

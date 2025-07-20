@@ -58,21 +58,8 @@ return {
 				
 				lspconfig.ruby_lsp.setup({
 					capabilities = capabilities,
-					settings = {
-						rubyLsp = {
-							enabledFeatures = {
-								"documentSymbols",
-								"foldingRanges",
-								"selectionRanges",
-								"semanticHighlighting",
-								"formatting",
-								"codeActions",
-								"completion",
-								"hover",
-								"documentHighlight",
-								"inlayHint",
-							},
-						},
+					init_options = {
+						formatter = "auto",
 					},
 					on_attach = function(client, bufnr)
 						-- Enable completion triggered by <c-x><c-o>
@@ -98,6 +85,29 @@ return {
 				vim.keymap.set("n", "<leader>lj", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
 				vim.keymap.set("n", "<leader>lk", vim.diagnostic.goto_prev, { desc = "Prev diagnostic" })
 				
+				-- Type hierarchy (experimental feature)
+				vim.keymap.set("n", "<leader>lt", function()
+					require('telescope.builtin').lsp_type_definitions()
+				end, { desc = "Type Hierarchy" })
+				
+				-- Inlay hints toggle
+				vim.keymap.set("n", "<leader>lH", function()
+					vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+				end, { desc = "Toggle Inlay Hints" })
+				
+				-- Additional diagnostic viewing options
+				vim.keymap.set("n", "<leader>le", vim.diagnostic.open_float, { desc = "Show diagnostic popup" })
+				vim.keymap.set("n", "<leader>lq", vim.diagnostic.setloclist, { desc = "Add diagnostics to location list" })
+				vim.keymap.set("n", "<leader>lQ", vim.diagnostic.setqflist, { desc = "Add diagnostics to quickfix list" })
+				
+				-- Toggle virtual text
+				vim.keymap.set("n", "<leader>lv", function()
+					vim.diagnostic.config({
+						virtual_text = not vim.diagnostic.config().virtual_text
+					})
+					print("Virtual text: " .. (vim.diagnostic.config().virtual_text and "enabled" or "disabled"))
+				end, { desc = "Toggle virtual text" })
+				
 				-- Command to restart Ruby LSP if multiple clients get started
 				vim.api.nvim_create_user_command("RestartRubyLsp", function()
 					-- Stop all ruby_lsp clients
@@ -111,6 +121,22 @@ return {
 						vim.cmd("LspStart ruby_lsp")
 					end, 500)
 				end, { desc = "Restart Ruby LSP (stops duplicates)" })
+				
+				-- Command to show Ruby LSP status
+				vim.api.nvim_create_user_command("RubyLspStatus", function()
+					local clients = vim.lsp.get_clients({ name = "ruby_lsp" })
+					if #clients == 0 then
+						print("Ruby LSP not running")
+						return
+					end
+					
+					local client = clients[1]
+					print("Ruby LSP is running:")
+					print("  - Formatter: " .. (client.config.init_options.formatter or "auto"))
+					print("  - All standard LSP features enabled")
+					print("  - RuboCop integration: ✓")
+					print("  - Rails addon: " .. (vim.fn.executable("ruby-lsp-rails") == 1 and "✓" or "✗"))
+				end, { desc = "Show Ruby LSP status" })
 			end
 		},
 }

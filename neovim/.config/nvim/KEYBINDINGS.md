@@ -12,9 +12,9 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 | `<leader>b`     | Buffer                        |
 | `<leader>w`     | Window                        |
 | `<leader>r`     | Rails/Ruby                    |
-| `<leader>d`     | Diagnostics/Debug             |
+| `<leader>d`     | Debug (DAP)                   |
 | `<leader>t`     | Test                          |
-| `<leader>x`     | Terminal                      |
+| `<leader>x`     | Terminal/Trouble              |
 | `<leader>a`     | Tabs                          |
 | `<leader>i`     | Swap/Sort                     |
 | `<leader>u`     | UI Toggles                    |
@@ -22,7 +22,7 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 | `<leader>e`     | File Explorer (Oil)           |
 | `<leader>l`     | LSP                           |
 | `<leader>v`     | Vimux                         |
-| `<leader>m`     | Manage/Motion                 |
+| `<leader>m`     | Motion/Harpoon                |
 
 ## File Navigation
 
@@ -49,11 +49,16 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 ## Find with Telescope
 
 - `<leader>ff` - Find files (including hidden)
+- `<leader>fi` - Find files (including ignored)
 - `<leader>fg` - Find text (grep, including hidden)
 - `<leader>fb` - Find buffers
 - `<leader>fh` - Find help
 - `<leader>fa` - Find all files (ignore gitignore)
 - `<leader>fd` - Find files in current directory
+- `<leader>fe` - Find diagnostics (all workspace)
+- `<leader>fE` - Find diagnostics (current buffer only)
+- `<leader>fs` - Find LSP document symbols
+- `<leader>fS` - Find LSP workspace symbols
 
 ## Git
 
@@ -68,8 +73,9 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 - `<leader>hS` - Stage buffer
 - `<leader>hp` - Preview hunk
 
-## Code & LSP
+## LSP & Code Intelligence
 
+### Core LSP Functions
 - `<leader>lf` - Format buffer
 - `<leader>lD` - Go to declaration
 - `<leader>ld` - Go to definition
@@ -81,22 +87,62 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 - `<leader>la` - Code actions
 - `<leader>lj` - Next diagnostic
 - `<leader>lk` - Previous diagnostic
+
+### Diagnostic Viewing
+- `<leader>le` - Show diagnostic popup
+- `<leader>lq` - Add diagnostics to location list
+- `<leader>lQ` - Add diagnostics to quickfix list
+- `<leader>lv` - Toggle virtual text diagnostics
+- `<leader>lt` - Toggle inlay hints
+- `<leader>lH` - Toggle inlay hints (alternative)
+
+### Quick LSP Actions
 - `gd` - Go to definition
 - `gr` - Go to references
 - `K` - Show hover information
 
 ## Copilot
 
-- `<leader>cc` - Copilot chat toggle
-- `<leader>cm` - Copilot chat models
-- `<leader>ce` - Copilot enable
-- `<leader>cd` - Copilot disable
+### Chat & Management
+- `<leader>cc` - Toggle Copilot Chat
+- `<leader>cr` - Reset Copilot Chat
 - `<leader>cs` - Copilot setup
-- `<leader>c?` - Copilot status
+- `<leader>cp` - Copilot panel
+- `<leader>cm` - Copilot models
+- `<leader>ca` - Copilot auth
 
-## Diagnostics & Debug
+### Code Analysis (Visual Mode)
+- `<leader>ce` - Explain selected code
+- `<leader>cf` - Fix issues in selection
+- `<leader>co` - Optimize performance
+- `<leader>cd` - Add documentation
+- `<leader>ct` - Generate tests
+- `<leader>cR` - Code review
 
-- `<leader>dr` - Refresh diagnostics
+### Rails-Specific Copilot (Visual Mode)
+- `<leader>cre` - Rails explanation
+- `<leader>cro` - Rails optimization
+- `<leader>crt` - Generate Rails/RSpec tests
+- `<leader>crs` - Rails security review
+- `<leader>crr` - Rails refactoring suggestions
+
+### Advanced Copilot Commands (Visual Mode)
+- `<leader>cA` - API design review
+- `<leader>cdb` - Database optimization
+- `<leader>cac` - Accessibility review
+- `<leader>cgc` - Generate commit message
+
+### Copilot Insert Mode
+- `<C-y>` - Accept full suggestion
+- `<C-Right>` - Accept next word
+- `<C-S-Right>` - Accept current line
+- `<M-[>` - Previous suggestion
+- `<M-]>` - Next suggestion
+- `<C-e>` - Dismiss suggestion
+- `<C-\>` - Manual trigger
+
+## Debugging (DAP)
+
 - `<leader>db` - Toggle breakpoint
 - `<leader>dB` - Set conditional breakpoint
 - `<leader>dc` - Continue debugging
@@ -109,13 +155,13 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 - `<leader>dl` - Run last debug session
 - `<leader>dr` - Open debug REPL
 
-## Testing
+## Testing (Neotest)
 
 - `<leader>tf` - Test file
 - `<leader>tn` - Test nearest
 - `<leader>ts` - Test suite
 - `<leader>tl` - Test last
-- `<leader>tv` - Test output panel
+- `<leader>tv` - Toggle test output panel
 - `<leader>tS` - Test summary
 - `<leader>to` - Test output
 
@@ -126,6 +172,15 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 - `<leader>xv` - Vertical terminal
 - `<C-\>` - Toggle terminal
 - `<leader>rc` - Rails console
+
+## Trouble.nvim (Diagnostics & Lists)
+
+- `<leader>xx` - All diagnostics (workspace)
+- `<leader>xX` - Current buffer diagnostics
+- `<leader>xs` - LSP symbols
+- `<leader>xl` - LSP definitions/references
+- `<leader>xL` - Location list
+- `<leader>xQ` - Quickfix list
 
 ## Buffers
 
@@ -145,7 +200,7 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 
 ## Rails/Ruby
 
-- `<leader>rv` - Controller/View toggle
+- `<leader>rv` - Controller/View toggle (vim-rails)
 - `<leader>rV` - View Rails routes
 - `<leader>rS` - View database schema
 - `<leader>rm` - Go to model
@@ -156,6 +211,83 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 - `<leader>rd` - Debug nearest RSpec test
 - `<leader>rD` - Debug RSpec file
 - `<leader>rC` - Go to controller (HAML files only)
+
+## UFO Folding
+
+### Core Folding Commands
+- `zR` - Open all folds
+- `zM` - Close all folds
+- `zr` - Open folds except certain kinds
+- `zm` - Close folds with specific criteria
+- `zp` - Peek inside fold (or show hover)
+- `zO` - Close other folds, open current only
+- `[z` - Go to previous fold (centered)
+- `]z` - Go to next fold (centered)
+
+### Standard Fold Commands (still work)
+- `za` - Toggle current fold
+- `zo` - Open current fold
+- `zc` - Close current fold
+- `zj` - Move to next fold
+- `zk` - Move to previous fold
+
+## Treesitter Text Objects
+
+### Selection Text Objects
+- `af/if` - Function (outer/inner)
+- `ac/ic` - Class (outer/inner)
+- `al/il` - Loop (outer/inner)
+- `aa/ia` - Parameter (outer/inner)
+- `ab/ib` - Block (outer/inner)
+- `ad/id` - Conditional (outer/inner)
+- `ar/ir` - Return statement (outer/inner)
+- `as/is` - Statement (outer/inner)
+
+### Navigation
+- `]m/[m` - Next/previous method start
+- `]M/[M` - Next/previous method end
+- `]]/[[` - Next/previous class start
+- `][/[]` - Next/previous class end
+- `]l/[l` - Next/previous loop start
+- `]L/[L` - Next/previous loop end
+- `]a/[a` - Next/previous parameter
+- `]d/[d` - Next/previous conditional
+
+### Code Swapping
+- `<leader>na` - Swap current parameter with next
+- `<leader>pa` - Swap current parameter with previous
+- `<leader>nf` - Swap current function with next
+- `<leader>pf` - Swap current function with previous
+
+## Harpoon (File Navigation)
+
+- `<leader>ma` - Add file to harpoon
+- `<leader>mh` - Show harpoon menu
+- `<leader>1-4` - Jump to harpoon file 1-4
+- `<C-S-P>` - Previous harpoon file
+- `<C-S-N>` - Next harpoon file
+
+## Sort/Swap
+
+- `<leader>is` - Sort functions alphabetically
+- `<leader>iS` - Sort treesitter nodes
+- `<leader>s` - Sort selected lines (visual mode)
+
+## Database
+
+- `<leader>md` - Toggle Database UI
+
+## Visual Mode Enhancements
+
+- `J` - Move selected lines down
+- `K` - Move selected lines up
+
+## Navigation Enhancements
+
+- `<C-d>` - Scroll down (cursor centered)
+- `<C-u>` - Scroll up (cursor centered)
+- `n` - Next search result (cursor centered)
+- `N` - Previous search result (cursor centered)
 
 ## Functional Languages
 
@@ -174,19 +306,3 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 ### Elixir
 - `<leader>rm` - Run mix command
 - `<leader>ri` - IEx console
-
-## Sort/Swap
-
-- `<leader>is` - Sort functions alphabetically
-- `<leader>iS` - Sort treesitter nodes
-- `<leader>s` - Sort selected lines (visual)
-
-## Database
-
-- `<leader>md` - Toggle Database UI
-
-## Motion and Navigation
-
-- `<leader>ma` - Add file to harpoon
-- `<leader>mh` - Show harpoon menu
-- `<leader>1-4` - Jump to harpoon file 1-4
