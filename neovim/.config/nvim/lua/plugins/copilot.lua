@@ -216,9 +216,6 @@ return {
       vim.keymap.set('n', '<leader>cm', function() 
         require("CopilotChat").select_model() 
       end, { desc = ' Select Model' })
-      vim.keymap.set('n', '<leader>ca', function() 
-        require("CopilotChat").select_agent() 
-      end, { desc = ' Select Agent' })
       
       -- Quick chat commands with descriptive icons
       vim.keymap.set('v', '<leader>ce', '<CMD>CopilotChatExplain<CR>', { desc = ' Explain selection' })

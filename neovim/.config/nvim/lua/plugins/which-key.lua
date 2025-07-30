@@ -43,7 +43,6 @@ return {
             { "<leader>cE", desc = " Enable Copilot" },
             { "<leader>cD", desc = " Disable Copilot" },
             { "<leader>cm", desc = " Select Model" },
-            { "<leader>ca", desc = " Select Agent" },
             { "<leader>ci", desc = " Fix Diagnostic Issue" },
             
             -- Selection-based commands (visual mode)
