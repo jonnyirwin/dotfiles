@@ -27,7 +27,7 @@ case "$chosen" in
     "🔒 Lock")
         # Check if swaylock is available, otherwise use a generic lock
         if command -v swaylock &> /dev/null; then
-            swaylock -f -c 000000
+            swaylock -f -i ~/Pictures/Wallpaper/wallpaper.jpg
         else
             notify-send "Lock" "No screen locker found. Install swaylock for screen locking."
         fi
