@@ -6,6 +6,12 @@ return {
         -- or leave it empty to use the default settings
         delay = 500,
         spec = {
+            -- Flash.nvim keybindings
+            { "s", desc = "Flash Jump", mode = { "n", "x", "o" } },
+            { "S", desc = "Flash Treesitter", mode = { "n", "x", "o" } },
+            { "r", desc = "Flash Remote", mode = "o" },
+            { "R", desc = "Flash Treesitter Search", mode = { "o", "x" } },
+            { "<C-s>", desc = "Toggle Flash Search", mode = "c" },
             { "<leader>f", group = "Find (Telescope)" },
             { "<leader>ff", desc = "Find files" },
             { "<leader>fg", desc = "Find text (grep)" },
