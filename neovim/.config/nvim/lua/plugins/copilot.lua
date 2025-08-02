@@ -16,8 +16,8 @@ return {
       -- Set up keymaps that don't conflict with your existing setup
       local opts = { silent = true, expr = true, replace_keycodes = false }
       
-      -- Accept suggestion with Ctrl-Y (common completion accept key)
-      vim.keymap.set('i', '<C-y>', 'copilot#Accept("\\<CR>")', opts)
+      -- Accept suggestion with Ctrl-J (reliable alternative)
+      vim.keymap.set('i', '<C-j>', 'copilot#Accept("\\<CR>")', opts)
       
       -- Accept word with Ctrl-Right (intuitive forward word motion)
       vim.keymap.set('i', '<C-Right>', 'copilot#AcceptWord()', opts)

@@ -133,13 +133,51 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 - `<leader>cgc` - Generate commit message
 
 ### Copilot Insert Mode
-- `<C-y>` - Accept full suggestion
+- `<C-j>` - Accept full suggestion
 - `<C-Right>` - Accept next word
 - `<C-S-Right>` - Accept current line
 - `<M-[>` - Previous suggestion
 - `<M-]>` - Next suggestion
 - `<C-e>` - Dismiss suggestion
 - `<C-\>` - Manual trigger
+
+## Multi-cursor
+- `<Leader>M` - Create cursor for word under cursor
+- `<Leader>Mv` - Visual multi-cursor
+- `<Leader>Mp` - Pattern-based multi-cursor
+- `<Leader>Mu` - Under cursor multi-cursor
+
+## Surround (nvim-surround)
+- `ys{motion}{char}` - Add surroundings (e.g., `ysiw"` to surround word with quotes)
+- `yss{char}` - Add surroundings to entire line
+- `ds{char}` - Delete surroundings (e.g., `ds"` to remove quotes)
+- `cs{old}{new}` - Change surroundings (e.g., `cs"'` to change quotes to single quotes)
+- `S{char}` - Add surroundings in visual mode
+
+## Enhanced Git (GitSigns)
+- `]c` / `[c` - Navigate to next/previous git hunk
+- `<leader>gs` - Stage current hunk
+- `<leader>gr` - Reset current hunk
+- `<leader>gS` - Stage entire buffer
+- `<leader>gu` - Undo stage hunk
+- `<leader>gR` - Reset entire buffer
+- `<leader>gp` - Preview hunk changes
+- `<leader>gb` - Show git blame for line
+- `<leader>gB` - Toggle line blame display
+- `<leader>gd` - Diff current file
+- `<leader>gD` - Diff current file against HEAD~
+- `<leader>gt` - Toggle deleted lines view
+
+## Enhanced Editing
+- `<leader>y` - Copy to system clipboard
+- `<leader>Y` - Copy entire line to system clipboard
+- `<leader>D` - Delete without yanking (preserves clipboard)
+- `<leader>P` - Paste without yanking (in visual mode)
+- `<leader>S` - Substitute word under cursor globally
+- `<leader>ua` - Toggle auto-save
+
+## Auto-pairs
+Automatically closes brackets, quotes, etc. when typing. No manual keybindings needed.
 
 ## Debugging (DAP)
 

@@ -46,8 +46,24 @@ keymap.set("n", "<C-u>", "<C-u>zz")
 keymap.set("n", "n", "nzzzv")
 keymap.set("n", "N", "Nzzzv")
 
+-- Better paste (don't lose clipboard content when pasting over selection)
+keymap.set("x", "<leader>P", [["_dP]], { desc = "Paste without yanking" })
+
+-- Copy to system clipboard
+keymap.set({"n", "v"}, "<leader>y", [["+y]], { desc = "Copy to system clipboard" })
+keymap.set("n", "<leader>Y", [["+Y]], { desc = "Copy line to system clipboard" })
+
+-- Delete without yanking
+keymap.set({"n", "v"}, "<leader>D", [["_d]], { desc = "Delete without yanking" })
+
 -- Custom sort for visual selection
 keymap.set("v", "<leader>s", ":sort<CR>", { desc = "Sort selected lines" })
+
+-- Quick substitute for word under cursor
+keymap.set("n", "<leader>S", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Substitute word under cursor" })
+
+-- Auto-save toggle
+keymap.set("n", "<leader>ua", ":ASToggle<CR>", { desc = "Toggle auto-save" })
 
 -- === UI TOGGLES ===
 
@@ -72,7 +88,7 @@ keymap.set("n", "<leader>lf", function()
 end, { desc = "Format buffer" })
 
 -- Diagnostics
-keymap.set("n", "<leader>dr", function()
+keymap.set("n", "<leader>lR", function()
   vim.diagnostic.enable()
 end, { desc = "Refresh diagnostics" })
 

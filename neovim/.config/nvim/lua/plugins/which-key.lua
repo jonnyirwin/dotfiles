@@ -32,6 +32,7 @@ return {
             { "<leader>la", desc = "Code actions" },
             { "<leader>lj", desc = "Next diagnostic" },
             { "<leader>lk", desc = "Previous diagnostic" },
+            { "<leader>lR", desc = "Refresh diagnostics" },
 
             { "<leader>c", group = " Copilot & AI" },
             { "<leader>cc", desc = " Toggle Copilot Chat" },
@@ -94,6 +95,25 @@ return {
             { "<leader>we", desc = "Equalize splits" },
             { "<leader>wx", desc = "Close split" },
 
+            { "<leader>g", group = " Git" },
+            { "<leader>gs", desc = " Stage hunk" },
+            { "<leader>gr", desc = " Reset hunk" },
+            { "<leader>gS", desc = " Stage buffer" },
+            { "<leader>gu", desc = " Undo stage hunk" },
+            { "<leader>gR", desc = " Reset buffer" },
+            { "<leader>gp", desc = " Preview hunk" },
+            { "<leader>gb", desc = " Blame line" },
+            { "<leader>gB", desc = " Toggle line blame" },
+            { "<leader>gd", desc = " Diff this" },
+            { "<leader>gD", desc = " Diff this ~" },
+            { "<leader>gt", desc = " Toggle deleted" },
+            
+            -- Multi-cursor commands
+            { "<leader>M", group = " Multi-cursor" },
+            { "<leader>Mv", desc = " Visual multi-cursor" },
+            { "<leader>Mp", desc = " Pattern multi-cursor" },
+            { "<leader>Mu", desc = " Under cursor" },
+
             { "<leader>a", group = "Tabs" },
             { "<leader>ao", desc = "Open new tab" },
             { "<leader>ax", desc = "Close tab" },
@@ -122,7 +142,6 @@ return {
             { "<leader>dt", desc = "Terminate debugging" },
             { "<leader>du", desc = "Toggle debug UI" },
             { "<leader>dl", desc = "Run last debug session" },
-            { "<leader>dr", desc = "Open debug REPL" },
 
             { "<leader>t", group = "Test" },
             { "<leader>tf", desc = "Test file" },
@@ -152,8 +171,15 @@ return {
             { "<leader>3", desc = "Jump to harpoon 3" },
             { "<leader>4", desc = "Jump to harpoon 4" },
 
-            { "<leader>u", group = "UI Toggles" },
+                        { "<leader>u", group = "UI" },
             { "<leader>uh", desc = "Clear search highlights" },
+            { "<leader>ua", desc = "Toggle auto-save" },
+
+            { "<leader>y", desc = "Copy to system clipboard" },
+            { "<leader>Y", desc = "Copy line to system clipboard" },
+            { "<leader>D", desc = "Delete without yanking" },
+            { "<leader>P", desc = "Paste without yanking", mode = "x" },
+            { "<leader>S", desc = "Substitute word under cursor" },
 
             { "<leader>n", group = "Next (Treesitter)" },
             { "<leader>na", desc = "Swap parameter with next" },
@@ -173,6 +199,13 @@ return {
             { "zO", desc = "Close other folds, open current" },
             { "[z", desc = "Previous fold" },
             { "]z", desc = "Next fold" },
+
+            -- Surround operations (nvim-surround)
+            { "ys", desc = "Add surrounding", mode = "n" },
+            { "yss", desc = "Add surrounding to line", mode = "n" },
+            { "ds", desc = "Delete surrounding", mode = "n" },
+            { "cs", desc = "Change surrounding", mode = "n" },
+            { "S", desc = "Add surrounding", mode = "v" },
 
             { "<leader>s", desc = "Sort selected lines", mode = "v" },
             { "<leader>de", desc = "Evaluate selection", mode = "v" },
