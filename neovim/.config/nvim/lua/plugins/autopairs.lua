@@ -25,10 +25,7 @@ return {
         })
         
         -- Integration with blink.cmp
-        local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-        local cmp = require('blink.cmp')
-        
-        -- This needs to be adapted for blink.cmp
-        -- You may need to check blink.cmp docs for autopairs integration
+        -- Note: blink.cmp handles autopairs integration differently than nvim-cmp
+        -- The integration should work automatically without manual setup
     end
 }

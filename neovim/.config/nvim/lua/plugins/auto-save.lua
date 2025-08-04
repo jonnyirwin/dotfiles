@@ -14,10 +14,9 @@ return {
         },
         condition = function(buf)
             local fn = vim.fn
-            local utils = require("auto-save.utils.data")
 
             -- don't save for special-buffers whose 'buftype' is set
-            if utils.not_normal_buffer(buf) then
+            if vim.bo[buf].buftype ~= "" then
                 return false
             end
 

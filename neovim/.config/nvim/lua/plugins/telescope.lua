@@ -52,21 +52,15 @@ return {
 
 			-- Enhanced keybindings for file finding
 			vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope: Find Files (hidden, respects gitignore)' })
-			vim.keymap.set('n', '<leader>fi', function()
+			vim.keymap.set('n', '<leader>fa', function()
 				builtin.find_files({ 
 					no_ignore = true, 
 					hidden = true,
-					find_command = { 'rg', '--files', '--hidden', '--no-ignore', '--glob', '!.git/*' }
 				})
-			end, { desc = 'Telescope: Find Files (including ignored)' })
+			end, { desc = 'Telescope: Find all files (ignore gitignore)' })
 			vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope: Live Grep (inc. hidden)' })
 			vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope: Buffers' })
 			vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope: Help Tags' })
-			
-			-- Additional useful telescope pickers
-			vim.keymap.set('n', '<leader>fa', function()
-				builtin.find_files({ no_ignore = true, hidden = true })
-			end, { desc = 'Telescope: All Files (no gitignore)' })
 			
 			vim.keymap.set('n', '<leader>fd', function()
 				builtin.find_files({ cwd = vim.fn.expand('%:p:h') })
