@@ -4,9 +4,6 @@ return {
     event = { "InsertLeave", "TextChanged" }, -- optional for lazy loading on trigger events
     opts = {
         enabled = true, -- start auto-save when the plugin is loaded (i.e. when your package manager loads it)
-        execution_message = {
-            enabled = false, -- disable the message that shows when auto-save executes
-        },
         trigger_events = { -- vim events that trigger auto-save
             immediate_save = { "BufLeave", "FocusLost" }, -- save immediately on these events
             defer_save = { "InsertLeave", "TextChanged" }, -- save after `debounce_delay` on these events
@@ -50,4 +47,40 @@ return {
             after_saving = nil
         },
     },
+    config = function(_, opts)
+        require("auto-save").setup(opts)
+        
+        -- Set up autocmds for auto-save messages (optional)
+        -- Uncomment the following lines if you want to see save messages
+        --[[
+        local group = vim.api.nvim_create_augroup('autosave', {})
+        
+        vim.api.nvim_create_autocmd('User', {
+            pattern = 'AutoSaveWritePost',
+            group = group,
+            callback = function(opts)
+                if opts.data.saved_buffer ~= nil then
+                    local filename = vim.api.nvim_buf_get_name(opts.data.saved_buffer)
+                    vim.notify('AutoSave: saved ' .. vim.fn.fnamemodify(filename, ':t') .. ' at ' .. vim.fn.strftime('%H:%M:%S'), vim.log.levels.INFO, { timeout = 1000 })
+                end
+            end,
+        })
+        
+        vim.api.nvim_create_autocmd('User', {
+            pattern = 'AutoSaveEnable',
+            group = group,
+            callback = function()
+                vim.notify('AutoSave enabled', vim.log.levels.INFO)
+            end,
+        })
+        
+        vim.api.nvim_create_autocmd('User', {
+            pattern = 'AutoSaveDisable',
+            group = group,
+            callback = function()
+                vim.notify('AutoSave disabled', vim.log.levels.INFO)
+            end,
+        })
+        --]]
+    end,
 }
