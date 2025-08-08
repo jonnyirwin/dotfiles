@@ -6,8 +6,7 @@ return {
     },
     event = "BufReadPost",
     config = function()
-        -- Enable fold column with triangle icons
-        vim.o.foldcolumn = '1'
+        vim.o.foldcolumn = 'auto:9'
         vim.o.foldlevel = 99
         vim.o.foldlevelstart = 99
         vim.o.foldenable = true

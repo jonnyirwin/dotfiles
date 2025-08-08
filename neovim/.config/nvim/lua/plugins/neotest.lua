@@ -13,9 +13,11 @@ return {
                 adapters = {
                     require("neotest-rspec")({
                         rspec_cmd = function()
-                            return vim.tbl_flatten({
-                                "bundle", "exec", "rspec",
-                            })
+                            -- Prefer bin/rspec if available; otherwise bundle exec rspec
+                            if vim.loop.fs_stat("bin/rspec") then
+                                return { "bin/rspec" }
+                            end
+                            return { "bundle", "exec", "rspec" }
                         end,
                         transform_spec_path = function(path)
                             return path

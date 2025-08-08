@@ -35,6 +35,8 @@ return {
 				auto_install = true,
 				highlight = {
 					enable = true,
+					-- Use vim-haml regex highlighting for Haml since no official Treesitter parser exists
+					additional_vim_regex_highlighting = { "haml" },
 				},
 				textobjects = {
 					select = {
