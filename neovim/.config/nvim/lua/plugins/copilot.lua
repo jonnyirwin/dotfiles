@@ -16,8 +16,8 @@ return {
       -- Set up keymaps that don't conflict with your existing setup
       local opts = { silent = true, expr = true, replace_keycodes = false }
       
-      -- Accept suggestion with Ctrl-J (reliable alternative)
-      vim.keymap.set('i', '<C-j>', 'copilot#Accept("\\<CR>")', opts)
+      -- Accept suggestion with Leader+Enter (intuitive and clean)
+      vim.keymap.set('i', '<leader><CR>', 'copilot#Accept("\\<CR>")', opts)
       
       -- Accept word with Ctrl-Right (intuitive forward word motion)
       vim.keymap.set('i', '<C-Right>', 'copilot#AcceptWord()', opts)
@@ -175,6 +175,43 @@ return {
           description = " Rails Refactoring",
         },
         
+        -- Elixir/Phoenix-specific prompts with Elixir icons
+        ElixirExplain = {
+          prompt = "Explain this Elixir/Phoenix code, focusing on functional programming concepts, OTP patterns, and Phoenix conventions.",
+          system_prompt = "You are an Elixir and Phoenix expert. Explain code with focus on functional programming, pattern matching, Phoenix conventions, and OTP principles.",
+          description = " Elixir Code Explanation",
+        },
+        ElixirOptimize = {
+          prompt = "Optimize this Elixir/Phoenix code for performance and best practices. Focus on GenServer efficiency, Ecto query optimization, and Phoenix performance patterns.",
+          system_prompt = "You are an Elixir and Phoenix performance expert. Focus on functional programming optimization, GenServer patterns, Ecto efficiency, and Phoenix performance improvements.",
+          description = " Elixir Performance Optimization",
+        },
+        ElixirTest = {
+          prompt = "Generate ExUnit tests for this Elixir/Phoenix code following Elixir testing best practices.",
+          system_prompt = "You are an Elixir testing expert. Write comprehensive ExUnit tests following Elixir testing conventions, using factories, and testing Phoenix-specific behavior including LiveView.",
+          description = " Elixir ExUnit Tests",
+        },
+        ElixirOTP = {
+          prompt = "Review this Elixir code for OTP best practices and suggest improvements for GenServer, Supervisor, and Application design.",
+          system_prompt = "You are an OTP and distributed systems expert. Focus on GenServer patterns, Supervisor trees, fault tolerance, and concurrent programming best practices.",
+          description = " OTP Design Review",
+        },
+        ElixirRefactor = {
+          prompt = "Refactor this Elixir/Phoenix code to follow Elixir conventions and functional programming best practices.",
+          system_prompt = "You are an Elixir refactoring expert. Focus on functional programming patterns, Phoenix contexts, pattern matching, and maintainable Elixir architecture.",
+          description = " Elixir Refactoring",
+        },
+        PhoenixLiveView = {
+          prompt = "Review and improve this Phoenix LiveView code for best practices, state management, and real-time features.",
+          system_prompt = "You are a Phoenix LiveView expert. Focus on state management, event handling, real-time updates, and LiveView performance patterns.",
+          description = " LiveView Optimization",
+        },
+        EctoOptimize = {
+          prompt = "Optimize this Ecto query and schema design for better performance and maintainability.",
+          system_prompt = "You are an Ecto and database expert. Focus on query optimization, proper associations, changesets, and database design patterns.",
+          description = " Ecto Query Optimization",
+        },
+        
         -- Git and workflow prompts
         CommitConventional = {
           prompt = "Write a commit message for the change with commitizen convention.",
@@ -229,7 +266,16 @@ return {
       vim.keymap.set('v', '<leader>cro', ':CopilotChat RailsOptimize<CR>', { desc = ' Rails Optimization' })
       vim.keymap.set('v', '<leader>crt', ':CopilotChat RailsTest<CR>', { desc = ' Rails RSpec Tests' })
       vim.keymap.set('v', '<leader>crs', ':CopilotChat RailsSecurity<CR>', { desc = ' Rails Security Review' })
-      vim.keymap.set('v', '<leader>crr', ':CopilotChat RailsRefactor<CR>', { desc = ' Rails Refactoring' })
+            vim.keymap.set('v', '<leader>crr', '<CMD>CopilotChatRailsRefactor<CR>', { desc = ' Rails Refactoring' })
+      
+      -- Elixir/Phoenix specific visual mode commands
+      vim.keymap.set('v', '<leader>cee', '<CMD>CopilotChatElixirExplain<CR>', { desc = ' Elixir Code Explanation' })
+      vim.keymap.set('v', '<leader>ceo', '<CMD>CopilotChatElixirOptimize<CR>', { desc = ' Elixir Performance Optimization' })
+      vim.keymap.set('v', '<leader>cet', '<CMD>CopilotChatElixirTest<CR>', { desc = ' Elixir ExUnit Tests' })
+      vim.keymap.set('v', '<leader>cep', '<CMD>CopilotChatElixirOTP<CR>', { desc = ' OTP Design Review' })
+      vim.keymap.set('v', '<leader>cer', '<CMD>CopilotChatElixirRefactor<CR>', { desc = ' Elixir Refactoring' })
+      vim.keymap.set('v', '<leader>cel', '<CMD>CopilotChatPhoenixLiveView<CR>', { desc = ' LiveView Optimization' })
+      vim.keymap.set('v', '<leader>ceq', '<CMD>CopilotChatEctoOptimize<CR>', { desc = ' Ecto Query Optimization' })
       
       -- Additional helpful prompts
       vim.keymap.set('v', '<leader>cR', '<CMD>CopilotChatReview<CR>', { desc = ' Code Review' })

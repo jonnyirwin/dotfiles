@@ -1,6 +1,6 @@
 # Neovim Configuration
 
-A modern Neovim configuration focused on Ruby on Rails, TypeScript, and C# development with LSP support, intelligent code completion, and a beautiful UI.
+A modern Neovim configuration focused on Ruby on Rails, Elixir/Phoenix, TypeScript, and C# development with LSP support, intelligent code completion, and a beautiful UI.
 
 ## Installation
 
@@ -19,6 +19,7 @@ This configuration is part of a Nix setup. To use independently:
 3. Install external dependencies for optimal experience:
    - Node.js (for LSP servers)
    - Ruby (for Ruby on Rails development)
+   - Elixir & Erlang (for Elixir/Phoenix development)
    - Git (for version control features)
    - ripgrep (for Telescope file searching)
    - A Nerd Font (for icons)
@@ -44,6 +45,7 @@ lib/nvim/
 │       ├── git.lua               # Git integration
 │       ├── format.lua            # Formatters and linters
 │       ├── rails.lua             # Ruby on Rails specific plugins
+│       ├── elixir.lua            # Elixir/Phoenix specific plugins
 │       ├── copilot.lua           # GitHub Copilot configuration
 │       ├── none-ls.lua           # Diagnostics & formatting with LSP UI
 │       ├── folding.lua           # Code folding with nvim-ufo
@@ -67,22 +69,25 @@ lib/nvim/
 
 ## Key Features
 
-- **LSP Integration**: Automatic language server setup for Ruby, TypeScript, C#, Python, etc.
+- **LSP Integration**: Automatic language server setup for Ruby, Elixir, TypeScript, C#, Python, etc.
 - **Intelligent Completion**: Using blink-cmp with snippets and LSP integration
-- **GitHub Copilot**: AI-powered code suggestions with chat interface
+- **GitHub Copilot**: AI-powered code suggestions with chat interface and language-specific prompts
 - **Syntax Highlighting**: Enhanced with Treesitter
-- **File Navigation**: Oil.nvim for seamless file browsing
+- **File Navigation**: Oil.nvim for seamless file browsing with framework-aware navigation
 - **Keybinding Help**: Which-key shows available commands as you type
 - **Git Integration**: Gitsigns and Fugitive for Git workflows
 - **Tab Management**: Buffer tabs with barbar
 - **Format & Lint**: Automatic code formatting and linting
 - **Diagnostics**: Trouble for organized errors and warnings
 - **Code Folding**: Smart folding with nvim-ufo and peek capability
-- **Rails Development**: Specialized plugins for Ruby on Rails
+- **Rails Development**: Specialized plugins for Ruby on Rails with vim-rails integration
+- **Elixir/Phoenix Development**: Comprehensive Phoenix navigation, LiveView support, Mix integration, and LiveBook
 - **Database Integration**: Built-in database viewing and management
 - **Project Management**: Automatic project detection and session handling
-- **Terminal Integration**: Floating terminals with specialized instances
+- **Terminal Integration**: Floating terminals with specialized instances (Rails console, IEx, Phoenix server)
 - **Enhanced Motion**: Quick navigation with Leap and Harpoon
+- **Testing Integration**: Neotest with RSpec and ExUnit adapters
+- **Advanced Debugging**: DAP support for Ruby and Elixir with visual debugging UI
 
 ## Keybindings
 
@@ -246,6 +251,16 @@ lib/nvim/
 - `<leader>rc` - Rails console
 - `<leader>rd` - Debug nearest RSpec test
 - `<leader>rD` - Debug all tests in file
+
+### Elixir/Phoenix Development
+
+- `<leader>is` - Start Phoenix server
+- `<leader>ic` - IEx console  
+- `<leader>it` - Mix test (stale)
+- `<leader>il` - LiveBook server
+- `<leader>ed` - Debug nearest ExUnit test
+- `<leader>eD` - Debug all ExUnit tests
+- `<leader>eP` - Debug Phoenix server
 - `<leader>rv` - Controller/View toggle
 - `<leader>rV` - View Rails routes
 - `<leader>rS` - View database schema

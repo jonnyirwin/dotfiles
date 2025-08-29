@@ -15,7 +15,7 @@ return {
             ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
             ['<C-e>'] = { 'hide', 'fallback' },
             ['<Esc>'] = { 'hide', 'fallback' },
-            ['<C-j>'] = { 'select_next', 'fallback' },
+            ['<C-n>'] = { 'select_next', 'fallback' },
             ['<C-k>'] = { 'select_prev', 'fallback' },
             ['<C-n>'] = { 'select_next', 'fallback' },
             ['<C-p>'] = { 'select_prev', 'fallback' },
@@ -24,6 +24,16 @@ return {
         },
         sources = {
             default = { 'lsp', 'path', 'snippets', 'buffer' },
+            per_filetype = {
+                sql = { 'snippets', 'dadbod', 'buffer' },
+                mysql = { 'snippets', 'dadbod', 'buffer' },
+                postgresql = { 'snippets', 'dadbod', 'buffer' },
+                plsql = { 'snippets', 'dadbod', 'buffer' },
+                sqlite = { 'snippets', 'dadbod', 'buffer' },
+            },
+            providers = {
+                dadbod = { name = "Dadbod", module = "vim_dadbod_completion.blink" },
+            },
         },
         completion = { 
             documentation = { auto_show = true },
@@ -35,6 +45,7 @@ return {
                 selection = { preselect = true, auto_insert = true },
             },
         },
+        signature = { enabled = true },
         fuzzy = { implementation = 'prefer_rust_with_warning' },
     },
     opts_extend = { "sources.default" },

@@ -13,6 +13,7 @@ return {
 				ensure_installed = {
 					"ruby_lsp",
 					"ts_ls",
+					"lexical", -- Elixir Language Server
 				},
 				automatic_installation = false,
 			})
@@ -103,6 +104,75 @@ return {
 			lspconfig.ts_ls.setup({
 				capabilities = capabilities,
 			})
+
+			-- Elixir LSP configuration with lexical
+			lspconfig.lexical.setup({
+				capabilities = capabilities,
+				filetypes = { "elixir", "eex", "heex", "surface" },
+				root_dir = function(fname)
+					-- Look for Phoenix/Elixir project markers
+					return util.root_pattern("mix.exs", ".git")(fname) or util.find_git_ancestor(fname)
+				end,
+				settings = {
+					-- Lexical settings for better Elixir support
+					elixir = {
+						dialyzerEnabled = true,
+						enableTestLenses = true,
+						fetchDeps = false,
+						mixEnv = "dev",
+						projectDir = ".",
+						suggestSpecs = true,
+					},
+				},
+				on_attach = function(client, bufnr)
+					-- Enable completion triggered by <c-x><c-o>
+					vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+
+					-- Elixir-specific keybindings
+					local bufopts = { noremap = true, silent = true, buffer = bufnr }
+					vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, bufopts)
+					
+					-- Additional Elixir-specific LSP features
+					vim.keymap.set("n", "<leader>ep", function()
+						vim.lsp.buf.code_action({
+							context = { only = { "quickfix.elixir.add_pipe" } },
+							apply = true,
+						})
+					end, { buffer = bufnr, desc = "Add pipe operator" })
+					
+					vim.keymap.set("n", "<leader>es", function()
+						vim.lsp.buf.code_action({
+							context = { only = { "refactor.elixir.to_string_interpolation" } },
+							apply = true,
+						})
+					end, { buffer = bufnr, desc = "Convert to string interpolation" })
+				end,
+			})
+
+			-- Alternative Elixir LS (fallback if lexical not available)
+			if not pcall(require, "lspconfig.configs.lexical") then
+				lspconfig.elixirls.setup({
+					capabilities = capabilities,
+					cmd = { "elixir-ls" },
+					filetypes = { "elixir", "eex", "heex", "surface" },
+					root_dir = function(fname)
+						return util.root_pattern("mix.exs", ".git")(fname) or util.find_git_ancestor(fname)
+					end,
+					settings = {
+						elixirLS = {
+							dialyzerEnabled = true,
+							fetchDeps = false,
+							enableTestLenses = true,
+							suggestSpecs = true,
+						},
+					},
+					on_attach = function(client, bufnr)
+						vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+						local bufopts = { noremap = true, silent = true, buffer = bufnr }
+						vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, bufopts)
+					end,
+				})
+			end
 
 			vim.keymap.set("n", "<leader>lD", vim.lsp.buf.declaration, { desc = "Declaration" })
 			vim.keymap.set("n", "<leader>ld", vim.lsp.buf.definition, { desc = "Definition" })

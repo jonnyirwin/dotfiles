@@ -61,6 +61,13 @@ return {
                 null_ls.builtins.diagnostics.markdownlint,
                 null_ls.builtins.diagnostics.stylelint,
                 
+                -- Elixir formatting and linting
+                null_ls.builtins.formatting.mix.with({
+                    cwd = h.cache.by_bufnr(function(params)
+                        return u.root_pattern("mix.exs")(params.bufname)
+                    end),
+                }),
+                
                 null_ls.builtins.formatting.alejandra,
                 null_ls.builtins.formatting.markdownlint,
                 null_ls.builtins.formatting.prettier,

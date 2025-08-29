@@ -98,6 +98,9 @@ input * {
     # Resolution switcher
     bindsym $mod+Shift+d exec ~/.config/sway/scripts/resolution-switcher.sh
 
+    # Pomodoro timer menu
+    bindsym $mod+p exec ~/.config/waybar/scripts/pomodoro-menu.sh
+
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
     # Despite the name, also works for non-floating windows.

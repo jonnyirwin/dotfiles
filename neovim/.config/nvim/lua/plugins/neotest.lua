@@ -7,6 +7,7 @@ return {
             "antoinemadec/FixCursorHold.nvim",
             "nvim-treesitter/nvim-treesitter",
             "olimorris/neotest-rspec", -- RSpec adapter for neotest
+            "jfpedroza/neotest-elixir", -- ExUnit adapter for neotest
         },
         config = function()
             require("neotest").setup({
@@ -23,6 +24,14 @@ return {
                             return path
                         end,
                         results_path = "tmp/rspec.output"
+                    }),
+                    require("neotest-elixir")({
+                        -- ExUnit configuration
+                        mix_task = "test", -- Mix task for running tests (default: test)
+                        post_process_command = function(cmd)
+                            -- Add any post-processing for the mix test command
+                            return cmd
+                        end,
                     }),
                 },
                 discovery = {

@@ -60,6 +60,60 @@ return {
                 end,
             })
 
+            -- Phoenix/Elixir terminals
+            local iex_console = Terminal:new({
+                cmd = "iex -S mix",
+                dir = "git_dir",
+                direction = "horizontal",
+                on_open = function(term)
+                    vim.cmd("startinsert!")
+                    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", {noremap = true, silent = true})
+                end,
+                on_close = function(term)
+                    vim.cmd("startinsert!")
+                end,
+            })
+
+            local phoenix_server = Terminal:new({
+                cmd = "mix phx.server",
+                dir = "git_dir", 
+                direction = "horizontal",
+                on_open = function(term)
+                    vim.cmd("startinsert!")
+                    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", {noremap = true, silent = true})
+                end,
+                on_close = function(term)
+                    vim.cmd("startinsert!")
+                end,
+            })
+
+            local mix_test = Terminal:new({
+                cmd = "mix test --stale",
+                dir = "git_dir",
+                direction = "horizontal", 
+                close_on_exit = false,
+                on_open = function(term)
+                    vim.cmd("startinsert!")
+                    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", {noremap = true, silent = true})
+                end,
+                on_close = function(term)
+                    vim.cmd("startinsert!")
+                end,
+            })
+
+            local livebook = Terminal:new({
+                cmd = "livebook server",
+                dir = "git_dir",
+                direction = "horizontal",
+                on_open = function(term)
+                    vim.cmd("startinsert!")
+                    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", {noremap = true, silent = true})
+                end,
+                on_close = function(term)
+                    vim.cmd("startinsert!")
+                end,
+            })
+
             -- Functions to toggle terminals
             function _rails_console_toggle()
                 rails_console:toggle()
@@ -69,12 +123,37 @@ return {
                 rails_server:toggle()
             end
 
+            -- Elixir/Phoenix terminal functions
+            function _iex_console_toggle()
+                iex_console:toggle()
+            end
+
+            function _phoenix_server_toggle()
+                phoenix_server:toggle()
+            end
+
+            function _mix_test_toggle()
+                mix_test:toggle()
+            end
+
+            function _livebook_toggle()
+                livebook:toggle()
+            end
+
             -- Terminal keybindings
             vim.keymap.set("n", "<leader>xf", "<cmd>ToggleTerm direction=float<cr>", { desc = "Float terminal" })
             vim.keymap.set("n", "<leader>xh", "<cmd>ToggleTerm size=10 direction=horizontal<cr>", { desc = "Horizontal terminal" })
             vim.keymap.set("n", "<leader>xv", "<cmd>ToggleTerm size=80 direction=vertical<cr>", { desc = "Vertical terminal" })
+            
+            -- Rails terminals
             vim.keymap.set("n", "<leader>rc", "<cmd>lua _rails_console_toggle()<CR>", { desc = "Rails console" })
             vim.keymap.set("n", "<leader>rs", "<cmd>lua _rails_server_toggle()<CR>", { desc = "Rails server" })
+            
+            -- Elixir/Phoenix terminals  
+            vim.keymap.set("n", "<leader>ic", "<cmd>lua _iex_console_toggle()<CR>", { desc = "IEx console" })
+            vim.keymap.set("n", "<leader>is", "<cmd>lua _phoenix_server_toggle()<CR>", { desc = "Phoenix server" })
+            vim.keymap.set("n", "<leader>it", "<cmd>lua _mix_test_toggle()<CR>", { desc = "Mix test (stale)" })
+            vim.keymap.set("n", "<leader>il", "<cmd>lua _livebook_toggle()<CR>", { desc = "LiveBook server" })
 
             -- Terminal mode keybindings
             vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })

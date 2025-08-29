@@ -2,7 +2,10 @@ return {
   'kristijanhusak/vim-dadbod-ui',
   dependencies = {
     { 'tpope/vim-dadbod', lazy = true },
-    { 'kristijanhusak/vim-dadbod-completion', ft = { 'sql', 'mysql', 'plsql' }, lazy = true },
+    { 
+      'kristijanhusak/vim-dadbod-completion', 
+      ft = { 'sql', 'mysql', 'plsql', 'postgresql', 'sqlite' },
+    },
   },
   cmd = {
     'DBUI',
@@ -18,11 +21,16 @@ return {
     vim.g.db_ui_win_position = 'left'
     vim.g.db_ui_save_location = vim.fn.stdpath("data") .. "/db_ui"
     
-    -- Prevent tree from collapsing
-    vim.g.db_ui_winwidth = 30
-    vim.g.db_ui_use_nvim_notify = 1
+    -- Minimal tree collapse prevention
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "dbui",
+      callback = function()
+        vim.opt_local.foldmethod = "manual"
+        vim.opt_local.foldenable = false
+      end,
+    })
     
-    -- Safe Rails database auto-detection
+    -- Enhanced Rails database auto-detection
     vim.api.nvim_create_autocmd("VimEnter", {
       callback = function()
         local cwd = vim.fn.getcwd()
@@ -44,57 +52,162 @@ return {
         
         local connections = {}
         
-        -- Check for SQLite files
-        local dev_sqlite = cwd .. '/storage/development.sqlite3'
-        local dev_sqlite_db = cwd .. '/db/development.sqlite3'
-        local test_sqlite = cwd .. '/storage/test.sqlite3'
-        local test_sqlite_db = cwd .. '/db/test.sqlite3'
-        
-        if vim.fn.filereadable(dev_sqlite) == 1 then
-          connections['Rails Development'] = 'sqlite:' .. dev_sqlite
-        elseif vim.fn.filereadable(dev_sqlite_db) == 1 then
-          connections['Rails Development'] = 'sqlite:' .. dev_sqlite_db
+        -- Check environment variables first (for production-like setups)
+        local database_url = os.getenv('DATABASE_URL')
+        if database_url then
+          connections['Rails (DATABASE_URL)'] = database_url
         end
         
-        if vim.fn.filereadable(test_sqlite) == 1 then
-          connections['Rails Test'] = 'sqlite:' .. test_sqlite
-        elseif vim.fn.filereadable(test_sqlite_db) == 1 then
-          connections['Rails Test'] = 'sqlite:' .. test_sqlite_db
+        -- Check for SQLite files (common in development)
+        local sqlite_paths = {
+          cwd .. '/storage/development.sqlite3',
+          cwd .. '/db/development.sqlite3',
+          cwd .. '/tmp/development.sqlite3'
+        }
+        
+        for _, path in ipairs(sqlite_paths) do
+          if vim.fn.filereadable(path) == 1 then
+            connections['Rails Development'] = 'sqlite:' .. path
+            break
+          end
         end
         
-        -- Basic PostgreSQL/MySQL detection if no SQLite found
-        if vim.tbl_isempty(connections) then
+        local test_sqlite_paths = {
+          cwd .. '/storage/test.sqlite3',
+          cwd .. '/db/test.sqlite3',
+          cwd .. '/tmp/test.sqlite3'
+        }
+        
+        for _, path in ipairs(test_sqlite_paths) do
+          if vim.fn.filereadable(path) == 1 then
+            connections['Rails Test'] = 'sqlite:' .. path
+            break
+          end
+        end
+        
+        -- Enhanced PostgreSQL/MySQL detection from database.yml
+        if vim.fn.filereadable(db_config) == 1 then
           local content = vim.fn.readfile(db_config)
-          local dev_db = nil
-          local test_db = nil
-          local adapter = nil
+          local current_env = nil
+          local dev_config = {}
+          local test_config = {}
           
           for _, line in ipairs(content) do
-            if line:match('adapter:%s*postgresql') then
-              adapter = 'postgresql'
-            elseif line:match('adapter:%s*mysql') then
-              adapter = 'mysql'
-            elseif line:match('database:%s*(%S+)') then
-              local db_name = line:match('database:%s*(%S+)')
-              if not dev_db then
-                dev_db = db_name
-              elseif not test_db then
-                test_db = db_name
-              end
+            -- Detect environment sections
+            if line:match('^development:') then
+              current_env = 'development'
+            elseif line:match('^test:') then
+              current_env = 'test'
+            elseif line:match('^production:') then
+              current_env = 'production'
+            elseif line:match('^%w+:') then
+              current_env = nil
+            end
+            
+            -- Parse configuration within environments
+            if current_env == 'development' then
+              local adapter = line:match('%s+adapter:%s*(%S+)')
+              local database = line:match('%s+database:%s*(%S+)')
+              local host = line:match('%s+host:%s*(%S+)')
+              local port = line:match('%s+port:%s*(%S+)')
+              local username = line:match('%s+username:%s*(%S+)')
+              local password = line:match('%s+password:%s*(%S+)')
+              
+              if adapter then dev_config.adapter = adapter end
+              if database then dev_config.database = database end
+              if host then dev_config.host = host end
+              if port then dev_config.port = port end
+              if username then dev_config.username = username end
+              if password then dev_config.password = password end
+              
+            elseif current_env == 'test' then
+              local adapter = line:match('%s+adapter:%s*(%S+)')
+              local database = line:match('%s+database:%s*(%S+)')
+              local host = line:match('%s+host:%s*(%S+)')
+              local port = line:match('%s+port:%s*(%S+)')
+              local username = line:match('%s+username:%s*(%S+)')
+              local password = line:match('%s+password:%s*(%S+)')
+              
+              if adapter then test_config.adapter = adapter end
+              if database then test_config.database = database end
+              if host then test_config.host = host end
+              if port then test_config.port = port end
+              if username then test_config.username = username end
+              if password then test_config.password = password end
             end
           end
           
-          if adapter and dev_db then
-            if adapter == 'postgresql' then
-              connections['Rails Development'] = 'postgresql://localhost:5432/' .. dev_db
-              if test_db then
-                connections['Rails Test'] = 'postgresql://localhost:5432/' .. test_db
+          -- Build connection strings for development
+          if dev_config.adapter and dev_config.database then
+            local conn_str = nil
+            if dev_config.adapter == 'postgresql' then
+              local host = dev_config.host or 'localhost'
+              local port = dev_config.port or '5432'
+              local user_pass = ''
+              if dev_config.username then
+                user_pass = dev_config.username
+                if dev_config.password then
+                  user_pass = user_pass .. ':' .. dev_config.password
+                end
+                user_pass = user_pass .. '@'
               end
-            elseif adapter == 'mysql' then
-              connections['Rails Development'] = 'mysql://localhost:3306/' .. dev_db
-              if test_db then
-                connections['Rails Test'] = 'mysql://localhost:3306/' .. test_db
+              conn_str = 'postgresql://' .. user_pass .. host .. ':' .. port .. '/' .. dev_config.database
+            elseif dev_config.adapter == 'mysql2' or dev_config.adapter == 'mysql' then
+              local host = dev_config.host or 'localhost'
+              local port = dev_config.port or '3306'
+              local user_pass = ''
+              if dev_config.username then
+                user_pass = dev_config.username
+                if dev_config.password then
+                  user_pass = user_pass .. ':' .. dev_config.password
+                end
+                user_pass = user_pass .. '@'
               end
+              conn_str = 'mysql://' .. user_pass .. host .. ':' .. port .. '/' .. dev_config.database
+            elseif dev_config.adapter == 'sqlite3' then
+              -- Handle SQLite with custom path from database.yml
+              conn_str = 'sqlite:' .. cwd .. '/' .. dev_config.database
+            end
+            
+            if conn_str and not connections['Rails Development'] then
+              connections['Rails Development'] = conn_str
+            end
+          end
+          
+          -- Build connection strings for test
+          if test_config.adapter and test_config.database then
+            local conn_str = nil
+            if test_config.adapter == 'postgresql' then
+              local host = test_config.host or 'localhost'
+              local port = test_config.port or '5432'
+              local user_pass = ''
+              if test_config.username then
+                user_pass = test_config.username
+                if test_config.password then
+                  user_pass = user_pass .. ':' .. test_config.password
+                end
+                user_pass = user_pass .. '@'
+              end
+              conn_str = 'postgresql://' .. user_pass .. host .. ':' .. port .. '/' .. test_config.database
+            elseif test_config.adapter == 'mysql2' or test_config.adapter == 'mysql' then
+              local host = test_config.host or 'localhost'
+              local port = test_config.port or '3306'
+              local user_pass = ''
+              if test_config.username then
+                user_pass = test_config.username
+                if test_config.password then
+                  user_pass = user_pass .. ':' .. test_config.password
+                end
+                user_pass = user_pass .. '@'
+              end
+              conn_str = 'mysql://' .. user_pass .. host .. ':' .. port .. '/' .. test_config.database
+            elseif test_config.adapter == 'sqlite3' then
+              -- Handle SQLite with custom path from database.yml
+              conn_str = 'sqlite:' .. cwd .. '/' .. test_config.database
+            end
+            
+            if conn_str and not connections['Rails Test'] then
+              connections['Rails Test'] = conn_str
             end
           end
         end
@@ -102,6 +215,10 @@ return {
         -- Only set connections if we found any and this is definitely a Rails project
         if not vim.tbl_isempty(connections) then
           vim.g.dbs = connections
+          -- Notify user about auto-detected connections
+          local count = 0
+          for _ in pairs(connections) do count = count + 1 end
+          vim.notify('🗄️ Auto-detected ' .. count .. ' Rails database connection(s)', vim.log.levels.INFO)
         end
       end,
     })

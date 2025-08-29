@@ -50,9 +50,56 @@ format_time() {
     printf "%02d:%02d" $minutes $remaining_seconds
 }
 
+# Function to create progress bar
+create_progress_bar() {
+    local current=$1
+    local total=$2
+    local width=8
+    
+    if [ $total -eq 0 ]; then
+        echo "████████"
+        return
+    fi
+    
+    local progress=$((current * width / total))
+    local filled=""
+    local empty=""
+    
+    for i in $(seq 1 $progress); do
+        filled="${filled}█"
+    done
+    
+    for i in $(seq $((progress + 1)) $width); do
+        empty="${empty}░"
+    done
+    
+    echo "$filled$empty"
+}
+
+# Function to play a happy break tune
+play_break_tune() {
+    # Play a simple fantasy-style ascending melody
+    (timeout 0.2s speaker-test -t sine -f 440 -l 1 >/dev/null 2>&1; sleep 0.05) &  # A4
+    sleep 0.25
+    (timeout 0.2s speaker-test -t sine -f 523 -l 1 >/dev/null 2>&1; sleep 0.05) &  # C5
+    sleep 0.25
+    (timeout 0.2s speaker-test -t sine -f 659 -l 1 >/dev/null 2>&1; sleep 0.05) &  # E5
+    sleep 0.25
+    (timeout 0.3s speaker-test -t sine -f 880 -l 1 >/dev/null 2>&1) &             # A5
+    wait
+}
+
+# Function to play a simple work tone
+play_work_tone() {
+    # Single descending tone for work time
+    (timeout 0.2s speaker-test -t sine -f 600 -l 1 >/dev/null 2>&1) || (printf "\a")
+}
+
 # Function to start work session
 start_work() {
     echo "WORK:$WORK_TIME:$(date +%s):0" > "$TIMER_FILE"
+    # Reset completed sessions when starting a new pomodoro cycle
+    sed -i 's/COMPLETED_SESSIONS=.*/COMPLETED_SESSIONS=0/' "$CONFIG_FILE"
 }
 
 # Function to start short break
@@ -112,20 +159,42 @@ get_display() {
                 
                 if [ $time_left -le 0 ]; then
                     # Timer finished
-                    if [ "$ENABLE_NOTIFICATIONS" = "true" ]; then
-                        notify-send "Pomodoro" "Timer finished!" -u critical
-                    fi
                     
                     if [ "$mode" = "WORK" ]; then
-                        echo "SHORT_BREAK:$SHORT_BREAK:$(date +%s):0" > "$TIMER_FILE"
-                        if [ "$ENABLE_NOTIFICATIONS" = "true" ]; then
-                            notify-send "Pomodoro" "Time for a break!" -u normal
+                        # Work session completed - increment counter
+                        CURRENT_COMPLETED=$(grep "COMPLETED_SESSIONS=" "$CONFIG_FILE" | cut -d= -f2)
+                        NEW_COMPLETED=$((CURRENT_COMPLETED + 1))
+                        sed -i "s/COMPLETED_SESSIONS=.*/COMPLETED_SESSIONS=$NEW_COMPLETED/" "$CONFIG_FILE"
+                        
+                        # Check if it's time for a long break
+                        if [ $NEW_COMPLETED -ge $SESSIONS_BEFORE_LONG_BREAK ]; then
+                            # Time for long break - reset counter
+                            sed -i "s/COMPLETED_SESSIONS=.*/COMPLETED_SESSIONS=0/" "$CONFIG_FILE"
+                            echo "LONG_BREAK:$LONG_BREAK:$(date +%s):0" > "$TIMER_FILE"
+                            if [ "$ENABLE_NOTIFICATIONS" = "true" ]; then
+                                notify-send "Pomodoro" "Time for a long break! ($SESSIONS_BEFORE_LONG_BREAK sessions completed)" -u normal
+                                if [ "$NOTIFICATION_SOUND" = "true" ]; then
+                                    play_break_tune &
+                                fi
+                            fi
+                        else
+                            # Regular short break
+                            echo "SHORT_BREAK:$SHORT_BREAK:$(date +%s):0" > "$TIMER_FILE"
+                            if [ "$ENABLE_NOTIFICATIONS" = "true" ]; then
+                                notify-send "Pomodoro" "Time for a break! ($NEW_COMPLETED/$SESSIONS_BEFORE_LONG_BREAK sessions)" -u normal
+                                if [ "$NOTIFICATION_SOUND" = "true" ]; then
+                                    play_break_tune &
+                                fi
+                            fi
                         fi
                     else
                         # Break finished - automatically transition to work
                         echo "WORK:$WORK_TIME:$(date +%s):0" > "$TIMER_FILE"
                         if [ "$ENABLE_NOTIFICATIONS" = "true" ]; then
                             notify-send "Pomodoro" "Break over! Work session started." -u normal
+                            if [ "$NOTIFICATION_SOUND" = "true" ]; then
+                                play_work_tone &
+                            fi
                         fi
                     fi
                     get_display
@@ -144,11 +213,36 @@ get_display() {
                     time_left=0
                 fi
                 
-                echo "{\"text\": \"$icon $(format_time $time_left)\", \"tooltip\": \"$mode - $(format_time $time_left) remaining\", \"class\": \"$css_class\"}"
+                # Calculate progress and percentage
+                local total_time
+                case "$mode" in
+                    "WORK") total_time=$WORK_TIME ;;
+                    "SHORT_BREAK") total_time=$SHORT_BREAK ;;
+                    "LONG_BREAK") total_time=$LONG_BREAK ;;
+                esac
+                
+                local elapsed=$((total_time - time_left))
+                local percentage=$((elapsed * 100 / total_time))
+                local progress_bar=$(create_progress_bar $elapsed $total_time)
+                
+                echo "{\"text\": \"$icon $(format_time $time_left) $progress_bar ${percentage}%\", \"tooltip\": \"$mode - $(format_time $time_left) remaining ($percentage% complete)\", \"class\": \"$css_class\"}"
             else
                 # Timer is paused
                 time_left=$remaining
-                echo "{\"text\": \"$PAUSED_ICON $(format_time $time_left)\", \"tooltip\": \"$mode - Paused\", \"class\": \"paused\"}"
+                
+                # Calculate progress and percentage for paused state
+                local total_time
+                case "$mode" in
+                    "WORK") total_time=$WORK_TIME ;;
+                    "SHORT_BREAK") total_time=$SHORT_BREAK ;;
+                    "LONG_BREAK") total_time=$LONG_BREAK ;;
+                esac
+                
+                local elapsed=$((total_time - time_left))
+                local percentage=$((elapsed * 100 / total_time))
+                local progress_bar=$(create_progress_bar $elapsed $total_time)
+                
+                echo "{\"text\": \"$PAUSED_ICON $(format_time $time_left) $progress_bar ${percentage}%\", \"tooltip\": \"$mode - Paused ($percentage% complete)\", \"class\": \"paused\"}"
             fi
             ;;
     esac

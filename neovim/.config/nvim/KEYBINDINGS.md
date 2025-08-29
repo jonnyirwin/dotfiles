@@ -133,7 +133,7 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 - `<leader>cgc` - Generate commit message
 
 ### Copilot Insert Mode
-- `<C-j>` - Accept full suggestion
+- `<leader><CR>` - Accept full suggestion
 - `<C-Right>` - Accept next word
 - `<C-S-Right>` - Accept current line
 - `<M-[>` - Previous suggestion

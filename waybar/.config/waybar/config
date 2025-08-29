@@ -3,13 +3,22 @@
     "position": "top",
     "modules-left": ["sway/workspaces"],
     "modules-center": ["custom/music", "custom/pomodoro"],
-    "modules-right": ["pulseaudio", "backlight", "battery", "clock", "tray", "idle_inhibitor"],
+    "modules-right": ["pulseaudio", "backlight", "battery", "idle_inhibitor", "clock", "tray"],
     "sway/workspaces": {
         "disable-scroll": true,
         "sort-by-name": true,
-        "format": " {name} ",
-        "format-icons": {
-            "default": ""
+        "format": "{name}",
+        "persistent_workspaces": {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": [],
+            "6": [],
+            "7": [],
+            "8": [],
+            "9": [],
+            "10": []
         }
     },
     "tray": {
@@ -17,7 +26,7 @@
         "spacing": 10
     },
     "custom/music": {
-        "format": "  {}",
+        "format": "   {}",
         "escape": true,
         "interval": 5,
         "tooltip": false,
@@ -36,28 +45,29 @@
     "clock": {
         "timezone": "Europe/Isle_of_Man",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": "\uf073 {:%Y-%m-%d}",
-        "format": "\uf017 {:%H:%M}"
+        "format-alt": "\uf073  {:%Y-%m-%d}",
+        "format": "\uf017  {:%H:%M}"
     },
     "backlight": {
-        "device": "intel_backlight",
-        "format": "{icon} {percent}%",
-        "format-icons": ["\uf185", "\uf186", "\uf042"]
+        "format": "{icon}  {percent:>3}%",
+        "format-icons": ["\uf185", "\uf186", "\uf042"],
+        "on-scroll-up": "brightnessctl set 1%+",
+        "on-scroll-down": "brightnessctl set 1%-"
     },
     "battery": {
         "states": {
             "warning": 30,
             "critical": 15
         },
-        "format": "{icon} {capacity}%",
-        "format-charging": "󰂄 {capacity}%",
-        "format-plugged": "󱐥 {capacity}%",
+        "format": "{icon}  {capacity:>3}%",
+        "format-charging": "󰂄  {capacity:>3}%",
+        "format-plugged": "󱐥  {capacity:>3}%",
         "format-alt": "{icon}",
         "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
     },
     "pulseaudio": {
-        "format": "{icon} {volume}%",
-        "format-muted": "\uf6a9",
+        "format": "{icon}  {volume:>3}%",
+        "format-muted": "\uf6a9   ---%",
         "format-icons": {
             "default": ["\uf026", "\uf027", "\uf028"]
         },

@@ -32,7 +32,11 @@ opt.splitbelow = true
 
 opt.iskeyword:append("-")
 
-opt.updatetime = 50
+opt.updatetime = 100
+
+-- Performance optimizations
+opt.timeoutlen = 300  -- Faster which-key response
+opt.ttimeoutlen = 10  -- Faster escape sequence timeout
 
 opt.swapfile = false
 opt.backup = false

@@ -61,6 +61,52 @@ return {
         -- Setup Ruby DAP with default configurations
         require("dap-ruby").setup()
         
+        -- Setup Elixir DAP configuration
+        -- Elixir debugging with IEx
+        dap.adapters.mix_task = {
+            type = "executable",
+            command = "elixir",
+            args = { "-S", "mix", "test", "--trace" },
+        }
+
+        dap.configurations.elixir = {
+            {
+                type = "mix_task",
+                name = "mix test",
+                task = "test",
+                taskArgs = { "--trace" },
+                request = "launch",
+                startApps = true, -- for Phoenix projects
+                projectDir = "${workspaceFolder}",
+                requireFiles = {
+                    "test/**/test_helper.exs",
+                    "test/**/*_test.exs"
+                }
+            },
+            {
+                type = "mix_task", 
+                name = "mix test (current file)",
+                task = "test",
+                taskArgs = { "${file}", "--trace" },
+                request = "launch",
+                startApps = true,
+                projectDir = "${workspaceFolder}",
+                requireFiles = {
+                    "test/**/test_helper.exs",
+                    "${file}"
+                }
+            },
+            {
+                type = "mix_task",
+                name = "Phoenix Server Debug",
+                task = "phx.server",
+                request = "launch",
+                startApps = true,
+                projectDir = "${workspaceFolder}",
+                requireFiles = {}
+            }
+        }
+        
         -- Add ruby_lsp adapter alias to fix "missing adapter ruby_lsp" error
         -- Some configurations may reference ruby_lsp instead of ruby
         if dap.adapters.ruby and not dap.adapters.ruby_lsp then
@@ -208,5 +254,51 @@ return {
             -- Fallback if configuration not found
             print("RSpec file debugging configuration not found")
         end, { desc = "Debug RSpec file" })
+
+        -- Elixir/Phoenix specific debugging keybindings
+        vim.keymap.set("n", "<leader>ed", function()
+            -- Debug nearest ExUnit test
+            local configs = dap.configurations.elixir
+            if configs then
+                for _, config in ipairs(configs) do
+                    if config.name and config.name:match("current.*file") then
+                        dap.run(config)
+                        return
+                    end
+                end
+            end
+            -- Fallback if configuration not found
+            print("ExUnit test debugging configuration not found")
+        end, { desc = "Debug nearest ExUnit test" })
+
+        vim.keymap.set("n", "<leader>eD", function()
+            -- Debug all ExUnit tests
+            local configs = dap.configurations.elixir
+            if configs then
+                for _, config in ipairs(configs) do
+                    if config.name and config.name:match("mix test") and not config.name:match("current") then
+                        dap.run(config)
+                        return
+                    end
+                end
+            end
+            -- Fallback if configuration not found
+            print("ExUnit full test debugging configuration not found")
+        end, { desc = "Debug all ExUnit tests" })
+
+        vim.keymap.set("n", "<leader>eP", function()
+            -- Debug Phoenix server
+            local configs = dap.configurations.elixir
+            if configs then
+                for _, config in ipairs(configs) do
+                    if config.name and config.name:match("Phoenix.*Server") then
+                        dap.run(config)
+                        return
+                    end
+                end
+            end
+            -- Fallback if configuration not found
+            print("Phoenix server debugging configuration not found")
+        end, { desc = "Debug Phoenix server" })
     end,
 }
