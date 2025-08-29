@@ -9,7 +9,7 @@
 #waybar {
   background: transparent;
   color: @text;
-  margin: 5px 5px;
+  margin: 3px 5px;
 }
 
 #workspaces {
@@ -23,11 +23,11 @@
   color: @surface2;
   border-radius: 50%;
   padding: 0;
-  margin: 0 0.3rem;
+  margin: 0 0.15rem;
   font-size: 14px;
   background-color: @surface0;
-  min-width: 32px;
-  min-height: 32px;
+  min-width: 28px;
+  min-height: 28px;
 }
 
 #workspaces button.focused {
@@ -52,8 +52,8 @@
 #custom-power,
 #idle_inhibitor {
   background-color: @surface0;
-  padding: 0.5rem 1rem;
-  margin: 5px 0;
+  padding: 0.3rem 0.8rem;
+  margin: 3px 0;
 }
 
 #clock {
