@@ -258,9 +258,9 @@ lib/nvim/
 - `<leader>ic` - IEx console  
 - `<leader>it` - Mix test (stale)
 - `<leader>il` - LiveBook server
-- `<leader>ed` - Debug nearest ExUnit test
-- `<leader>eD` - Debug all ExUnit tests
-- `<leader>eP` - Debug Phoenix server
+- `<leader>id` - Debug nearest ExUnit test
+- `<leader>iD` - Debug all ExUnit tests
+- `<leader>iP` - Debug Phoenix server
 - `<leader>rv` - Controller/View toggle
 - `<leader>rV` - View Rails routes
 - `<leader>rS` - View database schema

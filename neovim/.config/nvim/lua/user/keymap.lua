@@ -22,8 +22,6 @@ keymap.set("n", "<leader>ap", ":tabp<CR>", { desc = "Go to previous tab" })
 
 -- Alternative Oil keybindings (main one is <leader>e in oil.lua)
 keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory in oil" })
-keymap.set("n", "<leader>eh", "<CMD>Oil --horizontal<CR>", { desc = "Oil horizontal split" })
-keymap.set("n", "<leader>ev", "<CMD>Oil --vertical<CR>", { desc = "Oil vertical split" })
 
 -- === BUFFER & NAVIGATION ===
 

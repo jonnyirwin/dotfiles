@@ -133,14 +133,14 @@ return {
 					vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, bufopts)
 					
 					-- Additional Elixir-specific LSP features
-					vim.keymap.set("n", "<leader>ep", function()
+					vim.keymap.set("n", "<leader>ip", function()
 						vim.lsp.buf.code_action({
 							context = { only = { "quickfix.elixir.add_pipe" } },
 							apply = true,
 						})
 					end, { buffer = bufnr, desc = "Add pipe operator" })
 					
-					vim.keymap.set("n", "<leader>es", function()
+					vim.keymap.set("n", "<leader>is", function()
 						vim.lsp.buf.code_action({
 							context = { only = { "refactor.elixir.to_string_interpolation" } },
 							apply = true,

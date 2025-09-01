@@ -61,7 +61,43 @@ return {
         -- Setup Ruby DAP with default configurations
         require("dap-ruby").setup()
         
-        -- Setup Elixir DAP configuration
+        -- Function to read debug port from .env file
+        local function get_debug_port_from_env()
+            local env_file = vim.fn.getcwd() .. "/.env.development"
+            if vim.fn.filereadable(env_file) == 1 then
+                local content = vim.fn.readfile(env_file)
+                for _, line in ipairs(content) do
+                    local port = line:match("^RUBY_DEBUG_PORT=(%d+)")
+                    if port then
+                        return tonumber(port)
+                    end
+                end
+            end
+            return 38698 -- default port
+        end
+        
+        -- Override the ruby adapter to read port dynamically
+        local original_adapter = dap.adapters.ruby
+        dap.adapters.ruby = function(callback, config)
+            if config.name == "Attach Rails (from .env)" then
+                local port = get_debug_port_from_env()
+                config.port = port
+                print("Connecting to debug port: " .. port)
+            end
+            return original_adapter(callback, config)
+        end
+        
+        -- Add smart attach configuration that reads from .env
+        table.insert(dap.configurations.ruby, 1, {
+            type = "ruby",
+            name = "Attach Rails (from .env)",
+            request = "attach",
+            localfs = true,
+            remoteHost = "127.0.0.1",
+            -- Port will be set dynamically by the adapter
+        })
+        
+        -- Elixir DAP configuration
         -- Elixir debugging with IEx
         dap.adapters.mix_task = {
             type = "executable",
@@ -112,23 +148,6 @@ return {
         if dap.adapters.ruby and not dap.adapters.ruby_lsp then
             dap.adapters.ruby_lsp = dap.adapters.ruby
         end
-        
-        -- Add a simple debug configuration that works more reliably
-        if not dap.configurations.ruby then
-            dap.configurations.ruby = {}
-        end
-        
-        -- Insert a working debug configuration at the beginning
-        table.insert(dap.configurations.ruby, 1, {
-            type = "ruby",
-            name = "debug with binding.break",
-            request = "attach",
-            localfs = true,
-            remoteHost = "127.0.0.1",
-            remotePort = function()
-                return vim.fn.input("Debug port: ", "12345")
-            end,
-        })
 
         -- Customize DAP signs to look like VSCode
         vim.fn.sign_define('DapBreakpoint', {
@@ -211,7 +230,7 @@ return {
         vim.keymap.set("n", "<leader>dB", function()
             dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
         end, { desc = "Set Conditional Breakpoint" })
-        vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Continue" })
+        vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Start/Continue" })
         vim.keymap.set("n", "<leader>ds", dap.step_over, { desc = "Step Over" })
         vim.keymap.set("n", "<leader>di", dap.step_into, { desc = "Step Into" })
         vim.keymap.set("n", "<leader>do", dap.step_out, { desc = "Step Out" })
@@ -256,7 +275,7 @@ return {
         end, { desc = "Debug RSpec file" })
 
         -- Elixir/Phoenix specific debugging keybindings
-        vim.keymap.set("n", "<leader>ed", function()
+        vim.keymap.set("n", "<leader>id", function()
             -- Debug nearest ExUnit test
             local configs = dap.configurations.elixir
             if configs then
@@ -271,7 +290,7 @@ return {
             print("ExUnit test debugging configuration not found")
         end, { desc = "Debug nearest ExUnit test" })
 
-        vim.keymap.set("n", "<leader>eD", function()
+        vim.keymap.set("n", "<leader>iD", function()
             -- Debug all ExUnit tests
             local configs = dap.configurations.elixir
             if configs then
@@ -286,7 +305,7 @@ return {
             print("ExUnit full test debugging configuration not found")
         end, { desc = "Debug all ExUnit tests" })
 
-        vim.keymap.set("n", "<leader>eP", function()
+        vim.keymap.set("n", "<leader>iP", function()
             -- Debug Phoenix server
             local configs = dap.configurations.elixir
             if configs then

@@ -23,3 +23,5 @@ if status is-interactive
         set -gx FZF_DEFAULT_OPTS '--height 40% --layout=reverse --border'
     end
 end
+alias killrails="pkill -f rails; pkill -f puma; rm -f tmp/pids/server.pid"
+alias railsdebug="env RUBY_DEBUG_OPEN=true RUBY_DEBUG_PORT=38698 bundle exec rails s"

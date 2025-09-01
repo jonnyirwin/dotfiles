@@ -31,8 +31,6 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 
 - `<leader>e` - Open Oil file explorer (float)
 - `-` - Open parent directory in Oil
-- `<leader>eh` - Oil horizontal split
-- `<leader>ev` - Oil vertical split
 
 ## Window Management
 

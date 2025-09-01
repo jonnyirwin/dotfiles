@@ -5,6 +5,7 @@ return {
     -- Mix integration for running Mix tasks
     {
         'mattreduce/vim-mix',
+        event = "VeryLazy",  -- Load at same time as which-key
         ft = { 'elixir', 'eex', 'heex' },
         config = function()
             -- Mix convenience mappings

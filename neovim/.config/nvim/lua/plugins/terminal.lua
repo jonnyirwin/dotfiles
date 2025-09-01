@@ -2,6 +2,7 @@ return {
     {
         'akinsho/toggleterm.nvim',
         version = "*",
+        event = "VeryLazy",  -- Load at same time as which-key
         config = function()
             require("toggleterm").setup({
                 size = 20,
