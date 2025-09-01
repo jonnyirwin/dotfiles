@@ -16,13 +16,16 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 | `<leader>t`     | Test                          |
 | `<leader>x`     | Terminal/Trouble              |
 | `<leader>a`     | Tabs                          |
-| `<leader>i`     | Swap/Sort                     |
+| `<leader>i`     | IEx/Elixir Navigation         |
+| `<leader>ix`    | IEx/Elixir Terminal Commands  |
 | `<leader>u`     | UI Toggles                    |
-| `<leader>h`     | Hunks (Git)                   |
 | `<leader>e`     | File Explorer (Oil)           |
 | `<leader>l`     | LSP                           |
 | `<leader>v`     | Vimux                         |
 | `<leader>m`     | Motion/Harpoon                |
+| `<leader>n`     | Next (Treesitter swapping)   |
+| `<leader>p`     | Previous (Treesitter swapping) |
+| `<leader>s`     | Sort/Substitute               |
 
 ## File Navigation
 
@@ -307,9 +310,15 @@ Automatically closes brackets, quotes, etc. when typing. No manual keybindings n
 
 ## Sort/Swap
 
-- `<leader>is` - Sort functions alphabetically
-- `<leader>iS` - Sort treesitter nodes
+### Code Swapping (Treesitter)
+- `<leader>na` - Swap current parameter with next
+- `<leader>pa` - Swap current parameter with previous
+- `<leader>nf` - Swap current function with next
+- `<leader>pf` - Swap current function with previous
+
+### Sorting
 - `<leader>s` - Sort selected lines (visual mode)
+- `<leader>S` - Substitute word under cursor globally
 
 ## Database
 
@@ -340,6 +349,28 @@ Automatically closes brackets, quotes, etc. when typing. No manual keybindings n
 - `<leader>rE` - Elm Test
 - `<leader>re` - Elm REPL
 - `<leader>rd` - Elm Error Detail
+
+### Elixir/Phoenix Development
+
+#### File Navigation (`<leader>i`)
+- `<leader>iv` - Related view
+- `<leader>ic` - Jump to controller  
+- `<leader>im` - Jump to model/schema
+- `<leader>it` - Jump to test
+- `<leader>is` - Jump to schema
+- `<leader>il` - Jump to LiveView
+- `<leader>iC` - Jump to context
+- `<leader>iM` - Jump to migration
+- `<leader>iR` - Jump to router
+- `<leader>iE` - Jump to endpoint
+- `<leader>iV` - Router file
+- `<leader>iZ` - Database structure
+
+#### Terminal Commands (`<leader>ix`)
+- `<leader>ixc` - IEx console
+- `<leader>ixs` - Phoenix server
+- `<leader>ixt` - Mix test (stale)
+- `<leader>ixl` - LiveBook server
 
 ### Elixir
 - `<leader>rm` - Run mix command

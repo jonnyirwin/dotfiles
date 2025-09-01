@@ -149,11 +149,11 @@ return {
             vim.keymap.set("n", "<leader>rc", "<cmd>lua _rails_console_toggle()<CR>", { desc = "Rails console" })
             vim.keymap.set("n", "<leader>rs", "<cmd>lua _rails_server_toggle()<CR>", { desc = "Rails server" })
             
-            -- Elixir/Phoenix terminals  
-            vim.keymap.set("n", "<leader>ic", "<cmd>lua _iex_console_toggle()<CR>", { desc = "IEx console" })
-            vim.keymap.set("n", "<leader>is", "<cmd>lua _phoenix_server_toggle()<CR>", { desc = "Phoenix server" })
-            vim.keymap.set("n", "<leader>it", "<cmd>lua _mix_test_toggle()<CR>", { desc = "Mix test (stale)" })
-            vim.keymap.set("n", "<leader>il", "<cmd>lua _livebook_toggle()<CR>", { desc = "LiveBook server" })
+            -- Elixir/Phoenix terminals (using ix for terminal/eXecution commands)
+            vim.keymap.set("n", "<leader>ixc", "<cmd>lua _iex_console_toggle()<CR>", { desc = "IEx console" })
+            vim.keymap.set("n", "<leader>ixs", "<cmd>lua _phoenix_server_toggle()<CR>", { desc = "Phoenix server" })
+            vim.keymap.set("n", "<leader>ixt", "<cmd>lua _mix_test_toggle()<CR>", { desc = "Mix test (stale)" })
+            vim.keymap.set("n", "<leader>ixl", "<cmd>lua _livebook_toggle()<CR>", { desc = "LiveBook server" })
 
             -- Terminal mode keybindings
             vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })

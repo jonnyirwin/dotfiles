@@ -51,29 +51,29 @@ return {
 			telescope.load_extension('fzf')
 
 			-- Enhanced keybindings for file finding
-			vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope: Find Files (hidden, respects gitignore)' })
+			vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Find files' })
 			vim.keymap.set('n', '<leader>fa', function()
 				builtin.find_files({ 
 					no_ignore = true, 
 					hidden = true,
 				})
-			end, { desc = 'Telescope: Find all files (ignore gitignore)' })
-			vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope: Live Grep (inc. hidden)' })
-			vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope: Buffers' })
-			vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope: Help Tags' })
+			end, { desc = 'Find all files (ignore gitignore)' })
+			vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Live grep' })
+			vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Buffers' })
+			vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Help tags' })
 			
 			vim.keymap.set('n', '<leader>fd', function()
 				builtin.find_files({ cwd = vim.fn.expand('%:p:h') })
-			end, { desc = 'Telescope: Files in current directory' })
+			end, { desc = 'Files in current directory' })
 			
 			-- Diagnostic viewing with Telescope
-			vim.keymap.set('n', '<leader>fe', builtin.diagnostics, { desc = 'Telescope: All diagnostics (workspace)' })
+			vim.keymap.set('n', '<leader>fe', builtin.diagnostics, { desc = 'All diagnostics' })
 			vim.keymap.set('n', '<leader>fE', function()
 				builtin.diagnostics({ bufnr = 0 })
-			end, { desc = 'Telescope: Current buffer diagnostics' })
+			end, { desc = 'Current buffer diagnostics' })
 			
 			-- LSP pickers for additional context
-			vim.keymap.set('n', '<leader>fs', builtin.lsp_document_symbols, { desc = 'Telescope: Document symbols' })
-			vim.keymap.set('n', '<leader>fS', builtin.lsp_workspace_symbols, { desc = 'Telescope: Workspace symbols' })
+			vim.keymap.set('n', '<leader>fs', builtin.lsp_document_symbols, { desc = 'Document symbols' })
+			vim.keymap.set('n', '<leader>fS', builtin.lsp_workspace_symbols, { desc = 'Workspace symbols' })
 		end
 }

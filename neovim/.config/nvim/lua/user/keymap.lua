@@ -70,16 +70,6 @@ keymap.set("n", "<leader>ua", ":ASToggle<CR>", { desc = "Toggle auto-save" })
 -- Clear search highlights
 keymap.set("n", "<leader>uh", ":nohlsearch<CR>", { desc = "Clear search highlights" })
 
--- === RAILS/RUBY DEVELOPMENT ===
-
--- Rails keybindings
-keymap.set("n", "<leader>rv", ":A<CR>", { desc = "Rails alternate file (controller/view toggle)" })
-keymap.set("n", "<leader>rV", ":Eview<CR>", { desc = "View Rails routes" })
-keymap.set("n", "<leader>rS", ":Eschema<CR>", { desc = "View database schema" })
-keymap.set("n", "<leader>rm", ":Emodel<CR>", { desc = "Go to model" })
-keymap.set("n", "<leader>rg", ":Emigration<CR>", { desc = "Go to migration" })
-keymap.set("n", "<leader>rt", ":Rake<CR>", { desc = "Run Rake task" })
-
 -- === LSP & FORMATTING ===
 
 -- Formatting (moved from <leader>gf to proper LSP namespace)
@@ -106,3 +96,4 @@ keymap.set("n", "<leader>md", ":DBUIToggle<CR>", { desc = "Toggle Database UI" }
 -- - Copilot keybindings: lua/plugins/copilot.lua (<leader>c namespace)
 -- - Navigation keybindings: lua/plugins/navigation.lua (<leader>m namespace, <leader>1-4)
 -- - Oil main keybinding: lua/plugins/oil.lua (<leader>e)
+-- - Rails keybindings: lua/plugins/rails.lua (<leader>r namespace)
