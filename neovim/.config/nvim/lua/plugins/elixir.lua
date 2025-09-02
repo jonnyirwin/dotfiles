@@ -8,22 +8,22 @@ return {
         event = "VeryLazy",  -- Load at same time as which-key
         ft = { 'elixir', 'eex', 'heex' },
         config = function()
-            -- Mix convenience mappings
-            vim.keymap.set('n', '<leader>mx', ':Mix ', { desc = 'Mix: run task' })
-            vim.keymap.set('n', '<leader>mt', ':Mix test<CR>', { desc = 'Mix: run all tests' })
-            vim.keymap.set('n', '<leader>mf', ':Mix test %<CR>', { desc = 'Mix: test current file' })
-            vim.keymap.set('n', '<leader>mc', ':Mix compile<CR>', { desc = 'Mix: compile' })
-            vim.keymap.set('n', '<leader>md', ':Mix deps.get<CR>', { desc = 'Mix: get dependencies' })
-            vim.keymap.set('n', '<leader>ms', ':Mix phx.server<CR>', { desc = 'Mix: start Phoenix server' })
-            vim.keymap.set('n', '<leader>mi', ':Mix iex -S mix<CR>', { desc = 'Mix: start IEx' })
-            vim.keymap.set('n', '<leader>mp', ':Mix phx.new ', { desc = 'Mix: new Phoenix project' })
-            vim.keymap.set('n', '<leader>mg', ':Mix phx.gen.live ', { desc = 'Mix: generate LiveView' })
-            vim.keymap.set('n', '<leader>mh', ':Mix phx.gen.html ', { desc = 'Mix: generate HTML context' })
-            vim.keymap.set('n', '<leader>mj', ':Mix phx.gen.json ', { desc = 'Mix: generate JSON API' })
-            vim.keymap.set('n', '<leader>mn', ':Mix ecto.gen.migration ', { desc = 'Mix: new migration' })
-            vim.keymap.set('n', '<leader>mm', ':Mix ecto.migrate<CR>', { desc = 'Mix: run migrations' })
-            vim.keymap.set('n', '<leader>mr', ':Mix ecto.rollback<CR>', { desc = 'Mix: rollback migration' })
-            vim.keymap.set('n', '<leader>me', ':Mix ecto.reset<CR>', { desc = 'Mix: reset database' })
+            -- Mix convenience mappings (moved to <leader>i namespace to avoid conflicts)
+            vim.keymap.set('n', '<leader>ix', ':Mix ', { desc = 'Mix: run task' })
+            vim.keymap.set('n', '<leader>it', ':Mix test<CR>', { desc = 'Mix: run all tests' })
+            vim.keymap.set('n', '<leader>if', ':Mix test %<CR>', { desc = 'Mix: test current file' })
+            vim.keymap.set('n', '<leader>ic', ':Mix compile<CR>', { desc = 'Mix: compile' })
+            vim.keymap.set('n', '<leader>imd', ':Mix deps.get<CR>', { desc = 'Mix: get dependencies' })
+            vim.keymap.set('n', '<leader>ims', ':Mix phx.server<CR>', { desc = 'Mix: start Phoenix server' })
+            vim.keymap.set('n', '<leader>imi', ':Mix iex -S mix<CR>', { desc = 'Mix: start IEx' })
+            vim.keymap.set('n', '<leader>imp', ':Mix phx.new ', { desc = 'Mix: new Phoenix project' })
+            vim.keymap.set('n', '<leader>img', ':Mix phx.gen.live ', { desc = 'Mix: generate LiveView' })
+            vim.keymap.set('n', '<leader>imh', ':Mix phx.gen.html ', { desc = 'Mix: generate HTML context' })
+            vim.keymap.set('n', '<leader>imj', ':Mix phx.gen.json ', { desc = 'Mix: generate JSON API' })
+            vim.keymap.set('n', '<leader>imn', ':Mix ecto.gen.migration ', { desc = 'Mix: new migration' })
+            vim.keymap.set('n', '<leader>imm', ':Mix ecto.migrate<CR>', { desc = 'Mix: run migrations' })
+            vim.keymap.set('n', '<leader>imr', ':Mix ecto.rollback<CR>', { desc = 'Mix: rollback migration' })
+            vim.keymap.set('n', '<leader>ime', ':Mix ecto.reset<CR>', { desc = 'Mix: reset database' })
         end,
     },
     
