@@ -46,7 +46,6 @@ lib/nvim/
 │       ├── format.lua            # Formatters and linters
 │       ├── rails.lua             # Ruby on Rails specific plugins
 │       ├── elixir.lua            # Elixir/Phoenix specific plugins
-│       ├── copilot.lua           # GitHub Copilot configuration
 │       ├── none-ls.lua           # Diagnostics & formatting with LSP UI
 │       ├── folding.lua           # Code folding with nvim-ufo
 │       ├── which-key.lua         # Keybinding help popup
@@ -71,7 +70,6 @@ lib/nvim/
 
 - **LSP Integration**: Automatic language server setup for Ruby, Elixir, TypeScript, C#, Python, etc.
 - **Intelligent Completion**: Using blink-cmp with snippets and LSP integration
-- **GitHub Copilot**: AI-powered code suggestions with chat interface and language-specific prompts
 - **Syntax Highlighting**: Enhanced with Treesitter
 - **File Navigation**: Oil.nvim for seamless file browsing with framework-aware navigation
 - **Keybinding Help**: Which-key shows available commands as you type
@@ -99,7 +97,6 @@ lib/nvim/
 |-----------------|------------------------------|
 | `<leader>f`     | Find (Telescope)             |
 | `<leader>g`     | Git                          |
-| `<leader>c`     | Code/Copilot                 |
 | `<leader>b`     | Buffer                       |
 | `<leader>w`     | Window                       |
 | `<leader>r`     | Rails/Ruby                   |
@@ -226,17 +223,6 @@ lib/nvim/
 - `'[A-Z]` - Jump to global mark
 - `dm[a-z]` - Delete mark
 
-### Copilot
-
-- `<leader>cp` - Copilot panel
-- `<leader>cc` - Copilot chat
-- `<leader>ce` - Explain code
-- `<leader>ct` - Generate tests
-- `<leader>cr` - Review code
-- `<leader>cR` - Refactor code
-- `<leader>ci` - Edit code based on instructions
-- `Alt+l/j/k` - Accept suggestion/line/word
-
 ### Terminal
 
 - `<leader>xf` - Float terminal
@@ -333,7 +319,6 @@ This configuration includes built-in support for:
 - **oil.nvim**: File explorer integrated into buffer editing
 - **nvim-ufo**: Advanced code folding with previews
 - **barbar.nvim**: Buffer tabs with close buttons
-- **copilot.lua**: AI code completion with chat interface
 - **which-key.nvim**: Keybinding popup for discovering commands
 - **telescope.nvim**: Fuzzy finder for files, text, and more
 - **trouble.nvim**: Interactive diagnostic and reference viewer
@@ -364,9 +349,7 @@ To customize this configuration:
 - Type `gd` on a function to jump to its definition, `gR` to see all references
 - In Oil, press `-` to go up a directory, `Enter` to open a file
 - Press `zp` to peek inside a fold without opening it
-- Use `Alt+j/k/l` to accept Copilot suggestions (line/word/all)
 - Press `]f` and `[f` to jump between functions in a file
-- Use `<leader>cc` followed by your question about selected code
 
 ## Ruby on Rails Development
 

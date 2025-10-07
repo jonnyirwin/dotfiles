@@ -70,10 +70,8 @@ keymap.set("n", "<leader>uh", ":nohlsearch<CR>", { desc = "Clear search highligh
 
 -- === LSP & FORMATTING ===
 
--- Formatting (moved from <leader>gf to proper LSP namespace)
-keymap.set("n", "<leader>lf", function()
-  vim.lsp.buf.format({ async = true })
-end, { desc = "Format buffer" })
+-- Note: LSP formatting is handled by buffer-local keybindings in lsp.lua
+-- No global format binding needed since LSP provides <leader>lf when attached
 
 -- Diagnostics
 keymap.set("n", "<leader>lR", function()
@@ -88,10 +86,9 @@ keymap.set("n", "<leader>md", ":DBUIToggle<CR>", { desc = "Toggle Database UI" }
 -- === PLUGIN CONFIGURATIONS ===
 -- Note: The following are configured in their respective plugin files:
 -- - Telescope keybindings: lua/plugins/telescope.lua (<leader>f namespace)
--- - Test keybindings: lua/plugins/neotest.lua (<leader>t namespace) 
+-- - Test keybindings: lua/plugins/neotest.lua (<leader>t namespace)
 -- - DAP keybindings: lua/plugins/nvim-dap.lua (<leader>d namespace)
 -- - Terminal keybindings: lua/plugins/terminal.lua (<leader>x namespace, <leader>rc, <leader>rs)
--- - Copilot keybindings: lua/plugins/copilot.lua (<leader>c namespace)
 -- - Navigation keybindings: lua/plugins/navigation.lua (<leader>m namespace, <leader>1-4)
 -- - Oil main keybinding: lua/plugins/oil.lua (<leader>e)
 -- - Rails keybindings: lua/plugins/rails.lua (<leader>r namespace)

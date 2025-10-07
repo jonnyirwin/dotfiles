@@ -8,7 +8,6 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 |-----------------|-------------------------------|
 | `<leader>f`     | Find (Telescope)              |
 | `<leader>g`     | Git                           |
-| `<leader>c`     | Code/Copilot                  |
 | `<leader>b`     | Buffer                        |
 | `<leader>w`     | Window                        |
 | `<leader>r`     | Rails/Ruby                    |
@@ -101,46 +100,6 @@ This document provides a comprehensive list of keybindings used in this Neovim c
 - `gd` - Go to definition
 - `gr` - Go to references
 - `K` - Show hover information
-
-## Copilot
-
-### Chat & Management
-- `<leader>cc` - Toggle Copilot Chat
-- `<leader>cr` - Reset Copilot Chat
-- `<leader>cs` - Copilot setup
-- `<leader>cp` - Copilot panel
-- `<leader>cm` - Copilot models
-- `<leader>ca` - Copilot auth
-
-### Code Analysis (Visual Mode)
-- `<leader>ce` - Explain selected code
-- `<leader>cf` - Fix issues in selection
-- `<leader>co` - Optimize performance
-- `<leader>cd` - Add documentation
-- `<leader>ct` - Generate tests
-- `<leader>cR` - Code review
-
-### Rails-Specific Copilot (Visual Mode)
-- `<leader>cre` - Rails explanation
-- `<leader>cro` - Rails optimization
-- `<leader>crt` - Generate Rails/RSpec tests
-- `<leader>crs` - Rails security review
-- `<leader>crr` - Rails refactoring suggestions
-
-### Advanced Copilot Commands (Visual Mode)
-- `<leader>cA` - API design review
-- `<leader>cdb` - Database optimization
-- `<leader>cac` - Accessibility review
-- `<leader>cgc` - Generate commit message
-
-### Copilot Insert Mode
-- `<leader><CR>` - Accept full suggestion
-- `<C-Right>` - Accept next word
-- `<C-S-Right>` - Accept current line
-- `<M-[>` - Previous suggestion
-- `<M-]>` - Next suggestion
-- `<C-e>` - Dismiss suggestion
-- `<C-\>` - Manual trigger
 
 ## Multi-cursor
 - `<Leader>M` - Create cursor for word under cursor

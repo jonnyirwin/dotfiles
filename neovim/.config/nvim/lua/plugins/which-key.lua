@@ -11,9 +11,6 @@ return {
             -- Only define groups, let individual plugins define their own descriptions
             { "<leader>f", group = "Find (Telescope)" },
             { "<leader>l", group = "LSP" },
-            { "<leader>c", group = "Copilot & AI" },
-            { "<leader>cr", group = "Rails AI" },
-            { "<leader>cg", group = "Git AI" },
             { "<leader>b", group = "Buffer" },
             { "<leader>w", group = "Window" },
             { "<leader>g", group = "Git" },
