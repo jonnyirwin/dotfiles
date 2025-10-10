@@ -25,5 +25,16 @@ return {
 			vim.api.nvim_set_hl(0, 'FoldColumn', { bg = 'none' })
 			vim.api.nvim_set_hl(0, 'Folded', { bg = 'none' })
 			vim.api.nvim_set_hl(0, 'SignColumn', { bg = 'none' })
+
+			-- Italic styling
+			vim.api.nvim_set_hl(0, 'Comment', { italic = true })
+			vim.api.nvim_set_hl(0, '@keyword', { italic = true })
+			vim.api.nvim_set_hl(0, '@keyword.conditional', { italic = true })
+			vim.api.nvim_set_hl(0, '@keyword.repeat', { italic = true })
+			vim.api.nvim_set_hl(0, '@keyword.return', { italic = true })
+			vim.api.nvim_set_hl(0, '@keyword.function', { italic = true })
+			vim.api.nvim_set_hl(0, '@parameter', { italic = true })
+			vim.api.nvim_set_hl(0, '@variable.builtin', { italic = true })
+			vim.api.nvim_set_hl(0, '@type.builtin', { italic = true })
     end
   }
