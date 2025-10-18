@@ -14,6 +14,7 @@ return {
 					"ruby_lsp",
 					"ts_ls",
 					"lexical", -- Elixir Language Server
+					-- Note: HLS (Haskell Language Server) is installed via ghcup, not Mason
 				},
 				automatic_installation = false,
 			})
