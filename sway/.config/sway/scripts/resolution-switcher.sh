@@ -106,6 +106,136 @@ is_output_on() {
     [ "$power_state" = "true" ]
 }
 
+# Function to get output position and dimensions
+get_output_info() {
+    local output_name="$1"
+    echo "$outputs_json" | jq -r --arg output "$output_name" '
+        .[] | select(.name == $output) |
+        "\(.rect.x) \(.rect.y) \(.rect.width) \(.rect.height)"
+    '
+}
+
+# Function to get all active outputs sorted by x position
+get_outputs_by_position() {
+    echo "$outputs_json" | jq -r '
+        .[] | select(.active == true and .power == true) |
+        "\(.rect.x) \(.name) \(.rect.width)"
+    ' | sort -n | cut -d' ' -f2
+}
+
+# Function to move output left (swap with output to the left)
+move_output_left() {
+    local output_name="$1"
+
+    # Get list of outputs ordered by position
+    local ordered_outputs=$(get_outputs_by_position)
+    local outputs_array=($ordered_outputs)
+    local num_outputs=${#outputs_array[@]}
+
+    # Find the index of the current output
+    local current_idx=-1
+    for i in "${!outputs_array[@]}"; do
+        if [ "${outputs_array[$i]}" = "$output_name" ]; then
+            current_idx=$i
+            break
+        fi
+    done
+
+    # Check if we can move left (not already leftmost)
+    if [ $current_idx -le 0 ]; then
+        notify-send "Display Position" "Cannot move $output_name left - already leftmost"
+        return 1
+    fi
+
+    # Swap with the output to the left
+    local left_output="${outputs_array[$((current_idx - 1))]}"
+
+    # Recalculate positions after swap
+    recalculate_positions_after_swap $current_idx $((current_idx - 1)) "${outputs_array[@]}"
+
+    notify-send "Display Position" "Moved $output_name to the left"
+}
+
+# Function to move output right (swap with output to the right)
+move_output_right() {
+    local output_name="$1"
+
+    # Get list of outputs ordered by position
+    local ordered_outputs=$(get_outputs_by_position)
+    local outputs_array=($ordered_outputs)
+    local num_outputs=${#outputs_array[@]}
+
+    # Find the index of the current output
+    local current_idx=-1
+    for i in "${!outputs_array[@]}"; do
+        if [ "${outputs_array[$i]}" = "$output_name" ]; then
+            current_idx=$i
+            break
+        fi
+    done
+
+    # Check if we can move right (not already rightmost)
+    if [ $current_idx -ge $((num_outputs - 1)) ]; then
+        notify-send "Display Position" "Cannot move $output_name right - already rightmost"
+        return 1
+    fi
+
+    # Swap with the output to the right
+    local right_output="${outputs_array[$((current_idx + 1))]}"
+
+    # Recalculate positions after swap
+    recalculate_positions_after_swap $current_idx $((current_idx + 1)) "${outputs_array[@]}"
+
+    notify-send "Display Position" "Moved $output_name to the right"
+}
+
+# Function to recalculate all positions after swapping two outputs
+recalculate_positions_after_swap() {
+    local idx1=$1
+    local idx2=$2
+    shift 2
+    local outputs_array=("$@")
+
+    # Swap the outputs in the array
+    local temp="${outputs_array[$idx1]}"
+    outputs_array[$idx1]="${outputs_array[$idx2]}"
+    outputs_array[$idx2]="$temp"
+
+    # Recalculate positions from left to right
+    local current_x=0
+    for output in "${outputs_array[@]}"; do
+        # Get the width of this output
+        local output_info=$(get_output_info "$output")
+        local width=$(echo "$output_info" | awk '{print $3}')
+
+        # Set position
+        swaymsg output "$output" position $current_x 0
+        save_display_position "$output" $current_x 0
+
+        # Move to next x position
+        current_x=$((current_x + width))
+    done
+}
+
+# Function to save display position to config
+save_display_position() {
+    local output_name="$1"
+    local x_pos="$2"
+    local y_pos="$3"
+
+    # Create config.d directory if it doesn't exist
+    mkdir -p "$(dirname "$DISPLAY_CONFIG_FILE")"
+
+    # Remove existing position config for this output
+    if [ -f "$DISPLAY_CONFIG_FILE" ]; then
+        grep -v "^output $output_name position " "$DISPLAY_CONFIG_FILE" > "$DISPLAY_CONFIG_FILE.tmp" || true
+        mv "$DISPLAY_CONFIG_FILE.tmp" "$DISPLAY_CONFIG_FILE"
+    fi
+
+    # Add new position configuration
+    echo "output $output_name position $x_pos $y_pos" >> "$DISPLAY_CONFIG_FILE"
+}
+
 # If only one connected output, use it directly
 if [ $(echo "$all_connected_outputs" | wc -l) -eq 1 ]; then
     output=$(echo "$all_connected_outputs" | head -n1)
@@ -190,7 +320,13 @@ else
         # Build options menu
         modes_with_current=$(echo "$modes" | sed "s|^$current_mode|● $current_mode (current)|")
         all_options="Preferred resolution\n$modes_with_current"
-        
+
+        # Add move left/right options if there are multiple active displays
+        if [ "$active_count" -gt 1 ] && is_output_on "$chosen_output"; then
+            all_options="Move Right\n$all_options"
+            all_options="Move Left\n$all_options"
+        fi
+
         # Add turn off/on option based on current state
         if is_output_on "$chosen_output"; then
             if [ "$can_turn_off" = true ]; then
@@ -217,6 +353,12 @@ else
                     save_display_config "$chosen_output" "enable"
                     notify-send "Display" "Enabled and turned on $chosen_output (saved to config)"
                     ;;
+                "Move Left")
+                    move_output_left "$chosen_output"
+                    ;;
+                "Move Right")
+                    move_output_right "$chosen_output"
+                    ;;
                 "Preferred resolution")
                     swaymsg output "$chosen_output" resolution --custom
                     save_display_config "$chosen_output" "resolution" "preferred"
@@ -226,7 +368,7 @@ else
                     # Extract resolution from the chosen string
                     clean_res=$(echo "$chosen_action" | sed 's/^● //' | sed 's/ (current)$//')
                     resolution=$(echo "$clean_res" | cut -d' ' -f1)
-                    
+
                     # Set the resolution
                     swaymsg output "$chosen_output" resolution "$resolution"
                     save_display_config "$chosen_output" "resolution" "$resolution"
