@@ -1,0 +1,6 @@
+# Swaylock configuration
+# Override system defaults to use custom wallpaper
+# This ensures the lock screen always matches your desktop wallpaper
+
+image=$HOME/Pictures/Wallpaper/wallpaper.jpg
+scaling=fill
