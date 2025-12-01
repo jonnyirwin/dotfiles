@@ -1,7 +1,8 @@
 
 -- Fully disable RuboCop LSP client by removing all filetypes
 pcall(function()
-	require("lspconfig").rubocop.setup({ filetypes = {} })
+	vim.lsp.config('rubocop', { filetypes = {} })
+	vim.lsp.enable('rubocop')
 end)
 
 return {
@@ -56,12 +57,40 @@ return {
 			-- Setup capabilities for blink.cmp
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-			local lspconfig = require("lspconfig")
-			local util = require("lspconfig.util")
+			-- Global LspAttach autocmd to handle on_attach behavior for all servers
+			vim.api.nvim_create_autocmd('LspAttach', {
+				group = vim.api.nvim_create_augroup('UserLspConfig', { clear = true }),
+				callback = function(args)
+					local client = vim.lsp.get_client_by_id(args.data.client_id)
+					local bufnr = args.buf
 
+					-- Enable completion triggered by <c-x><c-o>
+					vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+					-- General formatting keybinding
+					vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, { buffer = bufnr, noremap = true, silent = true })
+
+					-- Elixir-specific keybindings
+					if client.name == "lexical" or client.name == "elixirls" then
+						vim.keymap.set("n", "<leader>ip", function()
+							vim.lsp.buf.code_action({
+								context = { only = { "quickfix.elixir.add_pipe" } },
+								apply = true,
+							})
+						end, { buffer = bufnr, desc = "Add pipe operator" })
+
+						vim.keymap.set("n", "<leader>is", function()
+							vim.lsp.buf.code_action({
+								context = { only = { "refactor.elixir.to_string_interpolation" } },
+								apply = true,
+							})
+						end, { buffer = bufnr, desc = "Convert to string interpolation" })
+					end
+				end,
+			})
 
 			-- Ruby LSP configuration with proper on_new_config hook
-			lspconfig.ruby_lsp.setup({
+			vim.lsp.config('ruby_lsp', {
 				capabilities = capabilities,
 				init_options = {
 					formatter = "auto",
@@ -93,27 +122,19 @@ return {
 						new_config.cmd = { "ruby-lsp" }
 					end
 				end,
-				on_attach = function(client, bufnr)
-					-- Enable completion triggered by <c-x><c-o>
-					vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-
-					-- Ruby-specific keybindings
-					local bufopts = { noremap = true, silent = true, buffer = bufnr }
-					vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, bufopts)
-				end,
 			})
-			lspconfig.ts_ls.setup({
+			vim.lsp.enable('ruby_lsp')
+
+			vim.lsp.config('ts_ls', {
 				capabilities = capabilities,
 			})
+			vim.lsp.enable('ts_ls')
 
 			-- Elixir LSP configuration with lexical
-			lspconfig.lexical.setup({
+			vim.lsp.config('lexical', {
 				capabilities = capabilities,
 				filetypes = { "elixir", "eex", "heex", "surface" },
-				root_dir = function(fname)
-					-- Look for Phoenix/Elixir project markers
-					return util.root_pattern("mix.exs", ".git")(fname) or util.find_git_ancestor(fname)
-				end,
+				root_markers = { "mix.exs", ".git" },
 				settings = {
 					-- Lexical settings for better Elixir support
 					elixir = {
@@ -125,55 +146,27 @@ return {
 						suggestSpecs = true,
 					},
 				},
-				on_attach = function(client, bufnr)
-					-- Enable completion triggered by <c-x><c-o>
-					vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-
-					-- Elixir-specific keybindings
-					local bufopts = { noremap = true, silent = true, buffer = bufnr }
-					vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, bufopts)
-					
-					-- Additional Elixir-specific LSP features
-					vim.keymap.set("n", "<leader>ip", function()
-						vim.lsp.buf.code_action({
-							context = { only = { "quickfix.elixir.add_pipe" } },
-							apply = true,
-						})
-					end, { buffer = bufnr, desc = "Add pipe operator" })
-					
-					vim.keymap.set("n", "<leader>is", function()
-						vim.lsp.buf.code_action({
-							context = { only = { "refactor.elixir.to_string_interpolation" } },
-							apply = true,
-						})
-					end, { buffer = bufnr, desc = "Convert to string interpolation" })
-				end,
 			})
+			vim.lsp.enable('lexical')
 
 			-- Alternative Elixir LS (fallback if lexical not available)
-			if not pcall(require, "lspconfig.configs.lexical") then
-				lspconfig.elixirls.setup({
-					capabilities = capabilities,
-					cmd = { "elixir-ls" },
-					filetypes = { "elixir", "eex", "heex", "surface" },
-					root_dir = function(fname)
-						return util.root_pattern("mix.exs", ".git")(fname) or util.find_git_ancestor(fname)
-					end,
-					settings = {
-						elixirLS = {
-							dialyzerEnabled = true,
-							fetchDeps = false,
-							enableTestLenses = true,
-							suggestSpecs = true,
-						},
+			-- Note: With the new API, we simply configure both and let Neovim handle which is available
+			vim.lsp.config('elixirls', {
+				capabilities = capabilities,
+				cmd = { "elixir-ls" },
+				filetypes = { "elixir", "eex", "heex", "surface" },
+				root_markers = { "mix.exs", ".git" },
+				settings = {
+					elixirLS = {
+						dialyzerEnabled = true,
+						fetchDeps = false,
+						enableTestLenses = true,
+						suggestSpecs = true,
 					},
-					on_attach = function(client, bufnr)
-						vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-						local bufopts = { noremap = true, silent = true, buffer = bufnr }
-						vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, bufopts)
-					end,
-				})
-			end
+				},
+			})
+			-- Note: Only enable elixirls if lexical is not available
+			-- vim.lsp.enable('elixirls')
 
 			vim.keymap.set("n", "<leader>lD", vim.lsp.buf.declaration, { desc = "Declaration" })
 			vim.keymap.set("n", "<leader>ld", vim.lsp.buf.definition, { desc = "Definition" })
@@ -231,9 +224,7 @@ return {
 						client.stop()
 					end
 				end
-				-- Clear any cached configurations
-				require("lspconfig").ruby_lsp.manager = nil
-				-- Wait then restart
+				-- Wait then restart (config will be re-evaluated automatically)
 				vim.defer_fn(function()
 					vim.cmd("LspStart ruby_lsp")
 				end, 1000)
