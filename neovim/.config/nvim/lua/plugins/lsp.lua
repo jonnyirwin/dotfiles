@@ -14,7 +14,7 @@ return {
 				ensure_installed = {
 					"ruby_lsp",
 					"ts_ls",
-					"lexical", -- Elixir Language Server
+					"expert", -- Elixir Language Server
 					-- Note: HLS (Haskell Language Server) is installed via ghcup, not Mason
 				},
 				automatic_installation = false,
@@ -71,7 +71,7 @@ return {
 					vim.keymap.set("n", "<leader>lf", vim.lsp.buf.format, { buffer = bufnr, noremap = true, silent = true })
 
 					-- Elixir-specific keybindings
-					if client.name == "lexical" or client.name == "elixirls" then
+					if client.name == "expert" then
 						vim.keymap.set("n", "<leader>ip", function()
 							vim.lsp.buf.code_action({
 								context = { only = { "quickfix.elixir.add_pipe" } },
@@ -130,43 +130,17 @@ return {
 			})
 			vim.lsp.enable('ts_ls')
 
-			-- Elixir LSP configuration with lexical
-			vim.lsp.config('lexical', {
+			-- Elixir LSP configuration with expert
+			-- Expert is the official Elixir LSP (currently in alpha)
+			-- It has built-in smart defaults and doesn't require extensive configuration
+			local mason_bin = vim.fn.stdpath("data") .. "/mason/bin/expert"
+			vim.lsp.config('expert', {
 				capabilities = capabilities,
-				filetypes = { "elixir", "eex", "heex", "surface" },
+				cmd = { mason_bin, "--stdio" },
+				filetypes = { "elixir", "eelixir", "heex", "surface" },
 				root_markers = { "mix.exs", ".git" },
-				settings = {
-					-- Lexical settings for better Elixir support
-					elixir = {
-						dialyzerEnabled = true,
-						enableTestLenses = true,
-						fetchDeps = false,
-						mixEnv = "dev",
-						projectDir = ".",
-						suggestSpecs = true,
-					},
-				},
 			})
-			vim.lsp.enable('lexical')
-
-			-- Alternative Elixir LS (fallback if lexical not available)
-			-- Note: With the new API, we simply configure both and let Neovim handle which is available
-			vim.lsp.config('elixirls', {
-				capabilities = capabilities,
-				cmd = { "elixir-ls" },
-				filetypes = { "elixir", "eex", "heex", "surface" },
-				root_markers = { "mix.exs", ".git" },
-				settings = {
-					elixirLS = {
-						dialyzerEnabled = true,
-						fetchDeps = false,
-						enableTestLenses = true,
-						suggestSpecs = true,
-					},
-				},
-			})
-			-- Note: Only enable elixirls if lexical is not available
-			-- vim.lsp.enable('elixirls')
+			vim.lsp.enable('expert')
 
 			vim.keymap.set("n", "<leader>lD", vim.lsp.buf.declaration, { desc = "Declaration" })
 			vim.keymap.set("n", "<leader>ld", vim.lsp.buf.definition, { desc = "Definition" })

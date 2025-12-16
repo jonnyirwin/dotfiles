@@ -142,13 +142,7 @@ return {
             })
         end,
     },
-    
-    -- Additional helpful plugins for Elixir development
-    {
-        'GrzegorzKozub/vim-elixirls',
-        ft = { 'elixir', 'eex', 'heex' },
-    },
-    
+
     -- Better HEEx syntax highlighting
     {
         'mitchellh/vim-misc',
