@@ -46,3 +46,12 @@ opt.undofile = true
 opt.scrolloff = 8
 
 opt.clipboard = 'unnamedplus'
+
+-- Auto-reload files when changed externally
+opt.autoread = true
+
+-- Autocmd to trigger autoread when switching to Neovim or moving cursor
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+  command = "checktime",
+  desc = "Check if file needs to be reloaded from disk"
+})
