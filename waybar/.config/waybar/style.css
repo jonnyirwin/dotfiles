@@ -48,6 +48,7 @@
 #clock,
 #battery,
 #pulseaudio,
+#custom-audio-output,
 #custom-lock,
 #custom-power,
 #idle_inhibitor {
@@ -86,10 +87,17 @@
   border-radius: 0px 1rem 1rem 0px;
 }
 
-#pulseaudio {
+#custom-audio-output {
   color: @maroon;
   border-radius: 1rem 0px 0px 1rem;
   margin-left: 1rem;
+  padding-right: 0.4rem;
+}
+
+#pulseaudio {
+  color: @maroon;
+  border-radius: 0;
+  padding-left: 0.4rem;
 }
 
 #custom-music {

@@ -21,7 +21,12 @@ if status is-interactive
     # Set up fzf if available
     if command -v fzf > /dev/null
         set -gx FZF_DEFAULT_OPTS '--height 40% --layout=reverse --border'
+        fzf --fish | source
     end
+
+    # zoxide (smarter cd - use 'z' instead of 'cd')
+    zoxide init fish | source
 end
 alias killrails="pkill -f rails; pkill -f puma; rm -f tmp/pids/server.pid"
 alias railsdebug="env RUBY_DEBUG_OPEN=true RUBY_DEBUG_PORT=38698 bundle exec rails s"
+export PATH="$HOME/.local/bin:$PATH"

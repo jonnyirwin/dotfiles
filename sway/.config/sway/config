@@ -39,7 +39,7 @@ set $menu $rofi_cmd -show drun -show-icons -lines 5
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 # Requires: desktop-backgrounds-compat, swaybg, jxl-pixbuf-loader
-output * bg ~/Pictures/Wallpaper/wallpaper.jpg fill
+output * bg /usr/share/backgrounds/gnome/adwaita-d.jpg fill
 
 # Include persistent display settings (managed by resolution-switcher script)
 include ~/.config/sway/config.d/display-settings.conf
@@ -51,14 +51,23 @@ include ~/.config/sway/config.d/display-settings.conf
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 
+### Clipboard sync for middle-click paste from browser
+exec ~/.config/sway/scripts/clipboard-sync.sh
+
+### Clipboard history (cliphist)
+exec wl-paste --watch cliphist store
+
+### Auto-tiling (automatic horizontal/vertical splits)
+exec autotiling
+
 ### Idle configuration
 #
 # Example configuration:
 #
 exec swayidle -w \
-    timeout 300 'swaylock -f -i ~/Pictures/Wallpaper/wallpaper.jpg' \
+    timeout 300 'swaylock -f -i /usr/share/backgrounds/gnome/adwaita-d.jpg' \
     timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-    before-sleep 'swaylock -f -i ~/Pictures/Wallpaper/wallpaper.jpg'
+    before-sleep 'swaylock -f -i /usr/share/backgrounds/gnome/adwaita-d.jpg'
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -82,6 +91,11 @@ input * {
     xkb_layout "gb"
 }
 
+# Enable middle button emulation for trackballs/mice without middle button
+input type:pointer {
+    middle_emulation enabled
+}
+
 ### Key bindings
 #
 # Basics:
@@ -101,6 +115,16 @@ input * {
     # Pomodoro timer menu
     bindsym $mod+p exec ~/.config/waybar/scripts/pomodoro-menu.sh
 
+    # Voice input (whisper.cpp) - press to start, press again to stop
+    bindsym $mod+semicolon exec ~/git/whisper.cpp/voice-input-toggle.sh
+
+    # Clipboard history (cliphist)
+    bindsym $mod+c exec cliphist list | rofi -dmenu -p "Clipboard" | cliphist decode | wl-copy
+
+    # Rofi window switcher
+    bindsym $mod+Tab exec ~/.config/sway/scripts/window-switcher.sh
+
+
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
     # Despite the name, also works for non-floating windows.
@@ -113,6 +137,9 @@ input * {
 
     # Exit sway (logs you out of your Wayland session)
     bindsym $mod+Shift+e exec ~/.config/sway/scripts/power-menu.sh
+
+    # Paste PRIMARY selection (middle-click alternative)
+    bindsym $mod+Shift+v exec wl-paste -p | wtype -
 #
 # Moving around:
 #
@@ -231,6 +258,12 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
+#
+# Screenshots:
+#
+    # Region select -> save to ~/Pictures/Screenshots/ and open
+    bindsym $mod+Shift+s exec ~/.config/sway/scripts/screenshot.sh
+
 # Include configs from 3 locations:
 #  - /usr/share/sway/config.d
 #  - /etc/sway/config.d
@@ -252,4 +285,6 @@ bindsym $mod+r mode "resize"
 # important to make the magic work. And if you want to learn the secret behind
 # the trick, it's all in the `wordexp(3)`.
 #
-include '$(/usr/libexec/sway/layered-include "/usr/share/sway/config.d/*.conf" "/etc/sway/config.d/*.conf" "${XDG_CONFIG_HOME:-$HOME/.config}/sway/config.d/*.conf")'
+include /usr/share/sway/config.d/*.conf
+include /etc/sway/config.d/*.conf
+include ~/.config/sway/config.d/*.conf

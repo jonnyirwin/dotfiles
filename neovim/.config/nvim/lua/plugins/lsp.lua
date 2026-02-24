@@ -12,8 +12,8 @@ return {
 		config = function()
 			require("mason-lspconfig").setup({
 				ensure_installed = {
-					"ruby_lsp",
-					"ts_ls",
+					-- ruby_lsp: Installed via gem (mise-managed Ruby), not Mason
+					-- ts_ls: Installed via npm (mise-managed Node.js), not Mason
 					"expert", -- Elixir Language Server
 					-- Note: HLS (Haskell Language Server) is installed via ghcup, not Mason
 				},

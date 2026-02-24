@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Rofi Power Menu for Sway
-# Provides options for logout, reboot, shutdown, lock, suspend, hibernate
+# Provides options for logout, reboot, shutdown, lock, suspend
 
 # Check if rofi is available
 if ! command -v rofi &> /dev/null; then
@@ -14,7 +14,6 @@ options=(
     "🔒 Lock"
     "🚪 Logout"
     "💤 Suspend"
-    "🛏️ Hibernate"
     "🔄 Reboot"
     "⏻ Shutdown"
     "❌ Cancel"
@@ -27,7 +26,7 @@ case "$chosen" in
     "🔒 Lock")
         # Check if swaylock is available, otherwise use a generic lock
         if command -v swaylock &> /dev/null; then
-            swaylock -f -i ~/Pictures/Wallpaper/wallpaper.jpg
+            swaylock -f -i /usr/share/backgrounds/gnome/adwaita-d.jpg
         else
             notify-send "Lock" "No screen locker found. Install swaylock for screen locking."
         fi
@@ -37,9 +36,6 @@ case "$chosen" in
         ;;
     "💤 Suspend")
         systemctl suspend
-        ;;
-    "🛏️ Hibernate")
-        systemctl hibernate
         ;;
     "🔄 Reboot")
         systemctl reboot

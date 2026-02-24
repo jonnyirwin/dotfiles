@@ -3,7 +3,7 @@
     "position": "top",
     "modules-left": ["sway/workspaces"],
     "modules-center": ["custom/music", "custom/pomodoro"],
-    "modules-right": ["pulseaudio", "backlight", "battery", "idle_inhibitor", "clock", "tray"],
+    "modules-right": ["custom/audio-output", "pulseaudio", "backlight", "battery", "idle_inhibitor", "clock", "tray"],
     "sway/workspaces": {
         "disable-scroll": true,
         "sort-by-name": true,
@@ -65,13 +65,20 @@
         "format-alt": "{icon}",
         "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
     },
+    "custom/audio-output": {
+        "format": "{}",
+        "interval": 2,
+        "exec": "~/.config/waybar/scripts/audio-output.sh",
+        "on-click": "~/.config/waybar/scripts/audio-switch.sh"
+    },
     "pulseaudio": {
         "format": "{icon}  {volume:>3}%",
         "format-muted": "\uf6a9   ---%",
         "format-icons": {
             "default": ["\uf026", "\uf027", "\uf028"]
         },
-        "on-click": "pavucontrol"
+        "on-click": "pavucontrol",
+        "on-click-right": "~/.config/waybar/scripts/audio-switch.sh"
     },
     "custom/lock": {
         "tooltip": false,
