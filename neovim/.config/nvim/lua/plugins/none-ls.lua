@@ -72,7 +72,13 @@ return {
                 null_ls.builtins.formatting.markdownlint,
                 null_ls.builtins.formatting.prettier,
                 null_ls.builtins.formatting.stylua,
-                null_ls.builtins.formatting.erb_lint,
+                null_ls.builtins.formatting.erb_lint.with({
+                    command = "bundle",
+                    prepend_args = { "exec", "erb_lint" },
+                    cwd = h.cache.by_bufnr(function(params)
+                        return u.root_pattern("Gemfile")(params.bufname)
+                    end),
+                }),
             },
         })
     end,

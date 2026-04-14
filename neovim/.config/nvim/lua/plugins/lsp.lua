@@ -6,21 +6,6 @@ pcall(function()
 end)
 
 return {
-	{ "williamboman/mason.nvim", config = true },
-	{
-		"williamboman/mason-lspconfig.nvim",
-		config = function()
-			require("mason-lspconfig").setup({
-				ensure_installed = {
-					-- ruby_lsp: Installed via gem (mise-managed Ruby), not Mason
-					-- ts_ls: Installed via npm (mise-managed Node.js), not Mason
-					"expert", -- Elixir Language Server
-					-- Note: HLS (Haskell Language Server) is installed via ghcup, not Mason
-				},
-				automatic_installation = false,
-			})
-		end,
-	},
 	{
 		"neovim/nvim-lspconfig",
 		config = function()
@@ -130,13 +115,17 @@ return {
 			})
 			vim.lsp.enable('ts_ls')
 
-			-- Elixir LSP configuration with expert
-			-- Expert is the official Elixir LSP (currently in alpha)
-			-- It has built-in smart defaults and doesn't require extensive configuration
-			local mason_bin = vim.fn.stdpath("data") .. "/mason/bin/expert"
+			-- ESLint LSP: `vscode-eslint-language-server` must be on PATH
+			-- (npm i -g vscode-langservers-extracted, via mise-managed Node)
+			vim.lsp.config('eslint', {
+				capabilities = capabilities,
+			})
+			vim.lsp.enable('eslint')
+
+			-- Elixir LSP: `expert` must be on PATH (install via mise or build from source)
 			vim.lsp.config('expert', {
 				capabilities = capabilities,
-				cmd = { mason_bin, "--stdio" },
+				cmd = { "expert", "--stdio" },
 				filetypes = { "elixir", "eelixir", "heex", "surface" },
 				root_markers = { "mix.exs", ".git" },
 			})

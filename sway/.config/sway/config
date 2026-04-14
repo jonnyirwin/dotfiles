@@ -37,9 +37,9 @@ set $menu $rofi_cmd -show drun -show-icons -lines 5
 
 ### Output configuration 
 #
-# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-# Requires: desktop-backgrounds-compat, swaybg, jxl-pixbuf-loader
-output * bg /usr/share/backgrounds/gnome/adwaita-d.jpg fill
+# Random wallpaper from ~/Pictures/Wallpapers; reshuffles on sway reload.
+# Requires: swaybg (and jxl-pixbuf-loader for .jxl files)
+exec_always ~/.config/sway/scripts/random-wallpaper.sh
 
 # Include persistent display settings (managed by resolution-switcher script)
 include ~/.config/sway/config.d/display-settings.conf

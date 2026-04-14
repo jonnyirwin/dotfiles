@@ -1,7 +1,10 @@
 # Better defaults
-set -gx EDITOR vim
+set -gx EDITOR nvim
 set -gx VISUAL $EDITOR
 set -gx PAGER less
+
+# 1Password SSH agent socket
+set -gx SSH_AUTH_SOCK $HOME/.1password/agent.sock
 
 # Colorful man pages
 set -gx LESS_TERMCAP_mb \e'[1;32m'     # begin blinking

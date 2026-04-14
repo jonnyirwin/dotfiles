@@ -10,6 +10,14 @@ abbr -a gb git branch
 abbr -a gco git checkout
 abbr -a gm git merge
 
+# Git worktree abbreviations
+abbr -a gw git worktree
+abbr -a gwa git worktree add
+abbr -a gwl git worktree list
+abbr -a gwr git worktree remove
+abbr -a gwp git worktree prune
+abbr -a gwm git worktree move
+
 # System abbreviations
 abbr -a ll ls -la
 abbr -a la ls -A

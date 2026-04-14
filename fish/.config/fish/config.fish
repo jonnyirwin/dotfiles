@@ -26,8 +26,17 @@ if status is-interactive
 
     # zoxide (smarter cd - use 'z' instead of 'cd')
     zoxide init fish | source
+
+    # atuin (searchable, syncable shell history - Ctrl-R)
+    if command -v atuin > /dev/null
+        atuin init fish | source
+    end
+
+    # direnv (per-directory env vars, auto-loaded on cd)
+    if command -v direnv > /dev/null
+        direnv hook fish | source
+    end
 end
-set -x SSH_AUTH_SOCK ~/.1password/agent.sock
 
 alias killrails="pkill -f rails; pkill -f puma; rm -f tmp/pids/server.pid"
 alias railsdebug="env RUBY_DEBUG_OPEN=true RUBY_DEBUG_PORT=38698 bundle exec rails s"

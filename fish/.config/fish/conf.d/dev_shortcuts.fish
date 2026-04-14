@@ -1,6 +1,5 @@
 # Development shortcuts
 abbr -a py python3
-abbr -a py2 python2
 abbr -a ipy ipython
 abbr -a jn jupyter notebook
 abbr -a jl jupyter lab
@@ -21,4 +20,6 @@ abbr -a yi yarn install
 
 # Quick server
 abbr -a serve python3 -m http.server
-abbr -a serve2 python2 -m SimpleHTTPServer
+
+# Rails debugging: start server with rdbg attached on 127.0.0.1:38698
+abbr -a rdbgs 'bundle exec rdbg -n --open --host 127.0.0.1 --port 38698 -c -- bin/rails server'

@@ -81,7 +81,7 @@ end, { desc = "Refresh diagnostics" })
 -- === DATABASE ===
 
 -- Database UI keybinding
-keymap.set("n", "<leader>md", ":DBUIToggle<CR>", { desc = "Toggle Database UI" })
+keymap.set("n", "<leader>uD", ":DBUIToggle<CR>", { desc = "Toggle Database UI" })
 
 -- === PLUGIN CONFIGURATIONS ===
 -- Note: The following are configured in their respective plugin files:

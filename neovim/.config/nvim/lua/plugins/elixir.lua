@@ -9,7 +9,7 @@ return {
         ft = { 'elixir', 'eex', 'heex' },
         config = function()
             -- Mix convenience mappings (moved to <leader>i namespace to avoid conflicts)
-            vim.keymap.set('n', '<leader>ix', ':Mix ', { desc = 'Mix: run task' })
+            vim.keymap.set('n', '<leader>iX', ':Mix ', { desc = 'Mix: run task' })
             vim.keymap.set('n', '<leader>it', ':Mix test<CR>', { desc = 'Mix: run all tests' })
             vim.keymap.set('n', '<leader>if', ':Mix test %<CR>', { desc = 'Mix: test current file' })
             vim.keymap.set('n', '<leader>ic', ':Mix compile<CR>', { desc = 'Mix: compile' })
@@ -34,20 +34,20 @@ return {
         config = function()
             -- Phoenix file navigation - using <leader>i for Interactive/iEx/Elixir
             -- (avoiding <leader>e conflict with Oil file explorer)
-            vim.keymap.set('n', '<leader>iv', ':Eview<CR>', { desc = 'Elixir: related view' })
-            vim.keymap.set('n', '<leader>ic', ':Econtroller<CR>', { desc = 'Elixir: jump to controller' })
-            vim.keymap.set('n', '<leader>im', ':Emodel<CR>', { desc = 'Elixir: jump to model/schema' })
-            vim.keymap.set('n', '<leader>it', ':Etest<CR>', { desc = 'Elixir: jump to test' })
-            vim.keymap.set('n', '<leader>is', ':Eschema<CR>', { desc = 'Elixir: jump to schema' })
-            vim.keymap.set('n', '<leader>il', ':Elive<CR>', { desc = 'Elixir: jump to LiveView' })
-            vim.keymap.set('n', '<leader>iC', ':Econtext<CR>', { desc = 'Elixir: jump to context' })
-            vim.keymap.set('n', '<leader>iM', ':Emigration<CR>', { desc = 'Elixir: jump to migration' })
-            vim.keymap.set('n', '<leader>iR', ':Erouter<CR>', { desc = 'Elixir: jump to router' })
-            vim.keymap.set('n', '<leader>iE', ':Eendpoint<CR>', { desc = 'Elixir: jump to endpoint' })
-            
+            vim.keymap.set('n', '<leader>iev', ':Eview<CR>', { desc = 'Elixir: related view' })
+            vim.keymap.set('n', '<leader>iec', ':Econtroller<CR>', { desc = 'Elixir: jump to controller' })
+            vim.keymap.set('n', '<leader>iem', ':Emodel<CR>', { desc = 'Elixir: jump to model/schema' })
+            vim.keymap.set('n', '<leader>iet', ':Etest<CR>', { desc = 'Elixir: jump to test' })
+            vim.keymap.set('n', '<leader>ies', ':Eschema<CR>', { desc = 'Elixir: jump to schema' })
+            vim.keymap.set('n', '<leader>iel', ':Elive<CR>', { desc = 'Elixir: jump to LiveView' })
+            vim.keymap.set('n', '<leader>ieC', ':Econtext<CR>', { desc = 'Elixir: jump to context' })
+            vim.keymap.set('n', '<leader>ieM', ':Emigration<CR>', { desc = 'Elixir: jump to migration' })
+            vim.keymap.set('n', '<leader>ieR', ':Erouter<CR>', { desc = 'Elixir: jump to router' })
+            vim.keymap.set('n', '<leader>ieE', ':Eendpoint<CR>', { desc = 'Elixir: jump to endpoint' })
+
             -- Phoenix project navigation
-            vim.keymap.set('n', '<leader>iV', ':edit lib/*/router.ex<CR>', { desc = 'Elixir: router' })
-            vim.keymap.set('n', '<leader>iZ', ':edit priv/repo/structure.sql<CR>', { desc = 'Elixir: database structure' })
+            vim.keymap.set('n', '<leader>ieV', ':edit lib/*/router.ex<CR>', { desc = 'Elixir: router' })
+            vim.keymap.set('n', '<leader>ieZ', ':edit priv/repo/structure.sql<CR>', { desc = 'Elixir: database structure' })
         end,
     },
 

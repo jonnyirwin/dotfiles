@@ -2,12 +2,7 @@ return {
     "rcarriga/nvim-dap-ui",
     dependencies = {
         "nvim-neotest/nvim-nio",
-        { 
-            "mfussenegger/nvim-dap",
-            dependencies = {
-                "suketa/nvim-dap-ruby",
-            }
-        }
+        "mfussenegger/nvim-dap",
     },
     config = function()
         local dap = require("dap")
@@ -58,9 +53,22 @@ return {
             }
         })
 
-        -- Setup Ruby DAP with default configurations
-        require("dap-ruby").setup()
-        
+        -- Ruby: attach-only to a running rdbg session.
+        -- Start server with: bundle exec rdbg -n --open --host 127.0.0.1 --port 38698 -c -- bin/rails server
+        dap.adapters.ruby = {
+            type = "server",
+            host = "127.0.0.1",
+            port = 38698,
+        }
+
+        dap.configurations.ruby = {
+            {
+                type = "ruby",
+                request = "attach",
+                name = "Attach to rdbg (127.0.0.1:38698)",
+            },
+        }
+
         -- Elixir DAP configuration
         -- Elixir debugging with IEx
         dap.adapters.mix_task = {
@@ -107,12 +115,6 @@ return {
             }
         }
         
-        -- Add ruby_lsp adapter alias to fix "missing adapter ruby_lsp" error
-        -- Some configurations may reference ruby_lsp instead of ruby
-        if dap.adapters.ruby and not dap.adapters.ruby_lsp then
-            dap.adapters.ruby_lsp = dap.adapters.ruby
-        end
-
         -- Customize DAP signs to look like VSCode
         vim.fn.sign_define('DapBreakpoint', {
             text = '●',           -- Solid circle
@@ -207,36 +209,10 @@ return {
         vim.keymap.set("n", "<leader>de", dapui.eval, { desc = "Evaluate Expression" })
         vim.keymap.set("v", "<leader>de", dapui.eval, { desc = "Evaluate Selection" })
 
-        -- Ruby/Rails specific debugging keybindings
+        -- Ruby: attach to running rdbg
         vim.keymap.set("n", "<leader>rd", function()
-            -- Debug nearest RSpec test (use the predefined configuration)
-            local configs = dap.configurations.ruby
-            if configs then
-                for _, config in ipairs(configs) do
-                    if config.name and config.name:match("current.*line") then
-                        dap.run(config)
-                        return
-                    end
-                end
-            end
-            -- Fallback if configuration not found
-            print("RSpec line debugging configuration not found")
-        end, { desc = "Debug nearest RSpec test" })
-
-        vim.keymap.set("n", "<leader>rD", function()
-            -- Debug entire RSpec file (use the predefined configuration)
-            local configs = dap.configurations.ruby
-            if configs then
-                for _, config in ipairs(configs) do
-                    if config.name and config.name:match("rspec.*file") and not config.name:match("line") then
-                        dap.run(config)
-                        return
-                    end
-                end
-            end
-            -- Fallback if configuration not found
-            print("RSpec file debugging configuration not found")
-        end, { desc = "Debug RSpec file" })
+            dap.run(dap.configurations.ruby[1])
+        end, { desc = "Attach to rdbg" })
 
         -- Elixir/Phoenix specific debugging keybindings
         vim.keymap.set("n", "<leader>id", function()
