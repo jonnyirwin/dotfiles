@@ -27,6 +27,8 @@ if status is-interactive
     # zoxide (smarter cd - use 'z' instead of 'cd')
     zoxide init fish | source
 end
+set -x SSH_AUTH_SOCK ~/.1password/agent.sock
+
 alias killrails="pkill -f rails; pkill -f puma; rm -f tmp/pids/server.pid"
 alias railsdebug="env RUBY_DEBUG_OPEN=true RUBY_DEBUG_PORT=38698 bundle exec rails s"
 export PATH="$HOME/.local/bin:$PATH"

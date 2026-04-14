@@ -59,6 +59,7 @@ exec wl-paste --watch cliphist store
 
 ### Auto-tiling (automatic horizontal/vertical splits)
 exec autotiling
+exec nm-applet --indicator
 
 ### Idle configuration
 #
@@ -261,8 +262,8 @@ bindsym $mod+r mode "resize"
 #
 # Screenshots:
 #
-    # Region select -> save to ~/Pictures/Screenshots/ and open
-    bindsym $mod+Shift+s exec ~/.config/sway/scripts/screenshot.sh
+    # Flameshot screenshot (region select with annotation tools)
+    bindsym $mod+Shift+s exec env QT_QPA_PLATFORM=wayland QT_STYLE_OVERRIDE=Adwaita-Dark flameshot gui --path ~/Pictures/Screenshots
 
 # Include configs from 3 locations:
 #  - /usr/share/sway/config.d
