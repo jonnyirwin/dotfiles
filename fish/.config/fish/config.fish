@@ -29,7 +29,8 @@ if status is-interactive
 
     # atuin (searchable, syncable shell history - Ctrl-R)
     if command -v atuin > /dev/null
-        atuin init fish | source
+        # Strip `-k up` (deprecated in fish 4.6); atuin <=18.6.1 still emits it.
+        atuin init fish | string replace -r -- '-k up\b' up | source
     end
 
     # direnv (per-directory env vars, auto-loaded on cd)

@@ -8,7 +8,7 @@
         "disable-scroll": true,
         "sort-by-name": true,
         "format": "{name}",
-        "persistent_workspaces": {
+        "persistent-workspaces": {
             "1": [],
             "2": [],
             "3": [],
@@ -91,7 +91,7 @@
         "format": "󰐥"
     },
     "idle_inhibitor": {
-        "format": "{icon} ",
+        "format": "{icon}",
         "format-icons": {
             "activated": "\uf0f4",
             "deactivated": "\uf186"

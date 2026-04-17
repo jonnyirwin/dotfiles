@@ -1,2 +1,3 @@
 #!/bin/bash
-pkill waybar && waybar &
+pkill waybar
+waybar -c ~/.config/waybar/hosts/$(hostname).json &

@@ -1,45 +1,48 @@
 @import "mocha.css";
 
 * {
-  font-family: FantasqueSansMono Nerd Font;
-  font-size: 15px;
+  font-family: "SF Mono", "Symbols Nerd Font Mono", "DejaVu Sans Mono", monospace;
+  font-size: 13px;
   min-height: 0;
 }
 
 #waybar {
   background: transparent;
   color: @text;
-  margin: 3px 5px;
+  margin: 4px 8px;
 }
 
+/* ── Workspaces ─────────────────────────── */
+
 #workspaces {
-  border-radius: 0;
-  margin: 5px;
-  background-color: transparent;
-  margin-left: 1rem;
+  background: @surface0;
+  border: 1px solid rgba(88, 91, 112, 0.35);
+  border-radius: 10px;
+  margin: 0 4px;
+  padding: 2px;
 }
 
 #workspaces button {
-  color: @surface2;
-  border-radius: 50%;
+  color: @overlay0;
+  background: transparent;
+  border-radius: 8px;
   padding: 0;
-  margin: 0 0.15rem;
-  font-size: 14px;
-  background-color: @surface0;
+  margin: 1px 2px;
   min-width: 28px;
-  min-height: 28px;
-}
-
-#workspaces button.focused {
-  color: @green;
-  border-radius: 50%;
-  background: @surface1;
+  min-height: 26px;
 }
 
 #workspaces button:hover {
-  color: @yellow;
-  border-radius: 50%;
+  color: @text;
+  background: @surface1;
 }
+
+#workspaces button.focused {
+  color: @crust;
+  background: @mauve;
+}
+
+/* ── Shared pill base ───────────────────── */
 
 #custom-music,
 #custom-pomodoro,
@@ -52,99 +55,51 @@
 #custom-lock,
 #custom-power,
 #idle_inhibitor {
-  background-color: @surface0;
-  padding: 0.3rem 0.8rem;
-  margin: 3px 0;
+  background: @surface0;
+  border: 1px solid rgba(88, 91, 112, 0.35);
+  border-radius: 10px;
+  padding: 0 12px;
+  margin: 0 3px;
 }
 
-#clock {
-  color: @blue;
-  border-radius: 0px 1rem 1rem 0px;
-  margin-right: 1rem;
+/* cancel the old "first child gets left cap" logic */
+.modules-right > widget:first-child > * {
+  border-radius: 10px;
+  margin-left: 4px;
+  padding-left: 12px;
 }
 
-#battery {
-  color: @green;
-}
+/* ── Right side ─────────────────────────── */
 
-#battery.charging {
-  color: @green;
-}
+#clock { color: @blue; }
 
-#battery.warning:not(.charging) {
-  color: @red;
-}
+#battery { color: @green; }
+#battery.charging { color: @teal; }
+#battery.warning:not(.charging) { color: @yellow; }
+#battery.critical:not(.charging) { color: @red; }
 
-#backlight {
-  color: @yellow;
-}
+#backlight { color: @yellow; }
 
-#backlight, #battery {
-    border-radius: 0;
-}
+#pulseaudio { color: @sapphire; }
+#custom-audio-output { color: @sapphire; }
 
-#idle_inhibitor {
-  border-radius: 0px 1rem 1rem 0px;
-}
+#idle_inhibitor { color: @overlay2; }
+#idle_inhibitor.activated { color: @yellow; }
 
-#custom-audio-output {
-  color: @maroon;
-  border-radius: 1rem 0px 0px 1rem;
-  margin-left: 1rem;
-  padding-right: 0.4rem;
-}
+#custom-lock { color: @lavender; }
+#custom-power { color: @red; }
 
-#pulseaudio {
-  color: @maroon;
-  border-radius: 0;
-  padding-left: 0.4rem;
-}
+#tray { margin-right: 8px; }
 
-#custom-music {
-  color: @mauve;
-  border-radius: 1rem;
-}
+/* ── Center ─────────────────────────────── */
 
-#custom-pomodoro {
-  color: @peach;
-  border-radius: 1rem;
-}
+#custom-music { color: @mauve; }
 
-#custom-pomodoro.idle {
-  background-color: @surface0;
-  color: @peach;
-}
-
-#custom-pomodoro.running {
-  background-color: @surface0;
-  color: @green;
-}
-
+#custom-pomodoro { color: @peach; }
+#custom-pomodoro.running { color: @green; }
+#custom-pomodoro.paused { color: @overlay1; }
 #custom-pomodoro.break {
-  background-color: @yellow;
-  color: @base;
-}
-
-#custom-pomodoro.paused {
-  background-color: @surface0;
-  color: @overlay1;
-}
-
-#custom-lock {
-    border-radius: 1rem 0px 0px 1rem;
-    color: @lavender;
-}
-
-#custom-power {
-    border-radius: 0px 0px 0px 0px;
-    color: @red;
-}
-
-#tray {
-  margin-right: 1rem;
-  border-radius: 1rem;
-}
-
-#idle_inhibitor {
-	border-radius: 0px;
+  background: @peach;
+  border-color: @peach;
+  color: @crust;
 }

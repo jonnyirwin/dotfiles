@@ -1,0 +1,30 @@
+{
+    "include": ["../config"],
+    "modules-left": ["sway/workspaces"],
+    "modules-center": ["custom/music", "custom/pomodoro"],
+    "modules-right": ["pulseaudio", "idle_inhibitor", "clock", "tray"],
+    "custom/pomodoro": {
+        "format": "{}",
+        "return-type": "json",
+        "interval": 1,
+        "exec": "~/.config/waybar/scripts/pomodoro.sh display",
+        "on-click": "~/.config/waybar/scripts/pomodoro-menu.sh",
+        "escape": true
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "\uf0f4",
+            "deactivated": "\uf186"
+        }
+    },
+    "pulseaudio": {
+        "format": "{icon}  {volume:>3}%",
+        "format-muted": "\uf6a9   ---%",
+        "format-icons": {
+            "default": ["\uf026", "\uf027", "\uf028"]
+        },
+        "on-click": "pavucontrol",
+        "on-click-right": "~/.config/waybar/scripts/audio-switch.sh"
+    }
+}
