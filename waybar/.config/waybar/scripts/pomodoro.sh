@@ -18,7 +18,7 @@ else
     SESSIONS_BEFORE_LONG_BREAK=4
     ENABLE_NOTIFICATIONS=true
     NOTIFICATION_SOUND=false
-    WORK_ICON="🍅"
+    WORK_ICON="󰔛"
     BREAK_ICON="☕"
     PAUSED_ICON="⏸️"
 fi
@@ -146,7 +146,7 @@ get_display() {
     
     case "$mode" in
         "IDLE")
-            echo '{"text": "🍅 Start", "tooltip": "Click to start pomodoro", "class": "idle"}'
+            echo '{"text": "󰔛 Start", "tooltip": "Click to start pomodoro", "class": "idle"}'
             ;;
         "WORK"|"SHORT_BREAK"|"LONG_BREAK")
             local current_time=$(date +%s)

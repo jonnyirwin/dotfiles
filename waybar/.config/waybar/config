@@ -1,8 +1,8 @@
 {
     "layer": "top",
     "position": "top",
-    "modules-left": ["sway/workspaces"],
-    "modules-center": ["custom/music", "custom/pomodoro"],
+    "modules-left": ["custom/pomodoro", "sway/workspaces"],
+    "modules-center": ["custom/music"],
     "modules-right": ["custom/audio-output", "pulseaudio", "backlight", "battery", "idle_inhibitor", "clock", "tray"],
     "sway/workspaces": {
         "disable-scroll": true,
@@ -45,8 +45,8 @@
     "clock": {
         "timezone": "Europe/Isle_of_Man",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": "\uf073  {:%Y-%m-%d}",
-        "format": "\uf017  {:%H:%M}"
+        "format-alt": "󰃭  {:%Y-%m-%d}",
+        "format": "󰥔  {:%H:%M}"
     },
     "backlight": {
         "format": "{icon}  {percent:>3}%",

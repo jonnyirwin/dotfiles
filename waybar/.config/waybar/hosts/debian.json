@@ -1,7 +1,6 @@
 {
-    "include": ["../config"],
-    "modules-left": ["sway/workspaces"],
-    "modules-center": ["custom/music", "custom/pomodoro"],
+    "modules-left": ["custom/pomodoro", "sway/workspaces"],
+    "modules-center": ["custom/music"],
     "modules-right": ["pulseaudio", "idle_inhibitor", "clock", "tray"],
     "custom/pomodoro": {
         "format": "{}",
@@ -17,6 +16,12 @@
             "activated": "\uf0f4",
             "deactivated": "\uf186"
         }
+    },
+    "clock": {
+        "timezone": "Europe/Isle_of_Man",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format-alt": "󰃭  {:%Y-%m-%d}",
+        "format": "󰥔  {:%H:%M}"
     },
     "pulseaudio": {
         "format": "{icon}  {volume:>3}%",

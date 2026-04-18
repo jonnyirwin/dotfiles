@@ -14,7 +14,7 @@ else
     SESSIONS_BEFORE_LONG_BREAK=4
     ENABLE_NOTIFICATIONS=true
     NOTIFICATION_SOUND=false
-    WORK_ICON="🍅"
+    WORK_ICON="󰔛"
     BREAK_ICON="☕"
     PAUSED_ICON="⏸️"
 fi

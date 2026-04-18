@@ -1,35 +1,45 @@
 @import "mocha.css";
 
+/* ── Global ─────────────────────────────
+   Match tmux rendered inside kitty:
+   Dank Mono 16px, mantle bar, surface0 capsule pills.
+─────────────────────────────────────── */
+
 * {
-  font-family: "SF Mono", "Symbols Nerd Font Mono", "DejaVu Sans Mono", monospace;
-  font-size: 13px;
+  font-family: "Dank Mono", "Symbols Nerd Font Mono", "DejaVu Sans Mono", monospace;
+  font-size: 16px;
   min-height: 0;
 }
 
 #waybar {
-  background: transparent;
+  background: @mantle;
   color: @text;
-  margin: 4px 8px;
+  margin: 0;
+  padding: 4px 0;
 }
 
-/* ── Workspaces ─────────────────────────── */
+/* ── Workspaces ─────────────────────────
+   Each workspace is its own capsule pill,
+   mirroring tmux window-status-format.
+─────────────────────────────────────── */
 
 #workspaces {
-  background: @surface0;
-  border: 1px solid rgba(88, 91, 112, 0.35);
-  border-radius: 10px;
+  background: transparent;
+  border: none;
   margin: 0 4px;
-  padding: 2px;
+  padding: 0;
 }
 
 #workspaces button {
-  color: @overlay0;
-  background: transparent;
-  border-radius: 8px;
-  padding: 0;
-  margin: 1px 2px;
-  min-width: 28px;
-  min-height: 26px;
+  background: @surface0;
+  color: @overlay1;
+  border-radius: 999px;
+  padding: 0 10px;
+  margin: 2px 3px;
+  min-height: 24px;
+  border: none;
+  box-shadow: none;
+  transition: color 120ms ease, background 120ms ease;
 }
 
 #workspaces button:hover {
@@ -42,7 +52,10 @@
   background: @mauve;
 }
 
-/* ── Shared pill base ───────────────────── */
+/* ── Status pills ───────────────────────
+   Capsule surface0 pills matching tmux's
+   window/status segments.
+─────────────────────────────────────── */
 
 #custom-music,
 #custom-pomodoro,
@@ -56,20 +69,20 @@
 #custom-power,
 #idle_inhibitor {
   background: @surface0;
-  border: 1px solid rgba(88, 91, 112, 0.35);
-  border-radius: 10px;
+  border: none;
+  border-radius: 999px;
   padding: 0 12px;
-  margin: 0 3px;
+  margin: 2px 3px;
+  min-height: 24px;
 }
 
-/* cancel the old "first child gets left cap" logic */
 .modules-right > widget:first-child > * {
-  border-radius: 10px;
-  margin-left: 4px;
+  border-radius: 999px;
+  margin-left: 3px;
   padding-left: 12px;
 }
 
-/* ── Right side ─────────────────────────── */
+/* ── Colour mapping (mirrors tmux sections) ─ */
 
 #clock { color: @blue; }
 
@@ -80,7 +93,7 @@
 
 #backlight { color: @yellow; }
 
-#pulseaudio { color: @sapphire; }
+#pulseaudio,
 #custom-audio-output { color: @sapphire; }
 
 #idle_inhibitor { color: @overlay2; }
@@ -91,8 +104,6 @@
 
 #tray { margin-right: 8px; }
 
-/* ── Center ─────────────────────────────── */
-
 #custom-music { color: @mauve; }
 
 #custom-pomodoro { color: @peach; }
@@ -100,6 +111,5 @@
 #custom-pomodoro.paused { color: @overlay1; }
 #custom-pomodoro.break {
   background: @peach;
-  border-color: @peach;
   color: @crust;
 }
