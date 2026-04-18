@@ -61,6 +61,12 @@ exec wl-paste --watch cliphist store
 exec autotiling
 exec nm-applet --indicator
 
+### Tiling ergonomics
+smart_borders on
+smart_gaps on
+tiling_drag enable
+workspace_auto_back_and_forth yes
+
 ### Idle configuration
 #
 # Example configuration:
@@ -184,6 +190,8 @@ input type:pointer {
     bindsym $mod+8 workspace number 8
     bindsym $mod+9 workspace number 9
     bindsym $mod+0 workspace number 10
+    # Jump back to the previously focused workspace
+    bindsym $mod+grave workspace back_and_forth
     # Move focused container to workspace
     bindsym $mod+Shift+1 move container to workspace number 1
     bindsym $mod+Shift+2 move container to workspace number 2
