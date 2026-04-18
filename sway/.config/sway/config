@@ -265,6 +265,21 @@ bindsym $mod+r mode "resize"
     # Flameshot screenshot (region select with annotation tools)
     bindsym $mod+Shift+s exec env QT_QPA_PLATFORM=wayland QT_STYLE_OVERRIDE=Adwaita-Dark flameshot gui --path ~/Pictures/Screenshots
 
+#
+# Capture & pickers:
+#
+    # Emoji picker (copies to clipboard)
+    bindsym $mod+period exec ~/.config/sway/scripts/emoji-picker.sh
+
+    # OCR a selected region → clipboard
+    bindsym $mod+Shift+o exec ~/.config/sway/scripts/ocr.sh
+
+    # Pick a colour under the cursor → clipboard as #RRGGBB
+    bindsym $mod+Shift+p exec ~/.config/sway/scripts/color-picker.sh
+
+    # Toggle region screen recording (wf-recorder)
+    bindsym $mod+Shift+r exec ~/.config/sway/scripts/record-toggle.sh
+
 # Include configs from 3 locations:
 #  - /usr/share/sway/config.d
 #  - /etc/sway/config.d
