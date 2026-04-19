@@ -122,6 +122,9 @@ input type:pointer {
     # Pomodoro timer menu
     bindsym $mod+p exec ~/.config/waybar/scripts/pomodoro-menu.sh
 
+    # Font-size scaling menu
+    bindsym $mod+equal exec ~/.config/waybar/scripts/ui-font-menu.sh
+
     # Voice input (whisper.cpp) - press to start, press again to stop
     bindsym $mod+semicolon exec ~/git/whisper.cpp/voice-input-toggle.sh
 

@@ -1,25 +1,43 @@
+# Catppuccin Mocha — matches the mako config and waybar pill aesthetic.
+
 [global]
-# Monitor settings
+# Monitor
 monitor = -1
 follow = keyboard
 
-# Display settings
+# Placement
 origin = top-right
-offset = (10, 50)
-width = (0, 300)
-height = (0, 300)
+offset = (8, 8)
+width = (0, 360)
+height = (0, 140)
 notification_limit = 5
+layer = overlay
 
-# Visual settings
-frame_color = "#89b4fa"
-separator_color= frame
-highlight = "#89b4fa"
+# Visual
+background = "#313244"
+foreground = "#cdd6f4"
+frame_color = "#45475a"
+separator_color = frame
+highlight = "#cba6f7"
 corner_radius = 10
-frame_width = 2
-font = "JetBrains Mono 11"
+frame_width = 1
+padding = 14
+horizontal_padding = 14
+gap_size = 8
+font = "SF Mono 13"
+markup = full
+format = "<span foreground='#cba6f7' weight='bold'>%s</span>\n<span foreground='#bac2de'>%b</span>"
+alignment = left
+vertical_alignment = center
+word_wrap = yes
+ellipsize = middle
+ignore_newline = no
+stack_duplicates = true
+hide_duplicate_count = false
+show_indicators = yes
 
 # Timing
-timeout = 10
+timeout = 5
 idle_threshold = 120
 
 # Interaction
@@ -27,63 +45,44 @@ mouse_left_click = close_current
 mouse_middle_click = do_action, close_current
 mouse_right_click = close_all
 
-# Progress bar (for things like volume, brightness)
+# Progress bar
 progress_bar = true
 progress_bar_height = 10
 progress_bar_frame_width = 1
 progress_bar_min_width = 150
 progress_bar_max_width = 300
 
-# History and controls
+# History
 history_length = 20
 show_age_threshold = 60
-ellipsize = middle
-ignore_newline = no
-stack_duplicates = true
-hide_duplicate_count = false
-show_indicators = yes
 
 # Icons
 icon_position = left
 min_icon_size = 32
-max_icon_size = 128
+max_icon_size = 48
 icon_path = /usr/share/icons/gnome/16x16/status/:/usr/share/icons/gnome/16x16/devices/:/usr/share/icons/Adwaita/16x16/status/:/usr/share/icons/Adwaita/16x16/devices/:/usr/share/pixmaps/
 
-# Formatting
-markup = full
-format = "<b>%s</b>\n%b"
-alignment = left
-vertical_alignment = center
-word_wrap = yes
-
-# Browser
 browser = /usr/bin/xdg-open
 
 [urgency_low]
-background = "#1e1e2e"
+background = "#313244"
 foreground = "#cdd6f4"
-timeout = 5
-frame_color = "#89b4fa"
+frame_color = "#6c7086"
+timeout = 3
+format = "<span foreground='#6c7086' weight='bold'>%s</span>\n<span foreground='#bac2de'>%b</span>"
 
 [urgency_normal]
-background = "#1e1e2e"
+background = "#313244"
 foreground = "#cdd6f4"
-timeout = 10
-frame_color = "#89b4fa"
+frame_color = "#45475a"
+timeout = 5
 
 [urgency_critical]
-background = "#1e1e2e"
+background = "#313244"
 foreground = "#cdd6f4"
-frame_color = "#fab387"
-timeout = 0  # Don't auto-dismiss critical notifications
-
-# Custom rules for specific applications
-[battery_low]
-appname = "Power Manager"
-urgency = critical
-background = "#f38ba8"
-foreground = "#1e1e2e"
+frame_color = "#f38ba8"
 timeout = 0
+format = "<span foreground='#f38ba8' weight='bold'>%s</span>\n<span foreground='#bac2de'>%b</span>"
 
 [volume_notification]
 summary = "*Volume*"
@@ -99,20 +98,6 @@ history_ignore = yes
 
 [spotify_notification]
 appname = "Spotify"
-format = "♫ %s\n%b"
+format = "<span foreground='#cba6f7' weight='bold'>♫ %s</span>\n<span foreground='#bac2de'>%b</span>"
 urgency = low
 timeout = 5
-
-[email_notification]
-appname = "Mail"
-urgency = normal
-format = "📧 %s\n%b"
-
-[discord_notification]
-appname = "discord"
-urgency = low
-format = "💬 %s\n%b"
-
-[system_notification]
-appname = "notify-send"
-urgency = normal

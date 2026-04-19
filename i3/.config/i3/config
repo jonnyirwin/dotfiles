@@ -1,182 +1,193 @@
+# i3 config — mirrors sway/.config/sway/config for parity across Wayland/X11 machines.
+# X11 substitutions: swaymsg→i3-msg, swaybg→feh, swaylock→i3lock, wl-paste→xclip,
+# wf-recorder→ffmpeg, grim/slurp→maim/slop, wtype→xdotool, cliphist→greenclip.
+#
+# Requires i3 >= 4.22 for the `include` directive (Ubuntu 24.04 ships 4.23).
+
+### GTK / environment
+exec --no-startup-id systemctl --user import-environment DISPLAY XAUTHORITY
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
+exec_always --no-startup-id gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+
+### Variables
 set $mod Mod4
-font pango:monospace 8
-exec --no-startup-id dex --autostart --environment i3
-# exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-exec --no-startup-id nm-applet
-# Use pactl to adjust volume in PulseAudio.
-set $refresh_i3status killall -SIGUSR1 i3status
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
-
-# use Mouse+$mod to drag floating windows to their wanted position
-floating_modifier $mod
-
-# move tiling windows via drag & drop by left-clicking into the title bar,
-# or left-clicking anywhere into the window while holding the floating modifier.
-tiling_drag modifier titlebar
-
-# start a terminal
-bindsym $mod+Return exec kitty
-
-# kill focused window
-bindsym $mod+Shift+q kill
-
-# start dmenu (a program launcher)
-bindsym $mod+d exec --no-startup-id "rofi -show drun" 
-
+# Home row direction keys, like vim
 set $left h
 set $down j
 set $up k
 set $right l
+# Preferred terminal
+set $term kitty
+# Application launcher (rofi)
+set $rofi_cmd rofi -terminal '$term'
+set $menu $rofi_cmd -show drun -show-icons -lines 5
 
-# change focus
-bindsym $mod+$left focus left
-bindsym $mod+$down focus down
-bindsym $mod+$up focus up
-bindsym $mod+$right focus right
+### Keyboard layout (X11)
+exec_always --no-startup-id setxkbmap gb
 
-# alternatively, you can use the cursor keys:
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
+### Wallpaper — random from ~/Pictures/Wallpapers; reshuffles on reload.
+exec_always --no-startup-id ~/.config/i3/scripts/random-wallpaper.sh
 
-# move focused window
-bindsym $mod+Shift+$left move left
-bindsym $mod+Shift+$down move down
-bindsym $mod+Shift+$up move up
-bindsym $mod+Shift+$right move right
+### Autostart
+exec --no-startup-id dex --autostart --environment i3
+exec --no-startup-id nm-applet
+exec --no-startup-id dunst
+exec --no-startup-id picom
+# Clipboard history daemon (equivalent to wl-paste --watch cliphist store)
+exec --no-startup-id greenclip daemon
+# Auto-tiling (same `autotiling` package works on i3)
+exec --no-startup-id autotiling
+# Screen lock + idle handling (xss-lock ties into systemd-logind for sleep/lock)
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -c 1e1e2e -n
+exec --no-startup-id xautolock -time 5 -locker "i3lock -c 1e1e2e -n" -detectsleep
 
-# alternatively, you can use the cursor keys:
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
+### Tiling ergonomics
+smart_borders on
+smart_gaps on
+tiling_drag modifier titlebar
+workspace_auto_back_and_forth yes
 
-# split in horizontal orientation
-bindsym $mod+h split h
+### Floating modifier (drag windows with $mod + left click)
+floating_modifier $mod
 
-# split in vertical orientation
-bindsym $mod+v split v
+### Key bindings
+#
+# Basics:
+#
+    bindsym $mod+Return exec $term
+    bindsym $mod+Shift+q kill
+    bindsym $mod+d exec --no-startup-id $menu
 
-# enter fullscreen mode for the focused container
-bindsym $mod+f fullscreen toggle
+    # Display configuration (arandr — X11 equivalent of sway's resolution-switcher)
+    bindsym $mod+Shift+d exec --no-startup-id arandr
 
-# change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+e layout toggle split
+    # Pomodoro timer menu (shared script lives under waybar/)
+    bindsym $mod+p exec --no-startup-id ~/.config/waybar/scripts/pomodoro-menu.sh
 
-# toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+    # Font-size scaling menu (shared script lives under waybar/)
+    bindsym $mod+equal exec --no-startup-id ~/.config/waybar/scripts/ui-font-menu.sh
 
-# change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+    # Voice input (whisper.cpp) — press to start, press again to stop
+    bindsym $mod+semicolon exec --no-startup-id ~/git/whisper.cpp/voice-input-toggle.sh
 
-# focus the parent container
-bindsym $mod+a focus parent
+    # Clipboard history (greenclip via rofi)
+    bindsym $mod+c exec --no-startup-id rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
 
-# focus the child container
-#bindsym $mod+d focus child
+    # Rofi window switcher
+    bindsym $mod+Tab exec --no-startup-id ~/.config/i3/scripts/window-switcher.sh
 
-# move the currently focused window to the scratchpad
-bindsym $mod+Shift+minus move scratchpad
+    # Reload the configuration file
+    bindsym $mod+Shift+c reload
 
-# Show the next scratchpad window or hide the focused scratchpad window.
-# If there are multiple scratchpad windows, this command cycles through them.
-bindsym $mod+minus scratchpad show
+    # Power menu (logout/lock/suspend/reboot/poweroff via rofi)
+    bindsym $mod+Shift+e exec --no-startup-id ~/.config/i3/scripts/power-menu.sh
 
-# Define names for default workspaces for which we configure key bindings later on.
-# We use variables to avoid repeating the names in multiple places.
-set $ws1 "1"
-set $ws2 "2"
-set $ws3 "3"
-set $ws4 "4"
-set $ws5 "5"
-set $ws6 "6"
-set $ws7 "7"
-set $ws8 "8"
-set $ws9 "9"
-set $ws10 "10"
+    # Paste PRIMARY selection (middle-click alternative)
+    bindsym $mod+Shift+v exec --no-startup-id sh -c 'xclip -selection primary -o | xdotool type --clearmodifiers --file -'
 
-# switch to workspace
-bindsym $mod+1 workspace number $ws1
-bindsym $mod+2 workspace number $ws2
-bindsym $mod+3 workspace number $ws3
-bindsym $mod+4 workspace number $ws4
-bindsym $mod+5 workspace number $ws5
-bindsym $mod+6 workspace number $ws6
-bindsym $mod+7 workspace number $ws7
-bindsym $mod+8 workspace number $ws8
-bindsym $mod+9 workspace number $ws9
-bindsym $mod+0 workspace number $ws10
+    # Audio / media keys
+    bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10%
+    bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10%
+    bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+    bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
+#
+# Moving around:
+#
+    bindsym $mod+$left focus left
+    bindsym $mod+$down focus down
+    bindsym $mod+$up focus up
+    bindsym $mod+$right focus right
+    bindsym $mod+Left focus left
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
+    bindsym $mod+Right focus right
 
-# move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace number $ws1
-bindsym $mod+Shift+2 move container to workspace number $ws2
-bindsym $mod+Shift+3 move container to workspace number $ws3
-bindsym $mod+Shift+4 move container to workspace number $ws4
-bindsym $mod+Shift+5 move container to workspace number $ws5
-bindsym $mod+Shift+6 move container to workspace number $ws6
-bindsym $mod+Shift+7 move container to workspace number $ws7
-bindsym $mod+Shift+8 move container to workspace number $ws8
-bindsym $mod+Shift+9 move container to workspace number $ws9
-bindsym $mod+Shift+0 move container to workspace number $ws10
+    bindsym $mod+Shift+$left move left
+    bindsym $mod+Shift+$down move down
+    bindsym $mod+Shift+$up move up
+    bindsym $mod+Shift+$right move right
+    bindsym $mod+Shift+Left move left
+    bindsym $mod+Shift+Down move down
+    bindsym $mod+Shift+Up move up
+    bindsym $mod+Shift+Right move right
 
-# reload the configuration file
-bindsym $mod+Shift+c reload
-# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r restart
-# exit i3 (logs you out of your X session)
-set $sysmenu " [r]estart - [l]ogout - [s]uspend - r[e]oot - po[w]eroff "
-bindsym $mod+Shift+e mode $sysmenu
+    bindsym $mod+Control+Right move workspace to output right
+    bindsym $mod+Control+Left move workspace to output left
+    bindsym $mod+Control+Down move workspace to output down
+    bindsym $mod+Control+Up move workspace to output up
+#
+# Workspaces:
+#
+    bindsym $mod+1 workspace number 1
+    bindsym $mod+2 workspace number 2
+    bindsym $mod+3 workspace number 3
+    bindsym $mod+4 workspace number 4
+    bindsym $mod+5 workspace number 5
+    bindsym $mod+6 workspace number 6
+    bindsym $mod+7 workspace number 7
+    bindsym $mod+8 workspace number 8
+    bindsym $mod+9 workspace number 9
+    bindsym $mod+0 workspace number 10
+    bindsym $mod+grave workspace back_and_forth
 
-mode $sysmenu {
-	bindsym r restart
-	bindsym l exit 
-	bindsym s exec --no-startup-id "systemctl suspend"
-	bindsym e exec --no-startup-id "systemctl reboot"
-	bindsym w exec --no-startup-id "systemctl poweroff"
-	bindsym Escape mode "default"
-	bindsym Return mode "default"
-}
-
-# resize window (you can also use the mouse for that)
+    bindsym $mod+Shift+1 move container to workspace number 1
+    bindsym $mod+Shift+2 move container to workspace number 2
+    bindsym $mod+Shift+3 move container to workspace number 3
+    bindsym $mod+Shift+4 move container to workspace number 4
+    bindsym $mod+Shift+5 move container to workspace number 5
+    bindsym $mod+Shift+6 move container to workspace number 6
+    bindsym $mod+Shift+7 move container to workspace number 7
+    bindsym $mod+Shift+8 move container to workspace number 8
+    bindsym $mod+Shift+9 move container to workspace number 9
+    bindsym $mod+Shift+0 move container to workspace number 10
+#
+# Layout:
+#
+    bindsym $mod+b split h
+    bindsym $mod+v split v
+    bindsym $mod+s layout stacking
+    bindsym $mod+w layout tabbed
+    bindsym $mod+e layout toggle split
+    bindsym $mod+f fullscreen toggle
+    bindsym $mod+Shift+space floating toggle
+    bindsym $mod+space focus mode_toggle
+    bindsym $mod+a focus parent
+#
+# Scratchpad:
+#
+    bindsym $mod+Shift+minus move scratchpad
+    bindsym $mod+minus scratchpad show
+#
+# Resizing containers:
+#
 mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
+    bindsym $left resize shrink width 10 px or 10 ppt
+    bindsym $down resize grow height 10 px or 10 ppt
+    bindsym $up resize shrink height 10 px or 10 ppt
+    bindsym $right resize grow width 10 px or 10 ppt
 
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym $left       resize shrink width 10 px or 10 ppt
-        bindsym $down       resize grow height 10 px or 10 ppt
-        bindsym $up         resize shrink height 10 px or 10 ppt
-        bindsym $right      resize grow width 10 px or 10 ppt
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
 
-        # same bindings, but for the arrow keys
-        bindsym Left        resize shrink width 10 px or 10 ppt
-        bindsym Down        resize grow height 10 px or 10 ppt
-        bindsym Up          resize shrink height 10 px or 10 ppt
-        bindsym Right       resize grow width 10 px or 10 ppt
-
-        # back to normal: Enter or Escape or $mod+r
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym $mod+r mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym $mod+r mode "default"
 }
-
 bindsym $mod+r mode "resize"
+#
+# Screenshots:
+#
+    bindsym $mod+Shift+s exec --no-startup-id flameshot gui --path ~/Pictures/Screenshots
+#
+# Capture & pickers:
+#
+    bindsym $mod+period exec --no-startup-id ~/.config/i3/scripts/emoji-picker.sh
+    bindsym $mod+Shift+o exec --no-startup-id ~/.config/i3/scripts/ocr.sh
+    bindsym $mod+Shift+p exec --no-startup-id ~/.config/i3/scripts/color-picker.sh
+    bindsym $mod+Shift+r exec --no-startup-id ~/.config/i3/scripts/record-toggle.sh
 
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-# bar {
-#         status_command i3status
-# }
-
-default_border none
-
-exec always --no-startup-id $HOME/.config/polybar/launch.sh
-exec always --no-startup-id feh --bg-fill $HOME/Pictures/wallpaper.jpg
+# Include split-out config fragments — mirrors sway's layout.
+include ~/.config/i3/config.d/*.conf
+include ~/.config/i3/hosts/$(hostname).conf
