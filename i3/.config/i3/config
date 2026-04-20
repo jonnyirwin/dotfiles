@@ -20,7 +20,7 @@ set $right l
 set $term kitty
 # Application launcher (rofi)
 set $rofi_cmd rofi -terminal '$term'
-set $menu $rofi_cmd -show drun -show-icons -lines 5
+set $menu $rofi_cmd -show drun
 
 ### Keyboard layout (X11)
 exec_always --no-startup-id setxkbmap gb
