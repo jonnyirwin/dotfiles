@@ -1,7 +1,7 @@
 if status is-interactive
     # Commands to run in interactive sessions can go here
     starship init fish | source
-    /usr/bin/mise activate fish | source
+    mise activate fish | source
     
     # Enable vi key bindings (optional - comment out if you prefer default)
     # fish_vi_key_bindings
@@ -21,7 +21,7 @@ if status is-interactive
     # Set up fzf if available
     if command -v fzf > /dev/null
         set -gx FZF_DEFAULT_OPTS '--height 40% --layout=reverse --border'
-        fzf --fish | source
+        fzf --fish 2>/dev/null | source
     end
 
     # zoxide (smarter cd - use 'z' instead of 'cd')

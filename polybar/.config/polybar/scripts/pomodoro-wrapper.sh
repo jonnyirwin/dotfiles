@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# Adapter that runs the shared waybar pomodoro script and emits plain text for
-# polybar. The underlying pomodoro.sh returns JSON like {"text": "...", "class": "..."}.
+# Adapter that runs the pomodoro script and emits plain text for polybar.
+# The underlying pomodoro.sh returns JSON like {"text": "...", "class": "..."}.
 
-out=$(~/.config/waybar/scripts/pomodoro.sh display 2>/dev/null)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+out=$("$SCRIPT_DIR/pomodoro.sh" display 2>/dev/null)
 
 if [ -z "$out" ]; then
     exit 0

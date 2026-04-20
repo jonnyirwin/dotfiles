@@ -24,7 +24,7 @@ get_input() {
     local prompt="$1"
     local current="$2"
     local result
-    
+
     result=$(echo "$current" | rofi -dmenu -p "$prompt (current: $current)")
     if [ -n "$result" ]; then
         echo "$result"

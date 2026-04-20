@@ -61,11 +61,11 @@ floating_modifier $mod
     # Display configuration (arandr — X11 equivalent of sway's resolution-switcher)
     bindsym $mod+Shift+d exec --no-startup-id arandr
 
-    # Pomodoro timer menu (shared script lives under waybar/)
-    bindsym $mod+p exec --no-startup-id ~/.config/waybar/scripts/pomodoro-menu.sh
+    # Pomodoro timer menu
+    bindsym $mod+p exec --no-startup-id ~/.config/polybar/scripts/pomodoro-menu.sh
 
-    # Font-size scaling menu (shared script lives under waybar/)
-    bindsym $mod+equal exec --no-startup-id ~/.config/waybar/scripts/ui-font-menu.sh
+    # Font-size scaling menu
+    bindsym $mod+equal exec --no-startup-id ~/.config/polybar/scripts/ui-font-menu.sh
 
     # Voice input (whisper.cpp) — press to start, press again to stop
     bindsym $mod+semicolon exec --no-startup-id ~/git/whisper.cpp/voice-input-toggle.sh
