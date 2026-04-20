@@ -1,170 +1,198 @@
+/* ──────────────────────────────────────────────────────────
+   Rofi — pill theme to match waybar + tmux status
+   Mantle canvas · surface0 capsules · mauve focus pill
+   (crust-on-mauve mirrors #workspaces button.focused and
+    tmux's window-status-current-format)
+   ────────────────────────────────────────────────────────── */
+
 @import "catppuccin-mocha"
 
 * {
-  selected-active-foreground:  @background;
-  lightfg:                     @text;
-  separatorcolor:              @foreground;
-  urgent-foreground:           @red;
-  alternate-urgent-background: @lightbg;
-  lightbg:                     @mantle;
-  background-color:            transparent;
-  border-color:                @foreground;
-  normal-background:           @background;
-  selected-urgent-background:  @red;
-  alternate-active-background: @lightbg;
-  spacing:                     2;
-  alternate-normal-foreground: @foreground;
-  urgent-background:           @background;
-  selected-normal-foreground:  @lightbg;
-  active-foreground:           @blue;
-  background:                  @base;
-  selected-active-background:  @blue;
-  active-background:           @background;
-  selected-normal-background:  @lightfg;
-  alternate-normal-background: @lightbg;
-  foreground:                  @text;
-  selected-urgent-foreground:  @background;
-  normal-foreground:           @foreground;
-  alternate-urgent-foreground: @red;
-  alternate-active-foreground: @blue;
+  font: "Dank Mono 14";
 
+  background-color:            transparent;
+  text-color:                  @text;
+
+  border-color:                @surface1;
+  separatorcolor:              transparent;
+
+  normal-background:           transparent;
+  normal-foreground:           @text;
+  alternate-normal-background: transparent;
+  alternate-normal-foreground: @text;
+  selected-normal-background:  @mauve;
+  selected-normal-foreground:  @crust;
+
+  active-background:           transparent;
+  active-foreground:           @blue;
+  alternate-active-background: transparent;
+  alternate-active-foreground: @blue;
+  selected-active-background:  @blue;
+  selected-active-foreground:  @crust;
+
+  urgent-background:           transparent;
+  urgent-foreground:           @red;
+  alternate-urgent-background: transparent;
+  alternate-urgent-foreground: @red;
+  selected-urgent-background:  @red;
+  selected-urgent-foreground:  @crust;
 }
+
+/* ── outer card ─────────────────────────────────
+   Mantle like waybar, subtle surface1 outline for
+   depth when floating over the desktop.
+─────────────────────────────────────────────── */
+window {
+    transparency:     "real";
+    location:         center;
+    anchor:           center;
+    width:            640px;
+    border:           1px solid;
+    border-radius:    18px;
+    border-color:     @surface1;
+    padding:          14px;
+    background-color: @mantle;
+    cursor:           "default";
+}
+
+mainbox {
+    enabled:          true;
+    spacing:          10px;
+    padding:          0;
+    background-color: transparent;
+    children:         [ "inputbar", "message", "listview" ];
+}
+
+/* ── search: one waybar-style surface0 pill ──── */
+inputbar {
+    enabled:          true;
+    spacing:          10px;
+    padding:          0 16px;
+    min-height:       40px;
+    background-color: @surface0;
+    border-radius:    999px;
+    text-color:       @text;
+    children:         [ "prompt", "entry", "num-filtered-rows", "textbox-num-sep", "num-rows" ];
+}
+
+prompt {
+    padding:          0 2px 0 0;
+    background-color: transparent;
+    text-color:       @mauve;
+    vertical-align:   0.5;
+}
+
+entry {
+    padding:          0;
+    background-color: transparent;
+    text-color:       @text;
+    cursor:           text;
+    placeholder:      "search…";
+    placeholder-color: @overlay1;
+    vertical-align:   0.5;
+}
+
+num-filtered-rows {
+    expand:           false;
+    background-color: transparent;
+    text-color:       @overlay1;
+    vertical-align:   0.5;
+}
+
+num-rows {
+    expand:           false;
+    background-color: transparent;
+    text-color:       @overlay1;
+    vertical-align:   0.5;
+}
+
+textbox-num-sep {
+    expand:           false;
+    str:              "/";
+    background-color: transparent;
+    text-color:       @overlay0;
+    vertical-align:   0.5;
+}
+
+case-indicator {
+    spacing:          0;
+    background-color: transparent;
+    text-color:       @overlay1;
+    vertical-align:   0.5;
+}
+
+/* ── hit list ─────────────────────────────────── */
+listview {
+    enabled:          true;
+    columns:          1;
+    lines:            8;
+    cycle:            true;
+    dynamic:          true;
+    scrollbar:        false;
+    fixed-height:     false;
+    fixed-columns:    true;
+    spacing:          2px;
+    padding:          6px 2px 0 2px;
+    background-color: transparent;
+    cursor:           "default";
+}
+
 element {
-    padding: 1px ;
-    cursor:  pointer;
-    spacing: 5px ;
-    border:  0;
+    enabled:          true;
+    spacing:          10px;
+    padding:          0 14px;
+    min-height:       34px;
+    border-radius:    999px;
+    background-color: transparent;
+    text-color:       @text;
+    cursor:           pointer;
 }
-element normal.normal {
-    background-color: @normal-background;
-    text-color:       @normal-foreground;
+
+element normal.normal    { background-color: transparent; text-color: @text;  }
+element alternate.normal { background-color: transparent; text-color: @text;  }
+element selected.normal  { background-color: @mauve;      text-color: @crust; }
+element normal.active    { background-color: transparent; text-color: @blue;  }
+element alternate.active { background-color: transparent; text-color: @blue;  }
+element selected.active  { background-color: @blue;       text-color: @crust; }
+element normal.urgent    { background-color: transparent; text-color: @red;   }
+element alternate.urgent { background-color: transparent; text-color: @red;   }
+element selected.urgent  { background-color: @red;        text-color: @crust; }
+
+element-icon {
+    size:             22px;
+    padding:          0 6px 0 0;
+    background-color: transparent;
+    text-color:       inherit;
+    cursor:           inherit;
+    vertical-align:   0.5;
 }
-element normal.urgent {
-    background-color: @urgent-background;
-    text-color:       @urgent-foreground;
-}
-element normal.active {
-    background-color: @active-background;
-    text-color:       @active-foreground;
-}
-element selected.normal {
-    background-color: @selected-normal-background;
-    text-color:       @selected-normal-foreground;
-}
-element selected.urgent {
-    background-color: @selected-urgent-background;
-    text-color:       @selected-urgent-foreground;
-}
-element selected.active {
-    background-color: @selected-active-background;
-    text-color:       @selected-active-foreground;
-}
-element alternate.normal {
-    background-color: @alternate-normal-background;
-    text-color:       @alternate-normal-foreground;
-}
-element alternate.urgent {
-    background-color: @alternate-urgent-background;
-    text-color:       @alternate-urgent-foreground;
-}
-element alternate.active {
-    background-color: @alternate-active-background;
-    text-color:       @alternate-active-foreground;
-}
+
 element-text {
     background-color: transparent;
-    cursor:           inherit;
-    highlight:        inherit;
     text-color:       inherit;
-}
-element-icon {
-    background-color: transparent;
-    size:             1.0000em ;
     cursor:           inherit;
-    text-color:       inherit;
+    highlight:        bold #fab387;
+    vertical-align:   0.5;
 }
-window {
-    padding:          5;
-    background-color: @background;
-    border:           1;
-}
-mainbox {
-    padding: 0;
-    border:  0;
-}
+
+/* ── messages & errors ────────────────────────── */
 message {
-    padding:      1px ;
-    border-color: @separatorcolor;
-    border:       2px dash 0px 0px ;
+    padding:          0;
+    margin:           0;
+    background-color: transparent;
+    border:           0;
 }
+
 textbox {
-    text-color: @foreground;
+    padding:          6px 14px;
+    border-radius:    999px;
+    background-color: @surface0;
+    text-color:       @text;
 }
-listview {
-    padding:      2px 0px 0px ;
-    scrollbar:    true;
-    border-color: @separatorcolor;
-    spacing:      2px ;
-    fixed-height: 0;
-    border:       2px dash 0px 0px ;
-}
-scrollbar {
-    width:        4px ;
-    padding:      0;
-    handle-width: 8px ;
-    border:       0;
-    handle-color: @normal-foreground;
-}
-sidebar {
-    border-color: @separatorcolor;
-    border:       2px dash 0px 0px ;
-}
-button {
-    cursor:     pointer;
-    spacing:    0;
-    text-color: @normal-foreground;
-}
-button selected {
-    background-color: @selected-normal-background;
-    text-color:       @selected-normal-foreground;
-}
-num-filtered-rows {
-    expand:     false;
-    text-color: Gray;
-}
-num-rows {
-    expand:     false;
-    text-color: Gray;
-}
-textbox-num-sep {
-    expand:     false;
-    str:        "/";
-    text-color: Gray;
-}
-inputbar {
-    padding:    1px ;
-    spacing:    0px ;
-    text-color: @normal-foreground;
-    children:   [ "prompt","textbox-prompt-colon","entry","num-filtered-rows","textbox-num-sep","num-rows","case-indicator" ];
-}
-case-indicator {
-    spacing:    0;
-    text-color: @normal-foreground;
-}
-entry {
-    text-color:        @normal-foreground;
-    cursor:            text;
-    spacing:           0;
-    placeholder-color: Gray;
-    placeholder:       "Type to filter";
-}
-prompt {
-    spacing:    0;
-    text-color: @normal-foreground;
-}
-textbox-prompt-colon {
-    margin:     0px 0.3000em 0.0000em 0.0000em ;
-    expand:     false;
-    str:        ":";
-    text-color: inherit;
+
+error-message {
+    padding:          8px 14px;
+    border-radius:    999px;
+    background-color: @red;
+    text-color:       @crust;
 }

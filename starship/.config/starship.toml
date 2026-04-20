@@ -1,72 +1,113 @@
+# Starship — discrete pill segments matching waybar/tmux/rofi house style.
+# Each module is its own surface0 capsule with Powerline Extra half-circle caps
+# (U+E0B6 left, U+E0B4 right). Accent colour per category mirrors waybar's
+# module palette: teal session, peach directory, green git, sapphire lang,
+# blue time, mauve prompt character (the unifying focus colour).
+
 add_newline = true
-format = "[](fg:#313244)[λ ](fg:#a6e3a1 bg:#313244)$username[ ](fg:#313244 bg:#fab387)$directory[](fg:#fab387 bg:#a6e3a1)[$git_branch$git_status](bg:#a6e3a1)[](fg:#a6e3a1 bg:#89b4fa)$dotnet$elixir$elm$haskell$lua$nix_shell$nodejs$ocaml$python$rust$scala$shell$vagrant[](fg:#89b4fa bg:#cba6f7)$time[](fg:#cba6f7)$line_break$character"
 palette = "catppuccin_mocha"
 
+format = """\
+$username\
+$directory\
+$git_branch\
+$git_status\
+$dotnet$elixir$elm$haskell$lua$nix_shell$nodejs$ocaml$python$rust$scala$shell$vagrant\
+$time\
+$line_break$character\
+"""
+
 [character]
-error_symbol = "[ ↳ ](fg:#f38ba8)"
-success_symbol = "[ ↳ ](fg:#a6e3a1)"
+error_symbol = "[❯](bold fg:red)"
+success_symbol = "[❯](bold fg:mauve)"
+vimcmd_symbol = "[❮](bold fg:mauve)"
+
+[username]
+show_always = true
+format = "[](fg:surface0)[ 󰀄 $user ](fg:teal bg:surface0)[](fg:surface0) "
+style_user = "fg:teal bg:surface0"
+style_root = "fg:red bg:surface0"
 
 [directory]
-format = "[$path ]($style)"
-style = "fg:#1e1e2e bg:#fab387"
-
-[dotnet]
-disabled = false
-format = "[ $symbol($version)]($style)"
-style = "fg:#1e1e2e bg:#89b4fa"
-symbol = " "
-
-[elixir]
-disabled = false
-format = "[ $symbol($version)]($style)"
-style = "fg:#1e1e2e bg:#89b4fa"
-symbol = " "
-
-[elm]
-disabled = false
-format = "[ $symbol($version)]($style)"
-style = "fg:#1e1e2e bg:#89b4fa"
-symbol = " "
+format = "[](fg:surface0)[  $path ](fg:peach bg:surface0)[](fg:surface0) "
+truncation_length = 4
+truncation_symbol = "…/"
 
 [git_branch]
-format = "([ $symbol$branch]($style))"
-style = "fg:#1e1e2e bg:#a6e3a1"
-symbol = " "
+symbol = ""
+format = "[](fg:surface0)[  $branch ](fg:green bg:surface0)[](fg:surface0) "
 
 [git_status]
 disabled = false
-format = "([ ❲$all_status$ahead_behind❳]($style))"
-style = "bold\tfg:#1e1e2e bg:#a6e3a1"
+format = "[](fg:surface0)[ ❲$all_status$ahead_behind❳ ](fg:green bg:surface0)[](fg:surface0) "
+
+[time]
+disabled = false
+format = "[](fg:surface0)[ 󰥔 $time ](fg:blue bg:surface0)[](fg:surface0)"
+time_format = "%H:%M"
+
+[dotnet]
+disabled = false
+format = "[](fg:surface0)[ $symbol$version ](fg:sapphire bg:surface0)[](fg:surface0) "
+symbol = " "
+
+[elixir]
+disabled = false
+format = "[](fg:surface0)[ $symbol$version ](fg:sapphire bg:surface0)[](fg:surface0) "
+symbol = " "
+
+[elm]
+disabled = false
+format = "[](fg:surface0)[ $symbol$version ](fg:sapphire bg:surface0)[](fg:surface0) "
+symbol = " "
 
 [haskell]
 disabled = false
-format = "[ $symbol($version)]($style)"
-style = "fg:#1e1e2e bg:#89b4fa"
-symbol = " "
+format = "[](fg:surface0)[ $symbol$version ](fg:sapphire bg:surface0)[](fg:surface0) "
+symbol = " "
 
 [lua]
 disabled = false
-format = "[ $symbol($version)]($style)"
-style = "fg:#1e1e2e bg:#89b4fa"
-symbol = " "
+format = "[](fg:surface0)[ $symbol$version ](fg:sapphire bg:surface0)[](fg:surface0) "
+symbol = " "
 
 [nix_shell]
 disabled = false
-format = "[ $symbol($version)]($style)"
-style = "fg:#1e1e2e bg:#89b4fa"
-symbol = " "
+format = "[](fg:surface0)[ $symbol$state ](fg:sapphire bg:surface0)[](fg:surface0) "
+symbol = " "
 
 [nodejs]
 disabled = false
-format = "[ $symbol($version)]($style)"
-style = "fg:#1e1e2e bg:#89b4fa"
-symbol = " "
+format = "[](fg:surface0)[ $symbol$version ](fg:sapphire bg:surface0)[](fg:surface0) "
+symbol = " "
 
 [ocaml]
 disabled = false
-format = "[ $symbol($version)]($style)"
-style = "fg:#1e1e2e bg:#89b4fa"
-symbol = " "
+format = "[](fg:surface0)[ $symbol$version ](fg:sapphire bg:surface0)[](fg:surface0) "
+symbol = " "
+
+[python]
+disabled = false
+format = "[](fg:surface0)[ $symbol$version ](fg:sapphire bg:surface0)[](fg:surface0) "
+symbol = " "
+
+[rust]
+disabled = false
+format = "[](fg:surface0)[ $symbol$version ](fg:sapphire bg:surface0)[](fg:surface0) "
+symbol = " "
+
+[scala]
+disabled = false
+format = "[](fg:surface0)[ $symbol$version ](fg:sapphire bg:surface0)[](fg:surface0) "
+symbol = " "
+
+[shell]
+disabled = true
+
+[vagrant]
+disabled = false
+format = "[](fg:surface0)[ $symbol$version ](fg:sapphire bg:surface0)[](fg:surface0) "
+symbol = " "
 
 [palettes.catppuccin_mocha]
 base = "#1e1e2e"
@@ -95,38 +136,3 @@ surface2 = "#585b70"
 teal = "#94e2d5"
 text = "#cdd6f4"
 yellow = "#f9e2af"
-
-[python]
-disabled = false
-format = "[ $symbol($version)]($style)"
-style = "fg:#1e1e2e bg:#89b4fa"
-symbol = " "
-
-[rust]
-disabled = false
-format = "[ $symbol($version)]($style)"
-style = "fg:#1e1e2e bg:#89b4fa"
-symbol = " "
-
-[scala]
-disabled = false
-format = "[ $symbol($version)]($style)"
-style = "fg:#1e1e2e bg:#89b4fa"
-symbol = " "
-
-[time]
-disabled = false
-format = "[   $time]($style)"
-style = "fg:#1e1e2e bg:#cba6f7"
-
-[username]
-format = "[$user ]($style)"
-show_always = true
-style_root = ""
-style_user = "fg:#b4befe bg:#313244"
-
-[vagrant]
-disabled = false
-format = "[ $symbol($version)]($style)"
-style = "fg:#1e1e2e bg:#89b4fa"
-symbol = " "

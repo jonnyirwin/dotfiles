@@ -1,11 +1,11 @@
 # Catppuccin Mocha — matches the waybar pill aesthetic.
 
-font=SF Mono 13
+font=Dank Mono 14
 background-color=#313244
 text-color=#cdd6f4
 border-color=#45475a
 border-size=1
-border-radius=10
+border-radius=18
 progress-color=over #45475a
 
 width=360

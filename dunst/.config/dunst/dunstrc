@@ -19,12 +19,12 @@ foreground = "#cdd6f4"
 frame_color = "#45475a"
 separator_color = frame
 highlight = "#cba6f7"
-corner_radius = 10
+corner_radius = 18
 frame_width = 1
 padding = 14
 horizontal_padding = 14
 gap_size = 8
-font = "SF Mono 13"
+font = "Dank Mono 14"
 markup = full
 format = "<span foreground='#cba6f7' weight='bold'>%s</span>\n<span foreground='#bac2de'>%b</span>"
 alignment = left
