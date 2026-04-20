@@ -26,7 +26,7 @@
         "spacing": 10
     },
     "custom/music": {
-        "format": "   {}",
+        "format": "󰝚 {}",
         "escape": true,
         "interval": 5,
         "tooltip": false,
@@ -45,11 +45,11 @@
     "clock": {
         "timezone": "Europe/Isle_of_Man",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": "󰃭  {:%Y-%m-%d}",
-        "format": "󰥔  {:%H:%M}"
+        "format-alt": "󰃭 {:%Y-%m-%d}",
+        "format": "󰥔 {:%H:%M}"
     },
     "backlight": {
-        "format": "{icon}  {percent:>3}%",
+        "format": "{icon} {percent:>3}%",
         "format-icons": ["\uf185", "\uf186", "\uf042"],
         "on-scroll-up": "brightnessctl set 1%+",
         "on-scroll-down": "brightnessctl set 1%-"
@@ -59,9 +59,9 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "{icon}  {capacity:>3}%",
-        "format-charging": "󰂄  {capacity:>3}%",
-        "format-plugged": "󱐥  {capacity:>3}%",
+        "format": "{icon} {capacity:>3}%",
+        "format-charging": "󰂄 {capacity:>3}%",
+        "format-plugged": "󱐥 {capacity:>3}%",
         "format-alt": "{icon}",
         "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
     },
@@ -72,8 +72,8 @@
         "on-click": "~/.config/waybar/scripts/audio-switch.sh"
     },
     "pulseaudio": {
-        "format": "{icon}  {volume:>3}%",
-        "format-muted": "\uf6a9   ---%",
+        "format": "{icon} {volume:>3}%",
+        "format-muted": "\uf6a9 ---%",
         "format-icons": {
             "default": ["\uf026", "\uf027", "\uf028"]
         },
