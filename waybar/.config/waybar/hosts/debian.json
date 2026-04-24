@@ -1,7 +1,7 @@
 {
     "modules-left": ["custom/pomodoro", "sway/workspaces"],
     "modules-center": ["custom/music"],
-    "modules-right": ["pulseaudio", "idle_inhibitor", "clock", "tray"],
+    "modules-right": ["cpu", "memory", "pulseaudio", "idle_inhibitor", "clock", "tray"],
     "custom/pomodoro": {
         "format": "{}",
         "return-type": "json",
@@ -9,6 +9,16 @@
         "exec": "~/.config/waybar/scripts/pomodoro.sh display",
         "on-click": "~/.config/waybar/scripts/pomodoro-menu.sh",
         "escape": true
+    },
+    "cpu": {
+        "format": "  {usage:>3}%",
+        "interval": 5,
+        "tooltip": false
+    },
+    "memory": {
+        "format": "  {percentage:>3}%",
+        "interval": 5,
+        "tooltip-format": "{used:0.1f}G / {total:0.1f}G"
     },
     "idle_inhibitor": {
         "format": "{icon}",

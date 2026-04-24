@@ -63,6 +63,8 @@
 #backlight,
 #clock,
 #battery,
+#cpu,
+#memory,
 #pulseaudio,
 #custom-audio-output,
 #custom-lock,
@@ -95,6 +97,9 @@
 
 #pulseaudio,
 #custom-audio-output { color: @sapphire; }
+
+#cpu { color: @green; }
+#memory { color: @teal; }
 
 #idle_inhibitor { color: @overlay2; }
 #idle_inhibitor.activated { color: @yellow; }
