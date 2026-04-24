@@ -63,7 +63,7 @@ exec nm-applet --indicator
 
 ### Scratchpad apps (pre-launched; for_window rules move them to scratchpad)
 exec kitty --class=float-mixer pulsemixer
-exec kitty --class=float-btop btop
+exec kitty --class=float-btop bash -c 'while true; do btop; done'
 exec kitty --class=float-notes nvim ~/notes/scratch.md
 exec kitty --class=float-cheatsheet bash -c 'while true; do ~/.config/sway/scripts/cheatsheet.sh; done'
 
@@ -164,10 +164,10 @@ input type:pointer {
     bindsym $mod+Mod1+k exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
     bindsym $mod+Mod1+j exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
     bindsym $mod+Mod1+m exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
-    bindsym $mod+m exec swaymsg '[app_id="float-mixer"] scratchpad show' && swaymsg '[app_id="float-mixer"] resize set 900 500' && swaymsg '[app_id="float-mixer"] move position center' || kitty --class=float-mixer pulsemixer
-    bindsym $mod+t exec swaymsg '[app_id="float-btop"] scratchpad show' && swaymsg '[app_id="float-btop"] resize set 1200 900' && swaymsg '[app_id="float-btop"] move position center'
-    bindsym $mod+n exec swaymsg '[app_id="float-notes"] scratchpad show' && swaymsg '[app_id="float-notes"] resize set 1000 700' && swaymsg '[app_id="float-notes"] move position center'
-    bindsym $mod+question exec swaymsg '[app_id="float-cheatsheet"] scratchpad show' && swaymsg '[app_id="float-cheatsheet"] resize set 960 640' && swaymsg '[app_id="float-cheatsheet"] move position center'
+    bindsym $mod+m exec ~/.config/sway/scripts/scratchpad-toggle.sh float-mixer 900 500 kitty --class=float-mixer pulsemixer
+    bindsym $mod+t exec ~/.config/sway/scripts/scratchpad-toggle.sh float-btop 1200 900 kitty --class=float-btop bash -c 'while true; do btop; done'
+    bindsym $mod+n exec ~/.config/sway/scripts/scratchpad-toggle.sh float-notes 1000 700 kitty --class=float-notes nvim ~/notes/scratch.md
+    bindsym $mod+question exec ~/.config/sway/scripts/scratchpad-toggle.sh float-cheatsheet 960 640 kitty --class=float-cheatsheet bash -c 'while true; do ~/.config/sway/scripts/cheatsheet.sh; done'
 
     # Brightness controls
     bindsym $mod+Mod1+l exec brightnessctl set 5%+
