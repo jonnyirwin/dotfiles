@@ -1,44 +1,51 @@
 #!/bin/bash
 
-# Enhanced Resolution Switcher for Sway
-# Shows available modes for each output and allows turning displays on/off
+# Enhanced Display Manager for Sway
+# Shows available modes for each output and allows turning displays on/off,
+# rotating (transform), and repositioning.
 # Ensures at least one display remains on at all times
 # Persists settings to Sway config for reboot persistence
 
 # Configuration file for persistent display settings
 DISPLAY_CONFIG_FILE="$HOME/.config/sway/config.d/display-settings.conf"
 
-# Function to save current display configuration
+# Function to save current display configuration.
+# Each call updates only the relevant directive(s) for the action so that
+# e.g. changing resolution does not erase a previously-saved transform.
 save_display_config() {
     local output_name="$1"
     local action="$2"
-    local resolution="$3"
-    
-    # Create config.d directory if it doesn't exist
+    local value="$3"
+
     mkdir -p "$(dirname "$DISPLAY_CONFIG_FILE")"
-    
-    # Remove existing config for this output
-    if [ -f "$DISPLAY_CONFIG_FILE" ]; then
-        grep -v "^output $output_name " "$DISPLAY_CONFIG_FILE" > "$DISPLAY_CONFIG_FILE.tmp" || true
-        mv "$DISPLAY_CONFIG_FILE.tmp" "$DISPLAY_CONFIG_FILE"
-    fi
-    
-    # Add new configuration
+    touch "$DISPLAY_CONFIG_FILE"
+
     case "$action" in
         "disable")
+            grep -vE "^output $output_name (enable|disable|resolution) " "$DISPLAY_CONFIG_FILE" > "$DISPLAY_CONFIG_FILE.tmp" || true
+            mv "$DISPLAY_CONFIG_FILE.tmp" "$DISPLAY_CONFIG_FILE"
             echo "output $output_name disable" >> "$DISPLAY_CONFIG_FILE"
             ;;
-        "resolution")
+        "enable")
+            grep -vE "^output $output_name (enable|disable) " "$DISPLAY_CONFIG_FILE" > "$DISPLAY_CONFIG_FILE.tmp" || true
+            mv "$DISPLAY_CONFIG_FILE.tmp" "$DISPLAY_CONFIG_FILE"
             echo "output $output_name enable" >> "$DISPLAY_CONFIG_FILE"
-            if [ -n "$resolution" ] && [ "$resolution" != "preferred" ]; then
-                echo "output $output_name resolution $resolution" >> "$DISPLAY_CONFIG_FILE"
+            ;;
+        "resolution")
+            grep -vE "^output $output_name (enable|disable|resolution) " "$DISPLAY_CONFIG_FILE" > "$DISPLAY_CONFIG_FILE.tmp" || true
+            mv "$DISPLAY_CONFIG_FILE.tmp" "$DISPLAY_CONFIG_FILE"
+            echo "output $output_name enable" >> "$DISPLAY_CONFIG_FILE"
+            if [ -n "$value" ] && [ "$value" != "preferred" ]; then
+                echo "output $output_name resolution $value" >> "$DISPLAY_CONFIG_FILE"
             fi
             ;;
-        "enable")
-            echo "output $output_name enable" >> "$DISPLAY_CONFIG_FILE"
+        "transform")
+            grep -v "^output $output_name transform " "$DISPLAY_CONFIG_FILE" > "$DISPLAY_CONFIG_FILE.tmp" || true
+            mv "$DISPLAY_CONFIG_FILE.tmp" "$DISPLAY_CONFIG_FILE"
+            echo "output $output_name transform $value" >> "$DISPLAY_CONFIG_FILE"
             ;;
     esac
-    
+
     # Reload Sway config to apply changes immediately and persist for next boot
     swaymsg reload
 }
@@ -104,6 +111,43 @@ is_output_on() {
         .[] | select(.name == $output) | .power
     ')
     [ "$power_state" = "true" ]
+}
+
+# Returns the current transform for an output (normal / 90 / 180 / 270)
+get_current_transform() {
+    local output_name="$1"
+    echo "$outputs_json" | jq -r --arg output "$output_name" '
+        .[] | select(.name == $output) | .transform // "normal"
+    '
+}
+
+# Shows a rotation submenu and applies the chosen transform
+prompt_rotation() {
+    local output_name="$1"
+    local current_transform=$(get_current_transform "$output_name")
+    local opts=""
+    for label in "Normal:normal" "90° CW:90" "180°:180" "270° CW:270"; do
+        local display="${label%%:*}"
+        local value="${label##*:}"
+        if [ "$current_transform" = "$value" ]; then
+            opts="${opts}● $display (current)\n"
+        else
+            opts="${opts}$display\n"
+        fi
+    done
+    local chosen=$(echo -e "$opts" | rofi -dmenu -i -p "Rotate $output_name" -format 's')
+    [ -z "$chosen" ] && return
+    local transform_value
+    case "$chosen" in
+        *"Normal"*)   transform_value="normal" ;;
+        *"90°"*)      transform_value="90"     ;;
+        *"180°"*)     transform_value="180"    ;;
+        *"270°"*)     transform_value="270"    ;;
+        *) return ;;
+    esac
+    swaymsg output "$output_name" transform "$transform_value"
+    save_display_config "$output_name" "transform" "$transform_value"
+    notify-send "Display" "Rotated $output_name to $transform_value (saved to config)"
 }
 
 # Function to get output position and dimensions
@@ -253,10 +297,9 @@ if [ $(echo "$all_connected_outputs" | wc -l) -eq 1 ]; then
     modes_with_current=$(echo "$modes" | sed "s|^$current_mode|● $current_mode (current)|")
     # Don't add turn off option for single output (would leave no screens on)
     all_options="Preferred resolution\n$modes_with_current"
-    
-    # Show resolution menu
-    chosen_res=$(echo -e "$all_options" | rofi -dmenu -i -p "Resolution for $output" -format 's')
-    
+
+    chosen_res=$(echo -e "$all_options" | rofi -dmenu -i -p "Configure $output" -format 's')
+
     if [ -n "$chosen_res" ]; then
         if [ "$chosen_res" = "Preferred resolution" ]; then
             swaymsg output "$output" resolution --custom
@@ -266,12 +309,12 @@ if [ $(echo "$all_connected_outputs" | wc -l) -eq 1 ]; then
             # Extract resolution from the chosen string (remove current indicator if present)
             clean_res=$(echo "$chosen_res" | sed 's/^● //' | sed 's/ (current)$//')
             resolution=$(echo "$clean_res" | cut -d' ' -f1)
-            
-            # Try to set the resolution directly first
+
             swaymsg output "$output" resolution "$resolution"
             save_display_config "$output" "resolution" "$resolution"
             notify-send "Resolution" "Set $output to $resolution (saved to config)"
         fi
+        prompt_rotation "$output"
     fi
 else
     # Multiple outputs - show all connected outputs (including those that are off)
@@ -363,16 +406,17 @@ else
                     swaymsg output "$chosen_output" resolution --custom
                     save_display_config "$chosen_output" "resolution" "preferred"
                     notify-send "Resolution" "Set $chosen_output to preferred resolution (saved to config)"
+                    prompt_rotation "$chosen_output"
                     ;;
                 *)
                     # Extract resolution from the chosen string
                     clean_res=$(echo "$chosen_action" | sed 's/^● //' | sed 's/ (current)$//')
                     resolution=$(echo "$clean_res" | cut -d' ' -f1)
 
-                    # Set the resolution
                     swaymsg output "$chosen_output" resolution "$resolution"
                     save_display_config "$chosen_output" "resolution" "$resolution"
                     notify-send "Resolution" "Set $chosen_output to $resolution (saved to config)"
+                    prompt_rotation "$chosen_output"
                     ;;
             esac
         fi

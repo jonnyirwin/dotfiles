@@ -32,7 +32,7 @@ key "Mod+Shift+X"     ; desc "Lock screen"
 key "Mod+I"           ; desc "Idle inhibitor toggle"
 
 header "Apps & Scripts"
-key "Mod+Shift+D"     ; desc "Resolution switcher"
+key "Mod+Shift+D"     ; desc "Display manager (resolution / rotate / on/off)"
 key "Mod+P"           ; desc "Pomodoro timer"
 key "Mod+="           ; desc "Font size scaling"
 key "Mod+."           ; desc "Emoji picker"
