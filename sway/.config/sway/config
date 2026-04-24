@@ -109,6 +109,9 @@ input type:pointer {
     middle_emulation enabled
 }
 
+# Hide cursor after 8s of inactivity
+seat * hide_cursor 8000
+
 ### Key bindings
 #
 # Basics:
@@ -323,6 +326,23 @@ bindsym $mod+r mode "resize"
 
     # Toggle region screen recording (wf-recorder)
     bindsym $mod+Shift+r exec ~/.config/sway/scripts/record-toggle.sh
+
+### Window rules
+#
+    # Prevent screen blanking during fullscreen video
+    for_window [app_id="firefox"] inhibit_idle fullscreen
+    for_window [app_id="mpv"] inhibit_idle fullscreen
+
+    # Common dialogs/utilities that should float
+    for_window [window_role="pop-up"] floating enable
+    for_window [window_type="dialog"] floating enable
+    for_window [app_id="pavucontrol"] floating enable
+    for_window [app_id="nm-connection-editor"] floating enable
+    for_window [window_role="GtkFileChooserDialog"] floating enable, resize set 800 600
+
+    # Picture-in-Picture follows you across workspaces
+    for_window [title="^Picture-in-Picture$"] floating enable, sticky enable, border none
+    for_window [app_id="firefox" title="^Picture-in-Picture$"] floating enable, sticky enable, border none
 
 # Include configs from 3 locations:
 #  - /usr/share/sway/config.d
