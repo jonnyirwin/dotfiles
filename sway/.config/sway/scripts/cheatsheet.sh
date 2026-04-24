@@ -29,6 +29,7 @@ key "Mod+Shift+V"     ; desc "Paste PRIMARY selection"
 key "Mod+Shift+C"     ; desc "Reload config"
 key "Mod+Shift+E"     ; desc "Power menu"
 key "Mod+Shift+X"     ; desc "Lock screen"
+key "Mod+I"           ; desc "Idle inhibitor toggle"
 
 header "Apps & Scripts"
 key "Mod+Shift+D"     ; desc "Resolution switcher"
