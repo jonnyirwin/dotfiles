@@ -65,6 +65,7 @@
 #battery,
 #cpu,
 #memory,
+#custom-ip,
 #pulseaudio,
 #custom-audio-output,
 #custom-lock,
@@ -100,6 +101,8 @@
 
 #cpu { color: @green; }
 #memory { color: @teal; }
+#custom-ip { color: @sky; }
+#custom-ip.internal { color: @overlay1; }
 
 #idle_inhibitor { color: @overlay2; }
 #idle_inhibitor.activated { color: @yellow; }

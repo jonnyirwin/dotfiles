@@ -9,6 +9,7 @@
     "modules-right": [
         "cpu",
         "memory",
+        "custom/ip",
         "pulseaudio",
         "idle_inhibitor",
         "clock",
@@ -34,27 +35,36 @@
         "signal": 8,
         "on-click": "pkill -SIGRTMIN+8 waybar"
     },
+    "custom/ip": {
+        "format": "{}",
+        "return-type": "json",
+        "interval": 30,
+        "signal": 9,
+        "exec": "~/.config/waybar/scripts/ip.sh",
+        "on-click": "~/.config/waybar/scripts/ip.sh toggle",
+        "escape": true
+    },
     "idle_inhibitor": {
         "format": "{icon}",
         "format-icons": {
-            "activated": "",
-            "deactivated": ""
+            "activated": "",
+            "deactivated": ""
         }
     },
     "clock": {
         "timezone": "Europe/Isle_of_Man",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "format-alt": "󰃭  {:%Y-%m-%d}",
-        "format": "󰅕  {:%H:%M}"
+        "format": "󰥔  {:%H:%M}"
     },
     "pulseaudio": {
         "format": "{icon}  {volume:>3}%",
-        "format-muted": "  ---%",
+        "format-muted": "  ---%",
         "format-icons": {
             "default": [
-                "",
-                "",
-                ""
+                "",
+                "",
+                ""
             ]
         },
         "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
