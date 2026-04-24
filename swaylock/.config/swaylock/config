@@ -4,13 +4,15 @@
 
 # Typography
 font=Dank Mono
-font-size=22
+font-size=36
+
+# Image
+scaling=fill
 
 # Indicator
 indicator-caps-lock
-indicator-idle-visible
-indicator-radius=92
-indicator-thickness=5
+indicator-radius=200
+indicator-thickness=20
 show-failed-attempts
 
 # Default state — mauve ring, surface0 fill

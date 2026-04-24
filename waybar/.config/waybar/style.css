@@ -70,7 +70,7 @@
 #custom-audio-output,
 #custom-lock,
 #custom-power,
-#idle_inhibitor {
+#custom-idle-inhibitor {
   background: @surface0;
   border: none;
   border-radius: 999px;
@@ -104,8 +104,7 @@
 #custom-ip { color: @sky; }
 #custom-ip.internal { color: @overlay1; }
 
-#idle_inhibitor { color: @overlay2; }
-#idle_inhibitor.activated { color: @yellow; }
+#custom-idle-inhibitor { color: @overlay2; }
 
 #custom-lock { color: @lavender; }
 #custom-power { color: @red; }

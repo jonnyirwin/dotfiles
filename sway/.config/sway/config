@@ -78,9 +78,9 @@ workspace_auto_back_and_forth yes
 # Example configuration:
 #
 exec swayidle -w \
-    timeout 300 'swaylock -f --scaling fill -i "$(ls $HOME/Pictures/Wallpapers/*.jpg | shuf -n1)"' \
+    timeout 300 'swaylock -f -i "$(ls $HOME/Pictures/Wallpapers/*.jpg | shuf -n1)"' \
     timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-    before-sleep 'swaylock -f --scaling fill -i "$(ls $HOME/Pictures/Wallpapers/*.jpg | shuf -n1)"'
+    before-sleep 'swaylock -f -i "$(ls $HOME/Pictures/Wallpapers/*.jpg | shuf -n1)"'
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -155,7 +155,10 @@ input type:pointer {
     bindsym $mod+Shift+e exec ~/.config/sway/scripts/power-menu.sh
 
     # Lock the screen
-    bindsym $mod+Shift+x exec swaylock -f --scaling fill -i "$(ls $HOME/Pictures/Wallpapers/*.jpg | shuf -n1)"
+    bindsym $mod+Shift+x exec swaylock -f -i "$(ls $HOME/Pictures/Wallpapers/*.jpg | shuf -n1)"
+
+    # Toggle idle inhibitor
+    bindsym $mod+i exec ~/.config/waybar/scripts/idle-inhibitor-toggle.sh
 
     # Volume controls
     bindsym $mod+Mod1+k exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+

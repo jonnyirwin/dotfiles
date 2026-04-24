@@ -1,9 +1,22 @@
 {
     "layer": "top",
     "position": "top",
-    "modules-left": ["custom/pomodoro", "sway/workspaces"],
-    "modules-center": ["custom/music"],
-    "modules-right": ["custom/audio-output", "pulseaudio", "backlight", "battery", "idle_inhibitor", "clock", "tray"],
+    "modules-left": [
+        "custom/pomodoro",
+        "sway/workspaces"
+    ],
+    "modules-center": [
+        "custom/music"
+    ],
+    "modules-right": [
+        "custom/audio-output",
+        "pulseaudio",
+        "backlight",
+        "battery",
+        "custom/idle-inhibitor",
+        "clock",
+        "tray"
+    ],
     "sway/workspaces": {
         "disable-scroll": true,
         "sort-by-name": true,
@@ -50,7 +63,11 @@
     },
     "backlight": {
         "format": "{icon} {percent:>3}%",
-        "format-icons": ["\uf185", "\uf186", "\uf042"],
+        "format-icons": [
+            "",
+            "",
+            ""
+        ],
         "on-scroll-up": "brightnessctl set 1%+",
         "on-scroll-down": "brightnessctl set 1%-"
     },
@@ -63,7 +80,19 @@
         "format-charging": "󰂄 {capacity:>3}%",
         "format-plugged": "󱐥 {capacity:>3}%",
         "format-alt": "{icon}",
-        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+        "format-icons": [
+            "󰂎",
+            "󰁺",
+            "󰁻",
+            "󰁼",
+            "󰁽",
+            "󰁾",
+            "󰁿",
+            "󰂀",
+            "󰂁",
+            "󰂂",
+            "󰁹"
+        ]
     },
     "custom/audio-output": {
         "format": "{}",
@@ -73,9 +102,13 @@
     },
     "pulseaudio": {
         "format": "{icon} {volume:>3}%",
-        "format-muted": "\uf6a9 ---%",
+        "format-muted": " ---%",
         "format-icons": {
-            "default": ["\uf026", "\uf027", "\uf028"]
+            "default": [
+                "",
+                "",
+                ""
+            ]
         },
         "on-click": "pavucontrol",
         "on-click-right": "~/.config/waybar/scripts/audio-switch.sh"
@@ -90,11 +123,11 @@
         "on-click": "wlogout &",
         "format": "󰐥"
     },
-    "idle_inhibitor": {
-        "format": "{icon}",
-        "format-icons": {
-            "activated": "\uf0f4",
-            "deactivated": "\uf186"
-        }
+    "custom/idle-inhibitor": {
+        "interval": "once",
+        "signal": 10,
+        "exec": "~/.config/waybar/scripts/idle-inhibitor-status.sh",
+        "on-click": "~/.config/waybar/scripts/idle-inhibitor-toggle.sh",
+        "tooltip": false
     }
 }

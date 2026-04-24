@@ -11,7 +11,7 @@
         "memory",
         "custom/ip",
         "pulseaudio",
-        "idle_inhibitor",
+        "custom/idle-inhibitor",
         "clock",
         "tray"
     ],
@@ -44,12 +44,12 @@
         "on-click": "~/.config/waybar/scripts/ip.sh toggle",
         "escape": true
     },
-    "idle_inhibitor": {
-        "format": "{icon}",
-        "format-icons": {
-            "activated": "",
-            "deactivated": ""
-        }
+    "custom/idle-inhibitor": {
+        "interval": "once",
+        "signal": 10,
+        "exec": "~/.config/waybar/scripts/idle-inhibitor-status.sh",
+        "on-click": "~/.config/waybar/scripts/idle-inhibitor-toggle.sh",
+        "tooltip": false
     },
     "clock": {
         "timezone": "Europe/Isle_of_Man",
