@@ -47,8 +47,8 @@
     "idle_inhibitor": {
         "format": "{icon}",
         "format-icons": {
-            "activated": "",
-            "deactivated": ""
+            "activated": "",
+            "deactivated": ""
         }
     },
     "clock": {
@@ -59,12 +59,12 @@
     },
     "pulseaudio": {
         "format": "{icon}  {volume:>3}%",
-        "format-muted": "  ---%",
+        "format-muted": "  ---%",
         "format-icons": {
             "default": [
-                "",
-                "",
-                ""
+                "",
+                "",
+                ""
             ]
         },
         "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
