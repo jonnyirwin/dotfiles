@@ -160,6 +160,9 @@ input type:pointer {
     # Toggle idle inhibitor
     bindsym $mod+i exec ~/.config/waybar/scripts/idle-inhibitor-toggle.sh
 
+    # Network manager
+    bindsym $mod+Shift+n exec ~/.config/sway/scripts/network-menu.sh
+
     # Volume controls
     bindsym $mod+Mod1+k exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
     bindsym $mod+Mod1+j exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
