@@ -5,7 +5,7 @@
 # Read `man 5 sway` for a complete reference.
 
 # Environment variables for GTK theme
-exec systemctl --user import-environment
+exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP SWAYSOCK
 exec_always {
     gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
@@ -72,9 +72,9 @@ workspace_auto_back_and_forth yes
 # Example configuration:
 #
 exec swayidle -w \
-    timeout 300 'swaylock -f -i /usr/share/backgrounds/gnome/adwaita-d.jpg' \
+    timeout 300 'swaylock -f --scaling fill -i "$(ls $HOME/Pictures/Wallpapers/*.jpg | shuf -n1)"' \
     timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-    before-sleep 'swaylock -f -i /usr/share/backgrounds/gnome/adwaita-d.jpg'
+    before-sleep 'swaylock -f --scaling fill -i "$(ls $HOME/Pictures/Wallpapers/*.jpg | shuf -n1)"'
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -147,6 +147,23 @@ input type:pointer {
 
     # Exit sway (logs you out of your Wayland session)
     bindsym $mod+Shift+e exec ~/.config/sway/scripts/power-menu.sh
+
+    # Lock the screen
+    bindsym $mod+Shift+x exec swaylock -f --scaling fill -i "$(ls $HOME/Pictures/Wallpapers/*.jpg | shuf -n1)"
+
+    # Volume controls
+    bindsym $mod+Mod1+k exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
+    bindsym $mod+Mod1+j exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+    bindsym $mod+Mod1+m exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+
+    # Brightness controls
+    bindsym $mod+Mod1+l exec brightnessctl set 5%+
+    bindsym $mod+Mod1+h exec brightnessctl set 5%-
+
+    # Media controls
+    bindsym $mod+Mod1+period exec playerctl next
+    bindsym $mod+Mod1+comma exec playerctl previous
+    bindsym $mod+Mod1+space exec playerctl play-pause
 
     # Paste PRIMARY selection (middle-click alternative)
     bindsym $mod+Shift+v exec wl-paste -p | wtype -

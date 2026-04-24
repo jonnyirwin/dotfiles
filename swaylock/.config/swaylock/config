@@ -2,15 +2,11 @@
 # Mauve ring (focus), surface0 fill, crust/accent text
 # (mirrors waybar #workspaces button.focused and rofi's mauve-on-crust)
 
-image=$HOME/Pictures/Wallpaper/wallpaper.jpg
-scaling=fill
-
 # Typography
 font=Dank Mono
 font-size=22
 
 # Indicator
-indicator
 indicator-caps-lock
 indicator-idle-visible
 indicator-radius=92
@@ -21,26 +17,26 @@ show-failed-attempts
 ring-color=cba6f7
 key-hl-color=a6e3a1
 bs-hl-color=f38ba8
-inside-color=313244
+inside-color=00000000
 line-color=181825
 text-color=cdd6f4
 separator-color=00000000
 
 # Verifying — mauve text
 ring-ver-color=cba6f7
-inside-ver-color=313244
+inside-ver-color=00000000
 line-ver-color=181825
 text-ver-color=cba6f7
 
 # Wrong password — red ring
 ring-wrong-color=f38ba8
-inside-wrong-color=313244
+inside-wrong-color=00000000
 line-wrong-color=181825
 text-wrong-color=f38ba8
 
 # Clear (escape) — peach
 ring-clear-color=fab387
-inside-clear-color=313244
+inside-clear-color=00000000
 line-clear-color=181825
 text-clear-color=fab387
 
