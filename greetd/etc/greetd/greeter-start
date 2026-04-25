@@ -1,0 +1,3 @@
+#!/bin/sh
+wlr-randr --output DP-3 --transform 90
+exec gtkgreet -c sway -s /etc/greetd/gtkgreet.css

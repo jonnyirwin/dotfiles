@@ -1,0 +1,6 @@
+[terminal]
+vt = "next"
+
+[default_session]
+command = "cage -s -d -- /etc/greetd/greeter-start"
+user = "_greetd"

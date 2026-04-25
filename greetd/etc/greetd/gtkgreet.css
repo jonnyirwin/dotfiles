@@ -1,0 +1,53 @@
+* {
+  font-family: "Dank Mono", "Symbols Nerd Font Mono", monospace;
+  font-size: 16px;
+  color: #cdd6f4;
+  outline: none;
+}
+
+window {
+  background-color: #181825;
+}
+
+box#body {
+  background-color: #313244;
+  border-radius: 12px;
+  padding: 32px 40px;
+}
+
+label {
+  color: #a6adc8;
+  margin-bottom: 4px;
+}
+
+entry {
+  background-color: #45475a;
+  border: 1px solid #585b70;
+  border-radius: 999px;
+  padding: 8px 16px;
+  color: #cdd6f4;
+  caret-color: #cba6f7;
+  margin-bottom: 12px;
+}
+
+entry:focus {
+  border-color: #cba6f7;
+  background-color: #45475a;
+}
+
+button,
+combobox,
+comboboxtext {
+  opacity: 0;
+  min-height: 0;
+  min-width: 0;
+  padding: 0;
+  margin-top: -999px;
+  border: none;
+  font-size: 0;
+}
+
+#error-label {
+  color: #f38ba8;
+  font-size: 16px;
+}
