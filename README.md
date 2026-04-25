@@ -144,38 +144,136 @@ All menu-driven interactions go through rofi so they share a single theme and ke
 
 Sway uses `swayidle` to dim and lock via `swaylock` after 5 min idle and on sleep. i3 uses `xss-lock` (sleep/suspend lock) plus `xautolock` (idle timer). Both converge on the same `~/Pictures` lockscreen image.
 
-## Installing dependencies
+## Setup from scratch (Debian Wayland)
 
-Install the subset that matches the compositor you actually run on each machine. `kitty`, `fish`, and common CLI tooling are assumed to be installed separately; the lists below cover only the window-manager stack.
+Steps to recreate this setup from a fresh Debian install (bookworm/12+).
 
-### Ubuntu (Wayland — sway, 24.04+)
+### 1. Prerequisites
 
 ```bash
-sudo apt install sway swaybg swayidle swaylock waybar \
-  wl-clipboard cliphist grim slurp wf-recorder wtype \
-  mako-notifier jq autotiling \
-  rofi flameshot tesseract-ocr imagemagick \
-  brightnessctl playerctl pavucontrol \
-  network-manager-gnome xdg-desktop-portal-wlr
+sudo apt install stow git curl
+```
+
+Clone into `~/.dotfiles`:
+
+```bash
+git clone https://github.com/jonnyirwin/dotfiles.git ~/.dotfiles
+```
+
+### 2. Install packages
+
+```bash
+sudo apt install \
+  sway swaybg swayidle swaylock waybar \
+  kitty fish tmux starship neovim \
+  wl-clipboard grim slurp wf-recorder wtype cliphist \
+  mako-notifier jq autotiling rofi flameshot \
+  tesseract-ocr imagemagick \
+  brightnessctl playerctl pavucontrol pulsemixer btop \
+  network-manager-gnome xdg-desktop-portal-wlr \
+  greetd gtkgreet cage wlr-randr \
+  pipx mise
+```
+
+```bash
 pipx install rofimoji
 ```
 
-On 22.04 `cliphist` and `wtype` aren't packaged. Install them as:
+### 3. Fonts
+
+Waybar and kitty require two fonts not in apt:
+
+- **Dank Mono** — proprietary; download from [dank.sh](https://dank.sh) and install to `~/.local/share/fonts/`
+- **Symbols Nerd Font Mono** — download `NerdFontsSymbolsOnly.tar.xz` from [nerdfonts.com](https://www.nerdfonts.com/font-downloads) and unpack to `~/.local/share/fonts/`
 
 ```bash
-# cliphist via Go
-sudo apt install golang-go
-go install go.senan.xyz/cliphist@latest    # lands in ~/go/bin
+fc-cache -f
+```
 
-# wtype from source (or pin the PPA)
-sudo apt install build-essential meson libwayland-dev libxkbcommon-dev
+### 4. Stow
+
+```bash
+cd ~/.dotfiles
+stow fish sway swaylock waybar mako rofi kitty starship tmux fontconfig git
+```
+
+Optional packages:
+
+- `stow neovim` — Neovim config
+- `stow pulsemixer` — Pulsemixer theme
+- `stow mise && mise install` — installs yazi and other dev tools (node, ruby, etc.)
+
+### 5. Shell
+
+Set fish as your login shell, then log out and back in:
+
+```bash
+chsh -s $(which fish)
+```
+
+Fish adds `~/.local/bin` to PATH automatically (`fish_user_paths`).
+
+### 6. Login manager
+
+Replace the default display manager with greetd. The greeter uses `gtkgreet` inside a `cage` compositor so that output transforms (e.g. portrait rotation on DP-3) are applied before the login prompt appears.
+
+```bash
+cd ~/.dotfiles
+./greetd/deploy.sh
+
+sudo systemctl disable gdm3    # or: sudo systemctl disable lightdm
+sudo systemctl enable greetd
+```
+
+> `greetd/etc/greetd/greeter-start` applies a 90° rotation to `DP-3`. Edit it before enabling greetd if your display setup differs.
+
+#### Revert to GDM
+
+```bash
+sudo systemctl disable greetd
+sudo systemctl enable gdm3
+sudo rm /etc/greetd/config.toml /etc/greetd/gtkgreet.css /etc/greetd/greeter-start
+```
+
+### 7. Per-host config
+
+Create hostname-scoped files for machine-specific settings (displays, input devices, waybar module list):
+
+```bash
+# Sway — outputs, inputs, host-specific execs
+cp ~/.dotfiles/sway/.config/sway/hosts/debian.conf \
+   ~/.dotfiles/sway/.config/sway/hosts/$(hostname).conf
+
+# Waybar — module list, battery/backlight presence
+cp ~/.dotfiles/waybar/.config/waybar/hosts/debian.json \
+   ~/.dotfiles/waybar/.config/waybar/hosts/$(hostname).json
+```
+
+Edit each file to match your hardware. See [Per-host configuration](#per-host-configuration) for details.
+
+## Other distros
+
+### Ubuntu (Wayland — sway, 24.04+)
+
+Same as Debian with these differences:
+
+- `cliphist` and `wtype` are packaged on 24.04+; on 22.04 they must be built from source
+- No `greetd`/`gtkgreet`/`cage` unless you add a PPA — stick with GDM or install greetd manually
+- Replace `mise` with the install script from `mise.jdx.dev` if it isn't in your apt repos
+
+On 22.04, `cliphist` via Go and `wtype` from source:
+
+```bash
+sudo apt install golang-go build-essential meson libwayland-dev libxkbcommon-dev
+go install go.senan.xyz/cliphist@latest
+
 git clone https://github.com/atx/wtype.git /tmp/wtype
 cd /tmp/wtype && meson build && ninja -C build && sudo ninja -C build install
 ```
 
 ### Ubuntu (X11 — i3, 22.04+)
 
-i3 ≥ 4.22 is required for `include`. Ubuntu 22.04 ships 4.20, so pull i3 from the sur5r PPA (upstream's official repo):
+i3 ≥ 4.22 is required for `include`. Ubuntu 22.04 ships 4.20 — pull i3 from the sur5r PPA:
 
 ```bash
 /usr/lib/apt/apt-helper download-file \
@@ -206,27 +304,7 @@ sudo apt install cargo
 cargo install xcolor
 ```
 
-### Debian (Wayland — sway, bookworm/12+)
-
-```bash
-sudo apt install sway swaybg swayidle swaylock waybar \
-  wl-clipboard grim slurp wf-recorder wtype \
-  mako-notifier jq rofi flameshot \
-  tesseract-ocr imagemagick brightnessctl playerctl pavucontrol \
-  network-manager-gnome xdg-desktop-portal-wlr \
-  greetd tuigreet \
-  pipx golang-go
-pipx install rofimoji autotiling
-
-# cliphist isn't in Debian main; build via Go
-go install go.senan.xyz/cliphist@latest    # lands in ~/go/bin
-```
-
-Ensure `~/go/bin` and `~/.local/bin` are on `PATH` (fish handles this via `fish_add_path` in the shared profile).
-
 ### Fedora (Wayland — sway, 39+)
-
-Most of what you need is packaged. `@base-x` is not required under pure Wayland.
 
 ```bash
 sudo dnf install sway swaybg swayidle swaylock waybar \
@@ -238,38 +316,7 @@ sudo dnf install sway swaybg swayidle swaylock waybar \
 pipx install rofimoji
 ```
 
-Fedora ships a separate `rofi-wayland` package that has the Wayland backend compiled in — prefer it over the X11 `rofi` package on sway.
-
-### Notes
-
-- `rofimoji` is always installed via `pipx` because distro packaging is inconsistent; `pipx install rofimoji` lands it in `~/.local/bin`.
-- `autotiling` is in the Ubuntu/Debian/Fedora repos, but `pipx install autotiling` is the portable fallback if the version in your repo is old.
-- The `kitty` terminal, `fish` shell, `rofi` theming, `starship` prompt, fonts (`Dank Mono`, `Symbols Nerd Font Mono`), and `tmux` are configured via their respective stow packages and aren't listed above; install them if you want the full visual set.
-
-## Login manager (greetd)
-
-The `greetd` package lives at `/etc/greetd/` and is managed as a stow package with a root target. It uses a minimal sway instance as the greeter compositor so that output rotation (portrait monitor on DP-3) is applied correctly before the login prompt appears. `tuigreet` runs inside `kitty` fullscreen with Catppuccin Mocha colours.
-
-### Setup
-
-```bash
-sudo apt install greetd tuigreet
-
-# Stow — note the different target
-sudo stow --target=/ greetd
-
-# Switch display manager
-sudo systemctl disable gdm3
-sudo systemctl enable greetd
-```
-
-### Uninstall / revert to GDM
-
-```bash
-sudo systemctl disable greetd
-sudo systemctl enable gdm3
-sudo stow --target=/ --delete greetd
-```
+Use `rofi-wayland` (not `rofi`) — Fedora ships them as separate packages and only the former has the Wayland backend.
 
 ## Per-host configuration
 
