@@ -22,7 +22,7 @@ if [[ "$mode" == "internal" ]]; then
     tooltip="Click for external IP"
     class="internal"
 else
-    ip=$(curl -sf --max-time 3 https://ifconfig.me)
+    ip=$(curl -sf --max-time 3 https://ipv4.icanhazip.com)
     tooltip="Click for internal IP"
     class="external"
 fi
