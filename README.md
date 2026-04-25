@@ -32,6 +32,7 @@ Sway (Wayland) and i3 (X11) share the same keybindings and UX. Swap the composit
 | `$mod+Shift+c` | Reload config |
 | `$mod+Shift+e` | Power menu (lock / logout / suspend / reboot / shutdown) |
 | `$mod+Shift+d` | Display configuration (sway: resolution switcher, i3: arandr) |
+| `$mod+Shift+n` | Network manager (rofi WiFi menu) |
 | `$mod+Shift+v` | Paste primary selection into focused window |
 
 ### Focus & movement
@@ -75,6 +76,18 @@ Sway (Wayland) and i3 (X11) share the same keybindings and UX. Swap the composit
 | `$mod+Shift+minus` | Send focused window to scratchpad |
 | `$mod+minus` | Show / cycle scratchpad windows, then hide |
 
+### Window rules
+
+Automatic window behaviour applied on Sway:
+
+| Condition | Rule |
+| --- | --- |
+| `app_id="pavucontrol"`, `nm-connection-editor`, `window_type="dialog"`, `window_role="pop-up"` or `GtkFileChooserDialog` | Float |
+| `title="Picture-in-Picture"` | Float + sticky (always on top across workspaces) |
+| `app_id="firefox"` or `mpv` in fullscreen | Inhibit idle (prevents screen blanking during video) |
+
+The cursor is auto-hidden after 8 s of inactivity (`seat * hide_cursor 8000`) and reappears on the next mouse event.
+
 ### Resize mode
 
 `$mod+r` enters resize mode; `Escape` or `Return` exits.
@@ -111,6 +124,7 @@ All menu-driven interactions go through rofi so they share a single theme and ke
 - **Power menu** (`$mod+Shift+e`) — rofi picker for Lock / Logout / Suspend / Reboot / Shutdown. Uses `swaylock`/`i3lock` for Lock, `swaymsg exit`/`i3-msg exit` for Logout, `systemctl` for the rest.
 - **Pomodoro menu** (`$mod+p`) — start / pause / resume / reset / configure the pomodoro. Durations live in `waybar/scripts/pomodoro.conf`; the same script powers the waybar/polybar status module and the menu, so state is consistent.
 - **Emoji picker** (`$mod+period`) — rofimoji shown via rofi. Default action: type the emoji into the focused window (via `wtype`/`xdotool`); fallback: copy to clipboard. Falls back to `rofi -show emoji` (rofi-emoji plugin) if rofimoji isn't installed.
+- **Network menu** (`$mod+Shift+n`, sway only) — rofi menu over `nmcli` listing available WiFi networks with connection status. Selecting a network connects or disconnects.
 - **Display switcher** (`$mod+Shift+d`, sway only) — rofi menu over `swaymsg -t get_outputs` offering per-output mode selection, enable/disable, and left/right reordering. Changes are persisted to `~/.config/sway/config.d/display-settings.conf` so they survive reboots. On i3 this key launches `arandr` instead.
 
 ### Auto-tiling
@@ -200,6 +214,7 @@ sudo apt install sway swaybg swayidle swaylock waybar \
   mako-notifier jq rofi flameshot \
   tesseract-ocr imagemagick brightnessctl playerctl pavucontrol \
   network-manager-gnome xdg-desktop-portal-wlr \
+  greetd tuigreet \
   pipx golang-go
 pipx install rofimoji autotiling
 
@@ -230,6 +245,31 @@ Fedora ships a separate `rofi-wayland` package that has the Wayland backend comp
 - `rofimoji` is always installed via `pipx` because distro packaging is inconsistent; `pipx install rofimoji` lands it in `~/.local/bin`.
 - `autotiling` is in the Ubuntu/Debian/Fedora repos, but `pipx install autotiling` is the portable fallback if the version in your repo is old.
 - The `kitty` terminal, `fish` shell, `rofi` theming, `starship` prompt, fonts (`Dank Mono`, `Symbols Nerd Font Mono`), and `tmux` are configured via their respective stow packages and aren't listed above; install them if you want the full visual set.
+
+## Login manager (greetd)
+
+The `greetd` package lives at `/etc/greetd/` and is managed as a stow package with a root target. It uses a minimal sway instance as the greeter compositor so that output rotation (portrait monitor on DP-3) is applied correctly before the login prompt appears. `tuigreet` runs inside `kitty` fullscreen with Catppuccin Mocha colours.
+
+### Setup
+
+```bash
+sudo apt install greetd tuigreet
+
+# Stow — note the different target
+sudo stow --target=/ greetd
+
+# Switch display manager
+sudo systemctl disable gdm3
+sudo systemctl enable greetd
+```
+
+### Uninstall / revert to GDM
+
+```bash
+sudo systemctl disable greetd
+sudo systemctl enable gdm3
+sudo stow --target=/ --delete greetd
+```
 
 ## Per-host configuration
 
