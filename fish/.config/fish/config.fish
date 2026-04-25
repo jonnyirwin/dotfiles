@@ -41,4 +41,4 @@ end
 
 alias killrails="pkill -f rails; pkill -f puma; rm -f tmp/pids/server.pid"
 alias railsdebug="env RUBY_DEBUG_OPEN=true RUBY_DEBUG_PORT=38698 bundle exec rails s"
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
