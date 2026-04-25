@@ -29,8 +29,8 @@
         "tooltip": false
     },
     "memory": {
-        "format": "󰘚  {percentage:>3}%",
-        "format-alt": "󰘚  {used:0.1f}G / {total:0.0f}G",
+        "format": "󰘚  {used:0.1f}G / {total:0.0f}G",
+        "format-alt": "󰘚  {percentage:>3}%",
         "interval": 5,
         "signal": 8,
         "on-click": "pkill -SIGRTMIN+8 waybar"

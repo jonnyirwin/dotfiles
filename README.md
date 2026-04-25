@@ -354,7 +354,7 @@ Waybar uses JSON and doesn't support shell expansion, so the host file is select
 
 To onboard a new host, copy an existing `hosts/<host>.json` and adjust the module list.
 
-**`custom/ip`** — displays the external public IPv4 address (via `ipv4.icanhazip.com`), polled hourly. Click to toggle between external and internal IP. State is persisted in `$XDG_RUNTIME_DIR/waybar-ip-mode`; a `SIGRTMIN+9` is sent to waybar after each toggle to force an immediate refresh.
+**`custom/ip`** — displays both the internal and external IPv4 addresses simultaneously (internal via `ip route`, external via `ipv4.icanhazip.com`), polled hourly.
 
 ### i3 (X11)
 
