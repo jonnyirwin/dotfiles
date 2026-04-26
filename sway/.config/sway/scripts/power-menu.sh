@@ -20,7 +20,7 @@ options=(
 )
 
 # Show the menu
-chosen=$(printf '%s\n' "${options[@]}" | rofi -dmenu -i -p "Power Menu" -theme-str 'window {width: 200px;}')
+chosen=$(printf '%s\n' "${options[@]}" | rofi -dmenu -i -p "Power Menu" -theme-str 'window {width: 300px;}')
 
 case "$chosen" in
     "🔒 Lock")
