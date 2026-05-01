@@ -56,45 +56,45 @@ return {
                 position = "center"
             }
         }
-		dashboard.section.buttons.val = {
-			dashboard.button("f", "📁 Find file", ":Telescope find_files <CR>"),
-			dashboard.button("r", "📄 Recent files", ":Telescope oldfiles <CR>"),
-			dashboard.button("t", "🔍 Find text", ":Telescope live_grep <CR>"),
-			dashboard.button("c", "⚙️ Config", ":e ~/.config/nvim/init.lua <CR>"),
-			dashboard.button("o", "📂 File Manager", ":Oil <CR>"),
-			dashboard.button("u", "⬇️ Update", ":Lazy<CR>"),
-			dashboard.button("q", "❌ Quit", ":qa<CR>"),
-		}			for _, button in ipairs(dashboard.section.buttons.val) do
-				button.opts.hl = "AlphaButtons"
-				button.opts.hl_shortcut = "AlphaShortcut"
-			end
+        dashboard.section.buttons.val = {
+            dashboard.button("f", "📁 Find file", ":Telescope find_files <CR>"),
+            dashboard.button("r", "📄 Recent files", ":Telescope oldfiles <CR>"),
+            dashboard.button("t", "🔍 Find text", ":Telescope live_grep <CR>"),
+            dashboard.button("c", "⚙️ Config", ":e ~/.config/nvim/init.lua <CR>"),
+            dashboard.button("o", "📂 File Manager", ":Oil <CR>"),
+            dashboard.button("u", "⬇️ Update", ":Lazy<CR>"),
+            dashboard.button("q", "❌ Quit", ":qa<CR>"),
+        }           for _, button in ipairs(dashboard.section.buttons.val) do
+                button.opts.hl = "AlphaButtons"
+                button.opts.hl_shortcut = "AlphaShortcut"
+            end
 
-			dashboard.section.header.opts.hl = "AlphaHeader"
-			dashboard.section.buttons.opts.hl = "AlphaButtons"
-			
-			-- Add Arnie quotes footer
-			dashboard.section.footer.val = get_arnie_quote()
-			dashboard.section.footer.opts.hl = "Type"
-			
-			-- Create custom layout with info section
-			dashboard.config = {
-				layout = {
-					{ type = "padding", val = 2 },
-					dashboard.section.header,
-					{ type = "padding", val = 1 },
-					info_section,
-					{ type = "padding", val = 2 },
-					dashboard.section.buttons,
-					{ type = "padding", val = 1 },
-					dashboard.section.footer,
-				},
-				opts = {
-					margin = 5,
-					noautocmd = true
-				}
-			}
-			
-			return dashboard
+            dashboard.section.header.opts.hl = "AlphaHeader"
+            dashboard.section.buttons.opts.hl = "AlphaButtons"
+            
+            -- Add Arnie quotes footer
+            dashboard.section.footer.val = get_arnie_quote()
+            dashboard.section.footer.opts.hl = "Type"
+            
+            -- Create custom layout with info section
+            dashboard.config = {
+                layout = {
+                    { type = "padding", val = 2 },
+                    dashboard.section.header,
+                    { type = "padding", val = 1 },
+                    info_section,
+                    { type = "padding", val = 2 },
+                    dashboard.section.buttons,
+                    { type = "padding", val = 1 },
+                    dashboard.section.footer,
+                },
+                opts = {
+                    margin = 5,
+                    noautocmd = true
+                }
+            }
+            
+            return dashboard
     end,
     config = function (_, dashboard)
         require'alpha'.setup(dashboard.config)

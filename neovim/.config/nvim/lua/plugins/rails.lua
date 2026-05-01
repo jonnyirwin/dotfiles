@@ -1,8 +1,6 @@
 return { 
     {
         'tpope/vim-rails',
-        -- Load immediately for Rails projects, not just on filetype
-        event = "VeryLazy",
         ft = { 'ruby', 'eruby', 'haml', 'slim' },
         cmd = { 'Rails', 'Rake', 'Rextract', 'Rinvert', 'A', 'R', 'Emodel', 'Emigration', 'Eschema', 'Econtroller', 'Eview', 'Ehelper', 'Eroutes', 'Ejob', 'Emailer' },
         config = function()
@@ -86,11 +84,9 @@ return {
     { 'tpope/vim-endwise' },
     { 'tpope/vim-rake', dependencies = { 'tpope/vim-projectionist' } },
     { 'tpope/vim-dispatch' },
-    { 'thoughtbot/vim-rspec', 
+    { 'thoughtbot/vim-rspec',
         config = function()
-            -- Configure vim-rspec to use dispatch for async test running
             vim.g.rspec_command = "Dispatch rspec {spec}"
         end
     },
-    { 'tpope/vim-projectionist' },
 }

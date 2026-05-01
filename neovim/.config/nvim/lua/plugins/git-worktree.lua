@@ -4,6 +4,10 @@ return {
         'nvim-telescope/telescope.nvim',
         'nvim-lua/plenary.nvim',
     },
+    keys = {
+        { "<leader>gw", desc = "Switch worktree" },
+        { "<leader>gW", desc = "Create worktree" },
+    },
     config = function()
         local worktree = require('git-worktree')
         local telescope = require('telescope')

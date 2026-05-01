@@ -1,10 +1,6 @@
 return {
     "folke/which-key.nvim",
     event = "VeryLazy",
-    dependencies = {
-        "nvim-telescope/telescope.nvim",  -- Ensure telescope loads first
-        "akinsho/toggleterm.nvim",        -- Ensure terminal loads first
-    },
     opts = {
         preset = "modern",
         spec = {

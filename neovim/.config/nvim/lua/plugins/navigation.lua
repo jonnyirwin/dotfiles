@@ -3,6 +3,11 @@ return {
         "ThePrimeagen/harpoon",
         branch = "harpoon2",
         dependencies = { "nvim-lua/plenary.nvim" },
+        keys = {
+            { "<leader>ma" }, { "<leader>mh" },
+            { "<leader>1" }, { "<leader>2" }, { "<leader>3" }, { "<leader>4" },
+            { "<C-S-P>" }, { "<C-S-N>" },
+        },
         config = function()
             local harpoon = require("harpoon")
             harpoon:setup()
@@ -24,7 +29,7 @@ return {
     {
         -- Enhanced Rails file navigation
         "tpope/vim-projectionist",
-        config = function()
+        init = function()
             -- Add Rails-specific projectionist patterns
             vim.g.projectionist_heuristics = {
                 ["Gemfile&config/application.rb"] = {

@@ -47,40 +47,4 @@ return {
             after_saving = nil
         },
     },
-    config = function(_, opts)
-        require("auto-save").setup(opts)
-        
-        -- Set up autocmds for auto-save messages (optional)
-        -- Uncomment the following lines if you want to see save messages
-        --[[
-        local group = vim.api.nvim_create_augroup('autosave', {})
-        
-        vim.api.nvim_create_autocmd('User', {
-            pattern = 'AutoSaveWritePost',
-            group = group,
-            callback = function(opts)
-                if opts.data.saved_buffer ~= nil then
-                    local filename = vim.api.nvim_buf_get_name(opts.data.saved_buffer)
-                    vim.notify('AutoSave: saved ' .. vim.fn.fnamemodify(filename, ':t') .. ' at ' .. vim.fn.strftime('%H:%M:%S'), vim.log.levels.INFO, { timeout = 1000 })
-                end
-            end,
-        })
-        
-        vim.api.nvim_create_autocmd('User', {
-            pattern = 'AutoSaveEnable',
-            group = group,
-            callback = function()
-                vim.notify('AutoSave enabled', vim.log.levels.INFO)
-            end,
-        })
-        
-        vim.api.nvim_create_autocmd('User', {
-            pattern = 'AutoSaveDisable',
-            group = group,
-            callback = function()
-                vim.notify('AutoSave disabled', vim.log.levels.INFO)
-            end,
-        })
-        --]]
-    end,
 }

@@ -5,7 +5,6 @@ return {
     -- Mix integration for running Mix tasks
     {
         'mattreduce/vim-mix',
-        event = "VeryLazy",  -- Load at same time as which-key
         ft = { 'elixir', 'eex', 'heex' },
         config = function()
             -- Mix convenience mappings (moved to <leader>i namespace to avoid conflicts)
@@ -55,7 +54,7 @@ return {
     {
         'tpope/vim-projectionist',
         ft = { 'elixir', 'eex', 'heex' },
-        config = function()
+        init = function()
             -- Phoenix projections for intelligent navigation
             vim.g.projectionist_heuristics = vim.tbl_extend("force", vim.g.projectionist_heuristics or {}, {
                 ["mix.exs"] = {
