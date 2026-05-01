@@ -172,6 +172,7 @@ sudo apt install \
   brightnessctl playerctl pavucontrol pulsemixer btop \
   network-manager-gnome xdg-desktop-portal-wlr \
   greetd gtkgreet cage wlr-randr \
+  fzf ripgrep \
   pipx mise
 ```
 
@@ -199,7 +200,7 @@ stow fish sway swaylock waybar mako rofi kitty starship tmux fontconfig git
 
 Optional packages:
 
-- `stow neovim` — Neovim config
+- `stow neovim` — Neovim config (requires `fzf` and `ripgrep` for Telescope file/text search)
 - `stow pulsemixer` — Pulsemixer theme
 - `stow mise && mise install` — installs yazi and other dev tools (node, ruby, etc.)
 
@@ -292,7 +293,8 @@ sudo apt install polybar dex dunst picom i3lock xss-lock xautolock \
   feh rofi flameshot maim slop xclip xdotool \
   tesseract-ocr imagemagick ffmpeg arandr \
   brightnessctl playerctl pavucontrol \
-  network-manager-gnome x11-xkb-utils jq autotiling
+  network-manager-gnome x11-xkb-utils jq autotiling \
+  fzf ripgrep
 pipx install rofimoji
 
 # greenclip — only on GitHub releases
@@ -312,6 +314,7 @@ sudo dnf install sway swaybg swayidle swaylock waybar \
   mako jq rofi-wayland flameshot \
   tesseract ImageMagick brightnessctl playerctl pavucontrol \
   NetworkManager-gnome xdg-desktop-portal-wlr \
+  fzf ripgrep \
   pipx autotiling
 pipx install rofimoji
 ```
