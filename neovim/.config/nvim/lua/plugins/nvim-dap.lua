@@ -1,5 +1,11 @@
 return {
     "rcarriga/nvim-dap-ui",
+    keys = {
+        { "<leader>db" }, { "<leader>dB" }, { "<leader>dc" }, { "<leader>ds" },
+        { "<leader>di" }, { "<leader>do" }, { "<leader>dr" }, { "<leader>dl" },
+        { "<leader>dt" }, { "<leader>du" }, { "<leader>de" },
+        { "<leader>rd" }, { "<leader>id" }, { "<leader>iD" }, { "<leader>iP" },
+    },
     dependencies = {
         "nvim-neotest/nvim-nio",
         "mfussenegger/nvim-dap",

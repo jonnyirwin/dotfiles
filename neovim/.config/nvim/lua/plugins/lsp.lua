@@ -214,8 +214,8 @@ return {
                 local root_dir = client.config.root_dir or vim.fn.getcwd()
                 local gemfile = root_dir .. "/Gemfile" 
                 local lockfile = root_dir .. "/Gemfile.lock"
-                local has_gemfile = vim.loop.fs_stat(gemfile) and true or false
-                local has_lockfile = vim.loop.fs_stat(lockfile) and true or false
+                local has_gemfile = vim.uv.fs_stat(gemfile) and true or false
+                local has_lockfile = vim.uv.fs_stat(lockfile) and true or false
                 local has_bundle = (vim.fn.executable("bundle") == 1)
 
                 -- Test lockfile parsing

@@ -2,7 +2,12 @@ return {
     {
         'akinsho/toggleterm.nvim',
         version = "*",
-        event = "VeryLazy",  -- Load at same time as which-key
+        keys = {
+            { "<c-\\>" },
+            { "<leader>xf" }, { "<leader>xh" }, { "<leader>xv" },
+            { "<leader>rc" }, { "<leader>rs" },
+            { "<leader>ixc" }, { "<leader>ixs" }, { "<leader>ixt" }, { "<leader>ixl" },
+        },
         config = function()
             require("toggleterm").setup({
                 size = 20,

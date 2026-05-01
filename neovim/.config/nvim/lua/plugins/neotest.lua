@@ -1,6 +1,10 @@
 return {
     {
         "nvim-neotest/neotest",
+        keys = {
+            { "<leader>tf" }, { "<leader>tn" }, { "<leader>ts" },
+            { "<leader>tl" }, { "<leader>tv" }, { "<leader>tS" }, { "<leader>to" },
+        },
         dependencies = {
             "nvim-neotest/nvim-nio",
             "nvim-lua/plenary.nvim",
@@ -15,7 +19,7 @@ return {
                     require("neotest-rspec")({
                         rspec_cmd = function()
                             -- Prefer bin/rspec if available; otherwise bundle exec rspec
-                            if vim.loop.fs_stat("bin/rspec") then
+                            if vim.uv.fs_stat("bin/rspec") then
                                 return { "bin/rspec" }
                             end
                             return { "bundle", "exec", "rspec" }
