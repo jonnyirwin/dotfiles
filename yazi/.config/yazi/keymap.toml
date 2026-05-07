@@ -1,0 +1,4 @@
+[[mgr.prepend_keymap]]
+on  = ["g", "D"]
+run = "cd /run/media/jonny"
+desc = "Go to mounted drives"

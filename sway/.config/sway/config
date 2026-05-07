@@ -62,6 +62,7 @@ exec wl-paste --watch cliphist store
 exec autotiling
 exec nm-applet --indicator
 exec lxpolkit
+exec udiskie --no-notify
 exec $HOME/.cargo/bin/sworkstyle &> /tmp/sworkstyle.log
 
 ### Scratchpad apps (pre-launched; for_window rules move them to scratchpad)

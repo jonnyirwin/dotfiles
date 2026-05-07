@@ -1,0 +1,57 @@
+[mgr]
+ratio          = [1, 3, 4]   # parent : current : preview column widths
+sort_by        = "natural"   # handles numbered files (file2 before file10)
+sort_dir_first = true
+show_hidden    = false        # toggle live with .
+show_symlink   = true         # shows → target in status bar
+
+[preview]
+tab_size     = 2
+max_width    = 1000
+max_height   = 1000
+wrap         = "yes"          # wrap long lines in text previews
+image_filter = "lanczos3"     # higher quality image downscaling
+image_quality = 80
+
+[tasks]
+micro_workers = 10   # parallel file ops (copy/move chunks)
+macro_workers = 4    # parallel high-level tasks
+
+[log]
+enabled = false
+
+[opener]
+edit = [
+  { run = 'nvim "$@"', block = true, desc = "Edit in nvim" },
+]
+pdf = [
+  { run = 'zathura "$@"', orphan = true, desc = "Open in Zathura" },
+]
+image = [
+  { run = 'imv-wayland "$@"', orphan = true, desc = "Open in imv" },
+]
+video = [
+  { run = 'mpv "$@"', orphan = true, desc = "Play in mpv" },
+]
+audio = [
+  { run = 'mpv "$@"', orphan = true, desc = "Play in mpv" },
+]
+open = [
+  { run = 'xdg-open "$@"', orphan = true, desc = "Open with xdg-open" },
+]
+
+[open]
+rules = [
+  # text / code → nvim
+  { mime = "text/*",             use = ["edit", "open"] },
+  { mime = "application/json",   use = ["edit", "open"] },
+  { mime = "application/xml",    use = ["edit", "open"] },
+  # PDFs → zathura
+  { mime = "application/pdf",    use = ["pdf",  "open"] },
+  # media
+  { mime = "image/*",            use = ["image", "open"] },
+  { mime = "video/*",            use = ["video", "open"] },
+  { mime = "audio/*",            use = ["audio", "open"] },
+  # everything else → xdg-open
+  { mime = "*",                  use = "open" },
+]
