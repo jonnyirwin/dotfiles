@@ -20,18 +20,18 @@ if status is-interactive
     
     # Set up fzf if available
     if command -v fzf > /dev/null
-        set -gx FZF_DEFAULT_OPTS '--height 40% --layout=reverse --border'
+        set -gx FZF_DEFAULT_OPTS \
+            '--height 40% --layout=default --border=none' \
+            '--prompt=❯\  --pointer=❯ --marker=❯' \
+            '--color=bg:#1e1e2e,bg+:#45475a,fg:#cdd6f4,fg+:#cdd6f4' \
+            '--color=hl:#89b4fa,hl+:#89b4fa' \
+            '--color=prompt:#cba6f7,pointer:#cba6f7,marker:#a6e3a1' \
+            '--color=spinner:#cba6f7,info:#585b70,header:#89b4fa'
         fzf --fish 2>/dev/null | source
     end
 
     # zoxide (smarter cd - use 'z' instead of 'cd')
     zoxide init fish | source
-
-    # atuin (searchable, syncable shell history - Ctrl-R)
-    if command -v atuin > /dev/null
-        # Strip `-k up` (deprecated in fish 4.6); atuin <=18.6.1 still emits it.
-        atuin init fish | string replace -r -- '-k up\b' up | source
-    end
 
     # direnv (per-directory env vars, auto-loaded on cd)
     if command -v direnv > /dev/null
