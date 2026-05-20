@@ -18,7 +18,9 @@ background = "#313244"
 foreground = "#cdd6f4"
 frame_color = "#45475a"
 separator_color = frame
+# >>> catppuccin-accent
 highlight = "#cba6f7"
+# <<< catppuccin-accent
 corner_radius = 18
 frame_width = 1
 padding = 14
@@ -26,7 +28,9 @@ horizontal_padding = 14
 gap_size = 8
 font = "Dank Mono 14"
 markup = full
+# >>> catppuccin-accent
 format = "<span foreground='#cba6f7' weight='bold'>%s</span>\n<span foreground='#bac2de'>%b</span>"
+# <<< catppuccin-accent
 alignment = left
 vertical_alignment = center
 word_wrap = yes
@@ -98,6 +102,8 @@ history_ignore = yes
 
 [spotify_notification]
 appname = "Spotify"
+# >>> catppuccin-accent
 format = "<span foreground='#cba6f7' weight='bold'>♫ %s</span>\n<span foreground='#bac2de'>%b</span>"
+# <<< catppuccin-accent
 urgency = low
 timeout = 5

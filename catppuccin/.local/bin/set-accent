@@ -1,0 +1,153 @@
+#!/usr/bin/env bash
+# set-accent <colour-name>
+#
+# Source of truth for the Catppuccin-Mocha accent colour used across dotfiles.
+# Writes the chosen name + hex to ~/.config/catppuccin/{accent,accent.hex},
+# rewrites sentinel-marked blocks in each tool's config, and reloads where
+# possible.
+
+set -euo pipefail
+
+# --- palette ----------------------------------------------------------------
+declare -A PAL=(
+  [rosewater]=f5e0dc [flamingo]=f2cdcd [pink]=f5c2e7 [mauve]=cba6f7
+  [red]=f38ba8 [maroon]=eba0ac [peach]=fab387 [yellow]=f9e2af
+  [green]=a6e3a1 [teal]=94e2d5 [sky]=89dceb [sapphire]=74c7ec
+  [blue]=89b4fa [lavender]=b4befe
+)
+
+STATE_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/catppuccin"
+DOT="$HOME/.dotfiles"
+
+# --- args -------------------------------------------------------------------
+if [[ $# -ne 1 ]]; then
+  echo "usage: set-accent <name>   (one of: ${!PAL[*]})" >&2
+  exit 2
+fi
+NEW_NAME="$1"
+NEW_HEX="${PAL[$NEW_NAME]:-}"
+if [[ -z "$NEW_HEX" ]]; then
+  echo "unknown colour: $NEW_NAME (valid: ${!PAL[*]})" >&2
+  exit 2
+fi
+
+# Previous values: read from the dotfile path (authoritative even when stow
+# isn't applied). The XDG state dir is a stow-managed mirror.
+REPO_ACCENT="$DOT/catppuccin/.config/catppuccin/accent"
+REPO_HEX="$DOT/catppuccin/.config/catppuccin/accent.hex"
+PREV_NAME="$(cat "$REPO_ACCENT" 2>/dev/null | tr -d '[:space:]')"
+PREV_HEX="$(cat "$REPO_HEX" 2>/dev/null | tr -d '[:space:]')"
+PREV_NAME="${PREV_NAME:-mauve}"
+PREV_HEX="${PREV_HEX:-cba6f7}"
+
+# --- write source of truth --------------------------------------------------
+echo "$NEW_NAME" > "$REPO_ACCENT"
+echo "$NEW_HEX" > "$REPO_HEX"
+# If state dir is not a symlink (stow not applied), mirror the values there
+# too so consumers reading the XDG path see the new accent.
+if [[ -d "$STATE_DIR" && ! -L "$STATE_DIR/accent" ]]; then
+  echo "$NEW_NAME" > "$STATE_DIR/accent"
+  echo "$NEW_HEX" > "$STATE_DIR/accent.hex"
+fi
+
+# --- sentinel rewriter ------------------------------------------------------
+# Each managed file contains a block delimited by
+#     <comment-prefix> >>> catppuccin-accent
+#     <comment-prefix> <<< catppuccin-accent
+# Inside the block, lines containing $PREV_NAME or $PREV_HEX are rewritten to
+# $NEW_NAME / $NEW_HEX. Lines outside the block are left alone.
+rewrite_block() {
+  local file="$1"
+  [[ -f "$file" ]] || { echo "skip (missing): $file"; return; }
+  python3 - "$file" "$PREV_NAME" "$PREV_HEX" "$NEW_NAME" "$NEW_HEX" <<'PY'
+import sys, re, pathlib
+path, prev_name, prev_hex, new_name, new_hex = sys.argv[1:6]
+src = pathlib.Path(path).read_text()
+pat = re.compile(
+    r'(>>> catppuccin-accent.*?<<< catppuccin-accent)',
+    re.DOTALL,
+)
+def sub(m):
+    blk = m.group(1)
+    # Replace hex (case-insensitive) and name word-boundary.
+    blk = re.sub(re.escape(prev_hex), new_hex, blk, flags=re.IGNORECASE)
+    blk = re.sub(rf'\b{re.escape(prev_name)}\b', new_name, blk)
+    return blk
+out = pat.sub(sub, src)
+if out != src:
+    pathlib.Path(path).write_text(out)
+    print(f"  updated: {path}")
+PY
+}
+
+# --- yazi: marker-based per-line rewrite ------------------------------------
+# yazi/theme.toml has no variables and no include mechanism, so accent lines
+# are tagged inline with a trailing "# catppuccin-accent" comment. We replace
+# every hex on a tagged line with the new accent hex. This avoids the chain-
+# swap bug of bulk hex-sweeping (where a new accent that happens to equal an
+# existing palette colour gets over-replaced on the next swap).
+rewrite_yazi() {
+  local file="$DOT/yazi/.config/yazi/theme.toml"
+  [[ -f "$file" ]] || return
+  # On tagged lines, replace only the previous-accent hex with the new accent
+  # hex. Other hex on the same line (e.g. fg=crust against bg=accent) stay.
+  python3 - "$file" "$PREV_HEX" "$NEW_HEX" <<'PY'
+import sys, re, pathlib
+path, prev_hex, new_hex = sys.argv[1:4]
+out = []
+changed = False
+for line in pathlib.Path(path).read_text().splitlines(keepends=True):
+    if 'catppuccin-accent' in line:
+        new = re.sub('#' + re.escape(prev_hex), '#' + new_hex, line, flags=re.IGNORECASE)
+        if new != line:
+            changed = True
+        out.append(new)
+    else:
+        out.append(line)
+if changed:
+    pathlib.Path(path).write_text("".join(out))
+    print(f"  updated: {path}")
+PY
+}
+
+echo "set-accent: ${PREV_NAME} (#${PREV_HEX}) -> ${NEW_NAME} (#${NEW_HEX})"
+
+MANAGED=(
+  "$DOT/sway/.config/sway/config.d/10-catppuccin-mocha.conf"
+  "$DOT/i3/.config/i3/config.d/10-catppuccin-mocha.conf"
+  "$DOT/waybar/.config/waybar/mocha.css"
+  "$DOT/waybar/.config/waybar/style.css"
+  "$DOT/polybar/.config/polybar/config.ini"
+  "$DOT/tmux/.config/tmux/tmux.conf"
+  "$DOT/starship/.config/starship.toml"
+  "$DOT/rofi/.config/rofi/catppuccin-mocha.rasi"
+  "$DOT/rofi/.config/rofi/catppuccin-default.rasi"
+  "$DOT/neovim/.config/nvim/lua/plugins/lualine.lua"
+  "$DOT/neovim/.config/nvim/lua/plugins/obsidian.lua"
+  "$DOT/dunst/.config/dunst/dunstrc"
+  "$DOT/mako/.config/mako/config"
+  "$DOT/kitty/.config/kitty/kitty.conf"
+  "$DOT/swaylock/.config/swaylock/config"
+  "$DOT/fish/.config/fish/config.fish"
+  "$DOT/greetd/etc/greetd/gtkgreet.css"
+  "$DOT/sway/.config/sway/scripts/cheatsheet.sh"
+)
+for f in "${MANAGED[@]}"; do rewrite_block "$f"; done
+rewrite_yazi
+
+# --- reloads ---------------------------------------------------------------
+reload() {
+  command -v "$1" >/dev/null 2>&1 || return 0
+  echo "  reload: $*"
+  "$@" >/dev/null 2>&1 || true
+}
+pgrep -x sway       >/dev/null && reload swaymsg reload
+pgrep -x waybar     >/dev/null && pkill -SIGUSR2 waybar || true
+pgrep -x mako       >/dev/null && reload makoctl reload
+pgrep -x dunst      >/dev/null && { killall dunst 2>/dev/null; setsid dunst >/dev/null 2>&1 & disown; }
+if [[ -n "${KITTY_LISTEN_ON:-}" ]] && command -v kitten >/dev/null 2>&1; then
+  reload kitten @ --to="$KITTY_LISTEN_ON" load-config
+fi
+pgrep -x tmux       >/dev/null && reload tmux source-file "$HOME/.config/tmux/tmux.conf"
+
+echo "done."

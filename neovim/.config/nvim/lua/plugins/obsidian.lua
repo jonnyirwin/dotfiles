@@ -1,3 +1,13 @@
+-- Accent hex: read from ~/.config/catppuccin/accent.hex (single source across dotfiles).
+local function read_accent_hex()
+    local f = vim.fn.expand('~/.config/catppuccin/accent.hex')
+    if vim.fn.filereadable(f) == 1 then
+        return '#' .. vim.trim(vim.fn.readfile(f)[1] or 'cba6f7')
+    end
+    return '#cba6f7'
+end
+local accent = read_accent_hex()
+
 return {
     "epwalsh/obsidian.nvim",
     version = "*",
@@ -84,8 +94,8 @@ return {
                 ObsidianRightArrow = { bold = true, fg = "#fab387" },
                 ObsidianTilde = { bold = true, fg = "#f38ba8" },
                 ObsidianBullet = { bold = true, fg = "#89b4fa" },
-                ObsidianRefText = { underline = true, fg = "#cba6f7" },
-                ObsidianExtLinkIcon = { fg = "#cba6f7" },
+                ObsidianRefText = { underline = true, fg = accent },
+                ObsidianExtLinkIcon = { fg = accent },
                 ObsidianTag = { italic = true, fg = "#89b4fa" },
                 ObsidianHighlightText = { bg = "#45475a" },
             },

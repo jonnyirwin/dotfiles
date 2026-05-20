@@ -3,7 +3,10 @@
 # Catppuccin Mocha palette
 RESET='\033[0m'
 BOLD='\033[1m'
-MAUVE='\033[38;2;203;166;247m'
+# Accent: read hex from ~/.config/catppuccin/accent.hex; convert to RGB escape.
+__accent_hex="$(cat "${XDG_CONFIG_HOME:-$HOME/.config}/catppuccin/accent.hex" 2>/dev/null || echo cba6f7)"
+__accent_hex="${__accent_hex//[^0-9a-fA-F]/}"
+ACCENT="$(printf '\033[38;2;%d;%d;%dm' "$((16#${__accent_hex:0:2}))" "$((16#${__accent_hex:2:2}))" "$((16#${__accent_hex:4:2}))")"
 BLUE='\033[38;2;137;180;250m'
 LAVENDER='\033[38;2;180;190;254m'
 SUBTEXT='\033[38;2;166;173;200m'
@@ -13,7 +16,7 @@ SURFACE='\033[38;2;88;91;112m'
 key()    { printf "  ${LAVENDER}${BOLD}%-22s${RESET}" "$1"; }
 desc()   { printf "${TEXT}%s${RESET}\n" "$1"; }
 sep()    { printf "${SURFACE}  %-40s${RESET}\n" "$(printf '─%.0s' {1..44})"; }
-header() { printf "\n${MAUVE}${BOLD}  %s${RESET}\n" "$1"; sep; }
+header() { printf "\n${ACCENT}${BOLD}  %s${RESET}\n" "$1"; sep; }
 
 {
 printf "${BLUE}${BOLD}  Sway Keybindings${RESET}  ${SUBTEXT}(Mod = Super)${RESET}\n"

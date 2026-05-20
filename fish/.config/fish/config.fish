@@ -2,6 +2,15 @@ if status is-interactive
     # Commands to run in interactive sessions can go here
     starship init fish | source
     mise activate fish | source
+
+    # Catppuccin accent: read from single source of truth so shell scripts
+    # and tools that honour env vars all see the same value.
+    if test -r ~/.config/catppuccin/accent
+        set -gx CATPPUCCIN_ACCENT (string trim < ~/.config/catppuccin/accent)
+    end
+    if test -r ~/.config/catppuccin/accent.hex
+        set -gx CATPPUCCIN_ACCENT_HEX (string trim < ~/.config/catppuccin/accent.hex)
+    end
     
     # Enable vi key bindings (optional - comment out if you prefer default)
     # fish_vi_key_bindings
@@ -20,12 +29,16 @@ if status is-interactive
     
     # Set up fzf if available
     if command -v fzf > /dev/null
+        # >>> catppuccin-accent
+        # Accent slots only (prompt + pointer); marker/spinner/header stay fixed.
+        set -l _accent_fzf 'prompt:#cba6f7,pointer:#cba6f7'
+        # <<< catppuccin-accent
         set -gx FZF_DEFAULT_OPTS \
             '--height 40% --layout=default --border=none' \
             '--prompt=❯\  --pointer=❯ --marker=❯' \
             '--color=bg:#1e1e2e,bg+:#45475a,fg:#cdd6f4,fg+:#cdd6f4' \
             '--color=hl:#89b4fa,hl+:#89b4fa' \
-            '--color=prompt:#cba6f7,pointer:#cba6f7,marker:#a6e3a1' \
+            "--color=$_accent_fzf,marker:#a6e3a1" \
             '--color=spinner:#cba6f7,info:#585b70,header:#89b4fa'
         fzf --fish 2>/dev/null | source
     end

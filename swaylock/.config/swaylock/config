@@ -15,8 +15,10 @@ indicator-radius=200
 indicator-thickness=20
 show-failed-attempts
 
-# Default state — mauve ring, surface0 fill
+# Default state — accent ring, surface0 fill
+# >>> catppuccin-accent
 ring-color=cba6f7
+# <<< catppuccin-accent
 key-hl-color=a6e3a1
 bs-hl-color=f38ba8
 inside-color=00000000
@@ -24,11 +26,13 @@ line-color=181825
 text-color=cdd6f4
 separator-color=00000000
 
-# Verifying — mauve text
+# Verifying — accent text
+# >>> catppuccin-accent
 ring-ver-color=cba6f7
 inside-ver-color=00000000
 line-ver-color=181825
 text-ver-color=cba6f7
+# <<< catppuccin-accent
 
 # Wrong password — red ring
 ring-wrong-color=f38ba8

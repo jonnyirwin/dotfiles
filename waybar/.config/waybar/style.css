@@ -49,7 +49,7 @@
 
 #workspaces button.focused {
   color: @crust;
-  background: @mauve;
+  background: @accent;
 }
 
 /* ── Status pills ───────────────────────
@@ -111,7 +111,7 @@
 
 #tray { margin-right: 8px; }
 
-#custom-music { color: @mauve; }
+#custom-music { color: @accent; }
 
 #custom-pomodoro { color: @peach; }
 #custom-pomodoro.running { color: @green; }

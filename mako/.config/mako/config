@@ -19,7 +19,9 @@ icons=1
 max-icon-size=48
 
 markup=1
+# >>> catppuccin-accent
 format=<span foreground="#cba6f7" weight="bold">%s</span>\n<span foreground="#bac2de">%b</span>
+# <<< catppuccin-accent
 
 [urgency=low]
 border-color=#6c7086

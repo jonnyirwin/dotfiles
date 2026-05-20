@@ -26,12 +26,16 @@ entry {
   border-radius: 999px;
   padding: 8px 16px;
   color: #cdd6f4;
+  /* >>> catppuccin-accent */
   caret-color: #cba6f7;
+  /* <<< catppuccin-accent */
   margin-bottom: 12px;
 }
 
 entry:focus {
+  /* >>> catppuccin-accent */
   border-color: #cba6f7;
+  /* <<< catppuccin-accent */
   background-color: #45475a;
 }
 
