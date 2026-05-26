@@ -1,0 +1,21 @@
+#!/bin/sh
+# Pick the right clipboard backend for the current session.
+#
+# Order: Wayland → X11 → fall through (consume stdin so the pipeline succeeds;
+# tmux's `set-clipboard on` will have already emitted OSC 52 to the outer
+# terminal, which is how SSH sessions to OSC-52-aware terminals get clipboard).
+
+if [ -n "$WAYLAND_DISPLAY" ] && command -v wl-copy >/dev/null 2>&1; then
+    exec wl-copy
+fi
+
+if [ -n "$DISPLAY" ]; then
+    if command -v xclip >/dev/null 2>&1; then
+        exec xclip -selection clipboard
+    fi
+    if command -v xsel >/dev/null 2>&1; then
+        exec xsel --clipboard --input
+    fi
+fi
+
+cat >/dev/null
