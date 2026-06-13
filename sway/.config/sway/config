@@ -321,7 +321,7 @@ bindsym $mod+r mode "resize"
     # Quick region screenshot → clipboard (grim+slurp)
     bindsym $mod+s exec ~/.config/sway/scripts/screenshot-region.sh
     # Flameshot screenshot (region select with annotation tools)
-    bindsym $mod+Shift+s exec env QT_QPA_PLATFORM=wayland QT_STYLE_OVERRIDE=Adwaita-Dark flameshot gui --path ~/Pictures/Screenshots
+    bindsym $mod+Shift+s exec env XDG_CURRENT_DESKTOP=sway QT_QPA_PLATFORM=wayland QT_STYLE_OVERRIDE=Adwaita-Dark flameshot gui --path ~/Pictures/Screenshots
 
 #
 # Capture & pickers:
