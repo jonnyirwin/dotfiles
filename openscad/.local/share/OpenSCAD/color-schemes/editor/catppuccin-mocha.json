@@ -1,0 +1,36 @@
+{
+    "name" : "Catppuccin Mocha",
+    "index" : 1700,
+    "paper" : "#1e1e2e",
+    "text" : "#cdd6f4",
+    "caret" : {
+        "width" : 2,
+        "foreground" : "#cdd6f4",
+        "line-background" : "#313244"
+    },
+    "colors" : {
+        "keyword1" : "#cba6f7",
+        "keyword2" : "#89b4fa",
+        "keyword3" : "#fab387",
+        "comment" : "#6c7086",
+        "commentline" : "#6c7086",
+        "commentdoc" : "#6c7086",
+        "commentdockeyword" : "#f9e2af",
+        "number" : "#fab387",
+        "string" : "#a6e3a1",
+        "operator" : "#94e2d5",
+        "whitespace-foreground" : "#45475a",
+        "selection-foreground" : "#1e1e2e",
+        "selection-background" : "#b4befe",
+        "margin-background" : "#181825",
+        "margin-foreground" : "#6c7086",
+        "matched-brace-background" : "#45475a",
+        "matched-brace-foreground" : "#cdd6f4",
+        "unmatched-brace-background" : "#8a1111",
+        "unmatched-brace-foreground" : "#cdd6f4",
+        "error-marker" : "#f38ba8",
+        "error-indicator" : "#80f38ba8",
+        "error-indicator-outline" : "#00f38ba8",
+        "edge" : "#cba6f7"
+    }
+}

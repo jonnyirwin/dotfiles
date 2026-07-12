@@ -3,6 +3,9 @@ if status is-interactive
     starship init fish | source
     mise activate fish | source
 
+    # Qt5 apps (OpenSCAD, etc.) use qt5ct for theming
+    set -gx QT_QPA_PLATFORMTHEME qt5ct
+
     # Catppuccin accent: read from single source of truth so shell scripts
     # and tools that honour env vars all see the same value.
     if test -r ~/.config/catppuccin/accent
